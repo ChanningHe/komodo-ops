@@ -113,6 +113,19 @@ match_tags = ["Pseudomugil"]
 
 ##
 
+[[resource_sync]]
+name = "src-osaka-arm64"
+tags = ["SyncRsTag"]
+[resource_sync.config]
+linked_repo = "komodo-ops"
+resource_path = [
+  "komodo/resources/src-osaka-arm64.toml"
+]
+managed = true
+match_tags = ["Osaka-arm64"]
+
+##
+
 [[variable]]
 name = "SECRET_ENV_PATH"
 value = "${PERIPHERY_ROOT_DIRECTORY}/repos/komodo-secrets/envs/${HOSTNAME}.env"

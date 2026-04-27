@@ -1,0 +1,6 @@
+[[server]]
+name = "osaka-arm64"
+tags = ["Osaka-arm64"]
+[server.config]
+address = "wss://10.1.130.150:38120"
+enabled = true
