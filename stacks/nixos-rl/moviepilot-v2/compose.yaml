@@ -1,0 +1,56 @@
+services:
+  moviepilot:
+    stdin_open: true
+    tty: true
+    #image: ghcr.io/jxxghp/moviepilot:2.9.9
+    image: channinghe/moviepilot:dev
+    container_name: moviepilot-v2
+    user: 0:${GID_NIXOS_RL}
+    #network_mode: host
+    networks:
+      - defualt
+    ports:
+      - 38296:3000
+      - 38297:3001
+    volumes:
+      - $PATH_MEDIA:$PATH_MEDIA
+      - $PATH_MEDIACENTRE:$PATH_MEDIACENTRE
+      - $DOCKER_DATA/moviepilot-v2/config:/config
+      - $DOCKER_DATA/moviepilot-v2/core:/moviepilot/.cache/ms-playwright
+    environment:
+      - NGINX_PORT=3000
+      - PORT=3001
+      - PUID=0
+      - PGID=${GID_NIXOS_RL}
+      - UMASK=000
+      - TZ=${LOCAL_TZ}
+      - SUPERUSER=ChanningHe
+    labels:
+      kop.poecilia.traefik.enable: true
+      kop.poecilia.traefik.http.routers.moviepilot.rule: Host(`mp.${DOMAIN_INT}`)
+      kop.poecilia.traefik.http.routers.moviepilot.entrypoints: websecure
+      kop.poecilia.traefik.http.services.moviepilot.loadbalancer.server.port: 38296
+      kop.namespace: poecilia
+    restart: always
+  qb-tmp:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qb-tmp
+    networks:
+      - defualt
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=${LOCAL_TZ}
+      - WEBUI_PORT=${MP_QB_PORT_WEB}
+      #- TORRENTING_PORT=6881
+    volumes:
+      - $DOCKER_DATA/moviepilot-v2/qb-tmp/config:/config
+      - $DOCKER_DATA/moviepilot-v2/qb-tmp/downloads:/downloads #optional
+    ports:
+      - ${MP_QB_PORT_WEB:-56922}:${MP_QB_PORT_WEB:-8080}
+      - ${MP_QB_PORT_BT:-6881}:${MP_QB_PORT_BT:-6881}/udp
+      # - 6881:6881
+      # - 6881:6881/udp
+    restart: unless-stopped
+networks:
+  defualt:

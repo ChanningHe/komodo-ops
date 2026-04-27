@@ -1,0 +1,127 @@
+[[repo]]
+name = "komodo-ops"
+tags = ["SyncRsTag"]
+[repo.config]
+git_provider = "10.1.10.8:53110"
+git_https = false
+git_account = "ChanningHe"
+repo = "channinghe/komodo-ops"
+
+##
+
+[[procedure]]
+name = "Global Auto Poll Daily"
+tags = ["SyncRsTag"]
+config.schedule_timezone = "Asia/Tokyo"
+config.schedule = "Every day at 09:30"
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+  { execution.type = "GlobalAutoUpdate", execution.params.skip_auto_update = false, enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "PullSecrets"
+tags = ["SyncRsTag"]
+config.schedule_timezone = "Asia/Tokyo"
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+  { execution.type = "BatchCloneRepo", execution.params.pattern = "komodo-secrets*", enabled = true }
+]
+
+##
+
+[[alerter]]
+name = "TG-Alerter"
+tags = ["SyncRsTag"]
+[alerter.config]
+enabled = true
+endpoint.type = "Custom"
+endpoint.params.url = "http://10.1.10.8:37120"
+
+##
+
+[[resource_sync]]
+name = "komodoconfig"
+tags = ["SyncRsTag"]
+[resource_sync.config]
+linked_repo = "komodo-ops"
+resource_path = ["komodo/resources/main.toml"]
+managed = true
+match_tags = ["SyncRsTag"]
+include_variables = true
+include_user_groups = true
+
+##
+
+[[resource_sync]]
+name = "src-kiwiserver"
+tags = ["SyncRsTag"]
+[resource_sync.config]
+linked_repo = "komodo-ops"
+resource_path = [
+  "komodo/resources/src-kiwiserver.toml"
+]
+managed = true
+match_tags = ["KiwiServer"]
+
+##
+
+[[resource_sync]]
+name = "src-nixos-rl"
+tags = ["SyncRsTag"]
+[resource_sync.config]
+linked_repo = "komodo-ops"
+resource_path = [
+  "komodo/resources/src-nixos-rl.toml"
+]
+managed = true
+match_tags = ["nixos-rl"]
+
+##
+
+[[resource_sync]]
+name = "src-poecilia"
+tags = ["SyncRsTag"]
+[resource_sync.config]
+linked_repo = "komodo-ops"
+resource_path = [
+  "komodo/resources/src-poecilia.toml"
+]
+managed = true
+match_tags = ["Poecilia"]
+
+##
+
+[[resource_sync]]
+name = "src-pseudomugil"
+tags = ["SyncRsTag"]
+[resource_sync.config]
+linked_repo = "komodo-ops"
+resource_path = [
+  "komodo/resources/src-pseudomugil.toml"
+]
+managed = true
+match_tags = ["Pseudomugil"]
+
+##
+
+[[variable]]
+name = "SECRET_ENV_PATH"
+value = "${PERIPHERY_ROOT_DIRECTORY}/repos/komodo-secrets/envs/${HOSTNAME}.env"
+is_secret = false
+
+##
+
+[[user_group]]
+name = "MonitorSvc"
+users = ["homepage"]
+all.Server = { level = "Read", specific = ["Logs", "Inspect", "Processes"] }
+all.Stack = { level = "Read", specific = ["Logs", "Inspect", "Processes"] }

@@ -1,0 +1,10 @@
+services:
+  fastapi-dls:
+    ports:
+      - 41443:443
+    image: makedie/fastapi-dls
+    restart: unless-stopped
+    environment:
+      - DLS_URL=${IP_NIXOS_RL}
+      - DLS_PORT=41443
+networks: {}

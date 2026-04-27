@@ -1,0 +1,199 @@
+[[server]]
+name = "poecilia"
+tags = ["Poecilia"]
+[server.config]
+address = "https://periphery:8120"
+enabled = true
+
+##
+
+[[stack]]
+name = "apprise"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/apprise"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["config", "pull", "up"]
+
+##
+
+[[stack]]
+name = "dockflare-controller"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/dockflare-controller"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "env-tester"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/env-tester"
+additional_env_files = [
+  { path = "compose.env", track = true }
+]
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "glance"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/glance"
+
+##
+
+[[stack]]
+name = "grafana"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/grafana"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "homepage"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/homepage"
+
+##
+
+[[stack]]
+name = "labelgate"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+destroy_before_deploy = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/labelgate"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "pgl-zfs"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/pgl-zfs"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "pocket-id-internal"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/pocket-id-internal"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "prometheus"
+tags = ["Poecilia", "admin_monitor"]
+[stack.config]
+server = "poecilia"
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/prometheus"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "traefik-dashboard"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/traefik-dashboard"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "traefik-poecilia"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/traefik-poecilia"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "unifi-controller"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/unifi-controller"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "uptime-kuma"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/uptime-kuma"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "waken"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/waken"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["config", "pull", "up"]
+
+##
+
+[[repo]]
+name = "komodo-secrets-Poecilia"
+tags = ["Poecilia"]
+[repo.config]
+server = "poecilia"
+git_provider = "git-local.homielab.cc:53110"
+git_https = false
+git_account = "ChanningHe"
+repo = "channinghe/komodo-secrets"
+path = "../komodo-secrets"

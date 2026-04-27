@@ -1,0 +1,98 @@
+services:
+  cc-svc:
+    image: ghcr.io/wei-shaw/claude-relay-service:latest
+    restart: unless-stopped
+    ports:
+      - 42841:3000
+    volumes:
+      - $DOCKER_DATA/cc-svc/crs/logs:/app/logs
+      - $DOCKER_DATA/cc-svc/crs/data:/app/data
+    env_file:
+      - ./compose.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_DB=${REDIS_DB:-0}
+      - REDIS_ENABLE_TLS=${REDIS_ENABLE_TLS:-}
+
+      - JWT_SECRET=${JWT_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - ADMIN_SESSION_TIMEOUT=${ADMIN_SESSION_TIMEOUT:-86400000}
+      - API_KEY_PREFIX=${API_KEY_PREFIX:-cr_}
+
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
+
+      - DEFAULT_PROXY_TIMEOUT=${DEFAULT_PROXY_TIMEOUT:-60000}
+      - MAX_PROXY_RETRIES=${MAX_PROXY_RETRIES:-3}
+
+      - DEFAULT_TOKEN_LIMIT=${DEFAULT_TOKEN_LIMIT:-1000000}
+
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_MAX_SIZE=${LOG_MAX_SIZE:-10m}
+      - LOG_MAX_FILES=${LOG_MAX_FILES:-5}
+
+      - CLEANUP_INTERVAL=${CLEANUP_INTERVAL:-3600000}
+      - TOKEN_USAGE_RETENTION=${TOKEN_USAGE_RETENTION:-2592000000}
+      - HEALTH_CHECK_INTERVAL=${HEALTH_CHECK_INTERVAL:-60000}
+      - TIMEZONE_OFFSET=8
+
+      - DEBUG=${DEBUG:-false}
+      - ENABLE_CORS=${ENABLE_CORS:-true}
+      - TRUST_PROXY=${TRUST_PROXY:-true}
+
+       # 🎯 Claude API 配置
+      - CLAUDE_API_URL=${CLAUDE_API_URL:-https://api.anthropic.com/v1/messages}
+      - CLAUDE_API_VERSION=${CLAUDE_API_VERSION:-2023-06-01}
+      - CLAUDE_BETA_HEADER=${CLAUDE_BETA_HEADER:-claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14}
+      
+      - USER_MANAGEMENT_ENABLED=true
+    networks:
+      - traefik_external_public_web
+      - claude-relay-network
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik_external_public_web
+      #-----
+      traefik.http.routers.crs.rule: Host(`crs.${DOMAIN_CC}`) && PathPrefix(`/api`)
+      traefik.http.routers.crs.entrypoints: https
+      traefik.http.services.crs.loadbalancer.server.port: 3000
+      traefik.http.routers.crs.service: crs
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 📊 Redis Database
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # expose:
+    #   - "6379"
+    volumes:
+      - $DOCKER_DATA/cc-svc/crs/redis:/data
+    command: redis-server --save 60 1 --appendonly yes --appendfsync everysec
+    networks:
+      - claude-relay-network
+    env_file:
+      - ./compose.env
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  claude-relay-network:
+    driver: bridge
+  traefik_external_public_web:
+    external: true

@@ -1,0 +1,16 @@
+version: '3.5'
+services:
+  drawio:
+    image: jgraph/drawio
+    container_name: drawio
+    restart: unless-stopped
+    ports:
+      - 36711:8080
+      #- 8443:8443
+    #environment:
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://domain:8080 || exit 1"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s

@@ -1,0 +1,59 @@
+services:
+  # create-directories:
+  #   image: alpine:latest
+  #   volumes:
+  #     - $DOCKER_DATA/nix-cache/storage:/storage
+  #   command: >
+  #     /bin/sh -c "
+  #       mkdir -m 0755 -p /storage/var &&
+  #       mkdir -m 0700 -p /storage/var/ncps &&
+  #       mkdir -m 0700 -p /storage/var/ncps/db
+  #     "
+  #   restart: "no"
+
+  migrate-database:
+    image: kalbasit/ncps:latest
+    volumes:
+      - $DOCKER_DATA/nix-cache/storage:/storage
+    command: >
+      /bin/dbmate --url=sqlite:/storage/var/ncps/db/db.sqlite migrate up
+    restart: "no"
+    networks:
+      - traefik_external_public_web
+      
+  ncps:
+    image: kalbasit/ncps:latest
+    depends_on:
+      migrate-database:
+        condition: service_completed_successfully
+    # ports:
+    #   - "8501:8501"
+    volumes:
+      - $DOCKER_DATA/nix-cache/storage:/storage
+    environment:
+      PROMETHEUS_ENABLED: true
+      # CACHE_LRU_SCHEDULE: "0 2 1 * *"
+      # CACHE_LRU_SCHEDULE_TZ: Asia/Tokyo
+    command: >
+      /bin/ncps serve
+      --cache-hostname=nix-cache.${DOMAIN_HSC}
+      --cache-data-path=/storage
+      --cache-database-url=sqlite:/storage/var/ncps/db/db.sqlite
+      --upstream-cache=https://cache.nixos.org
+      --upstream-public-key=cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+    networks:
+      - traefik_external_public_web
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik_external_public_web
+      #-----
+      traefik.http.routers.ncps.rule: Host(`nix-cache.${DOMAIN_HSC}`)
+      traefik.http.routers.ncps.entrypoints: https,cf
+      traefik.http.services.ncps.loadbalancer.server.port: 8501
+      traefik.http.routers.ncps.service: ncps
+
+    restart: unless-stopped
+networks:
+  traefik_external_public_web:
+    external: true

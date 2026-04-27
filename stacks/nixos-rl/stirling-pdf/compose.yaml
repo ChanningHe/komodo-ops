@@ -1,0 +1,30 @@
+services:
+  stirling-pdf:
+    image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+    container_name: stirling-pdf
+    restart: unless-stopped
+    networks:
+      - traefik_external_public_web
+    ports:
+      - '35037:8080'
+    volumes:
+      - $DOCKER_DATA/stirling-pdf/trainingData:/usr/share/tessdata # Required for extra OCR languages
+      - $DOCKER_DATA/stirling-pdf/extraConfigs:/configs
+      - $DOCKER_DATA/stirling-pdf/customFiles:/customFiles/
+      - $DOCKER_DATA/stirling-pdf/logs:/logs/
+      - $DOCKER_DATA/stirling-pdf/pipeline:/pipeline/
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - LANGS=zh_CN
+    labels:
+      # --- labelgate --- #
+      labelgate.tunnel.pdf.hostname: pdfttt.${DOMAIN_HSC}
+      labelgate.tunnel.pdf.service: http://stirling-pdf:8080
+      labelgate.tunnel.pdf.access: test-policy
+
+      labelgate.access.test-policy.policy.include.country: "JP"
+      labelgate.access.test-policy.policy.decision: "allow"
+
+networks:
+  traefik_external_public_web:
+    external: true

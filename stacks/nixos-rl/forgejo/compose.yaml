@@ -1,0 +1,58 @@
+
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:13
+    container_name: forgejo
+    environment:
+      - USER_UID=${UID_NIXOS_RL}
+      - USER_GID=${GID_NIXOS_RL}
+      - FORGEJO__database__DB_TYPE=${FORGEJO_DB_TYPE}
+      - FORGEJO__database__HOST=${FORGEJO_DB_HOST}
+      - FORGEJO__database__NAME=${FORGEJO_DB_NAME}
+      - FORGEJO__database__USER=${FORGEJO_DB_USER}
+      - FORGEJO__database__PASSWD=${FORGEJO_DB_PASSWORD}
+    restart: always
+    volumes:
+      - $DOCKER_DATA/forgejo/forgejo/data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "26510:3000"
+      - "26511:22"
+    depends_on:
+      - db
+    networks:
+      - traefik_external_public_web
+      - default
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik_external_public_web
+      #-----
+      traefik.http.routers.forgejo.rule: Host(`${DOMAIN_FORGEJO}`)
+      traefik.http.routers.forgejo.entrypoints: https
+      traefik.http.services.forgejo.loadbalancer.server.port: 3000
+      traefik.http.routers.forgejo.service: forgejo
+
+  db:
+    image: postgres:14
+    restart: always
+    command:
+      - "postgres"
+      - "-c"
+      - "full_page_writes=off"
+    environment:
+      - POSTGRES_USER=${FORGEJO_DB_USER}
+      - POSTGRES_PASSWORD=${FORGEJO_DB_PASSWORD}
+      - POSTGRES_DB=${FORGEJO_DB_NAME}
+    networks:
+      - default
+    volumes:
+      - $DOCKER_DATA/forgejo/postgres:/var/lib/postgresql/data
+
+
+networks:
+  traefik_external_public_web:
+    external: true
+  default:
+    external: false

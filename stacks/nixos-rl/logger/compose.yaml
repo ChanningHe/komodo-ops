@@ -1,0 +1,32 @@
+
+services:
+  promtail:
+    container_name: promtail
+    restart: unless-stopped
+    networks:
+      - default
+    ports:
+      - 39180:9080
+    volumes:
+      - $DOCKER_DATA/logger/promtail/config:/config
+      - /etc/localtime:/etc/localtime
+      - $DOCKER_DATA/traefik_external/traefik/log/:/var/log/traefik:ro
+    image: grafana/promtail:2.9.3
+    command: -config.file=/config/promtail-config.yaml
+  loki:
+    container_name: loki
+    restart: unless-stopped
+    user: 0:0
+    networks:
+      - default
+    volumes:
+      - $DOCKER_DATA/logger/loki/config:/config
+      - $DOCKER_DATA/logger/loki/tmp:/loki
+      - /etc/localtime:/etc/localtime
+    ports:
+      - 30372:3100
+    image: grafana/loki:2.9.3
+    command: -config.file=/config/loki-config.yaml
+
+networks:
+  default:

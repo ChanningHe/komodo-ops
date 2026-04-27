@@ -1,0 +1,204 @@
+services:
+  rybbit_backend:
+    image: ghcr.io/rybbit-io/rybbit-backend:latest
+    #image: ghcr.io/rybbit-io/rybbit-backend:v1.6.1
+    container_name: rybbit_backend
+    env_file:
+      - ./.env
+    ports:
+      - "${HOST_BACKEND_PORT}"
+    environment:
+      - NODE_ENV=production
+      - CLICKHOUSE_HOST=http://rybbit-clickhouse:8123
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB:-analytics}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-frog}
+      - POSTGRES_HOST=rybbit-postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-analytics}
+      - POSTGRES_USER=${POSTGRES_USER:-frog}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-frog}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BASE_URL=https://${BASE_URL}
+      - DISABLE_SIGNUP=${DISABLE_SIGNUP}
+      - DISABLE_TELEMETRY=${DISABLE_TELEMETRY}
+    depends_on:
+      rybbit-clickhouse:
+        condition: service_healthy
+      rybbit-postgres:
+        condition: service_started
+    networks:
+      - default
+      - traefik_external_public_web
+    labels:
+      - 'traefik.enable=true'
+      #-----external
+      - 'traefik.public=true'
+      - 'traefik.docker.network=traefik_external_public_web'
+      
+      - 'traefik.http.routers.rybbit-backend-external.rule=Host(`rybbit.homelabproject.cc`) && ((Method(`GET`) && (Path(`/api/script.js`) || Path(`/api/replay.js`) || PathRegexp(`^/api/site/[\\d\\w]+/tracking-config`))) || ((Method(`POST`) || Method(`OPTIONS`)) && (Path(`/api/track`) || PathPrefix(`/api/session-replay/record`))))'
+      - 'traefik.http.routers.rybbit-backend-external.entrypoints=cf'
+      - 'traefik.http.services.rybbit-backend-external.loadbalancer.server.port=3001'
+      - 'traefik.http.routers.rybbit-backend-external.service=rybbit-backend-external'
+      # #---cloudflared---
+      # - 'dockflare.enable=true'
+      # - 'dockflare.0.hostname=rybbit.homelabproject.cc'
+      # - 'dockflare.0.service=http://traefik:808'
+      # - 'dockflare.0.zonename=homelabproject.cc'
+      # - 'dockflare.access.group=public-default-bypass'
+      - 'labelgate.tunnel.rybbit.hostname=rybbit.homelabproject.cc'
+      - 'labelgate.tunnel.rybbit.service=http://traefik:808'
+
+      #-----local traefik
+      - 'kop.namespace=poecilia'
+      - 'kop.poecilia.traefik.enable=true'
+      - 'kop.poecilia.traefik.http.routers.rybbit-internal-backend.rule=Host(`rybbit.${DOMAIN_INT}`) && PathPrefix(`/api`)'
+      - 'kop.poecilia.traefik.http.services.rybbit-internal-backend.loadbalancer.server.port=23001'
+      - 'kop.poecilia.traefik.http.routers.rybbit-internal-backend.entrypoints=websecure'
+      - 'kop.poecilia.traefik.http.routers.rybbit-internal-backend.service=rybbit-internal-backend'
+      #----rybbit rewrite middlewares
+      - 'traefik.http.middlewares.rybbit-rewrite.plugin.rewrite-body.rewrites[0].regex=</head>'
+      - 'traefik.http.middlewares.rybbit-rewrite.plugin.rewrite-body.rewrites[0].replacement=<script defer data-site-id="9" src="https://rybbit.homelabproject.cc/api/script.js"></script></head>'
+
+    restart: unless-stopped
+
+  rybbit-client:
+    image: ghcr.io/rybbit-io/rybbit-client:latest
+    #image: ghcr.io/rybbit-io/rybbit-client:v1.6.1
+    container_name: rybbit-client
+    # env_file:
+    #   - ./.env
+    ports:
+      - "${HOST_CLIENT_PORT}"
+      #- 23002:3002
+    environment:
+      - NODE_ENV=production
+      - BASE_URL=https://${BASE_URL}
+      - NEXT_PUBLIC_BACKEND_URL=https://${BASE_URL}
+      - NEXT_PUBLIC_DISABLE_SIGNUP=${DISABLE_SIGNUP}
+    depends_on:
+      - rybbit_backend
+    networks:
+      - default
+    labels:
+      kop.poecilia.traefik.enable: true
+      #----local traefik
+      kop.namespace: poecilia
+      kop.poecilia.traefik.http.routers.rybbit-client-web.service: rybbit-client-web
+      kop.poecilia.traefik.http.routers.rybbit-client-web.rule: Host(`rybbit.${DOMAIN_INT}`)
+      kop.poecilia.traefik.http.services.rybbit-client-web.loadbalancer.server.port: 23002
+      kop.poecilia.traefik.http.routers.rybbit-client-web.entrypoints: websecure
+    restart: unless-stopped
+
+  #
+  # ----- DB Services --------
+  #
+
+  rybbit-clickhouse:
+    container_name: rybbit-clickhouse
+    image: clickhouse/clickhouse-server:25.4.2
+    networks:
+      - default
+    volumes:
+      - $DOCKER_DATA/rybbit/clickhouse-data:/var/lib/clickhouse
+      #- $DOCKER_DATA/rybbit/clickhouse-config:/etc/clickhouse-server/config.d
+    configs:
+      - source: clickhouse_network
+        target: /etc/clickhouse-server/config.d/network.xml
+      - source: clickhouse_json
+        target: /etc/clickhouse-server/config.d/enable_json.xml
+      - source: clickhouse_logging
+        target: /etc/clickhouse-server/config.d/logging_rules.xml
+      - source: clickhouse_user_logging
+        target: /etc/clickhouse-server/config.d/user_logging.xml
+    environment:
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB:-analytics}
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER:-default}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-frog}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8123/ping",
+        ]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  rybbit-postgres:
+    image: postgres:17.4
+    container_name: rybbit-postgres
+    env_file:
+      - ./.env
+    networks:
+      - default
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-frog}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-frog}
+      - POSTGRES_DB=${POSTGRES_DB:-analytics}
+    volumes:
+      - $DOCKER_DATA/rybbit/rybbit-postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+networks:
+  default:
+    #internal: true
+  traefik_external_public_web:
+    external: true
+
+configs:
+  clickhouse_network:
+    content: |
+      <clickhouse>
+          <listen_host>0.0.0.0</listen_host>
+      </clickhouse>
+
+  clickhouse_json:
+    content: |
+      <clickhouse>
+          <settings>
+              <enable_json_type>1</enable_json_type>
+          </settings>
+      </clickhouse>
+
+  clickhouse_logging:
+    content: |
+      <clickhouse>
+        <logger>
+            <level>warning</level>
+            <console>true</console>
+        </logger>
+        <query_thread_log remove="remove"/>
+        <query_log remove="remove"/>
+        <text_log remove="remove"/>
+        <trace_log remove="remove"/>
+        <metric_log remove="remove"/>
+        <asynchronous_metric_log remove="remove"/>
+        <session_log remove="remove"/>
+        <part_log remove="remove"/>
+        <latency_log remove="remove"/>
+        <processors_profile_log remove="remove"/>
+      </clickhouse>
+
+  clickhouse_user_logging:
+    content: |
+      <clickhouse>
+        <profiles>
+          <default>
+            <log_queries>0</log_queries>
+            <log_query_threads>0</log_query_threads>
+            <log_processors_profiles>0</log_processors_profiles>
+          </default>
+        </profiles>
+      </clickhouse>

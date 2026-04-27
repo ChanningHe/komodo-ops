@@ -1,0 +1,66 @@
+services:
+  hlpj-alist:
+    container_name: hlpj-alist
+    user: 0:${GID_NIXOS_RL}
+    ports:
+      - 10160:5244
+    environment:
+      - PUID=0
+      - PGID=${GID_NIXOS_RL}
+      - UMASK=022
+    volumes:
+      - $DOCKER_DATA/hlpj-alist/config:/opt/openlist/data
+      - ${PATH_SHARE}/alist:/sharefile
+      - ${PATH_SHARE}/foxipan:${PATH_SHARE}/foxipan
+      - $DOCKER_DATA/hlpj-alist/group-fake:/etc/group
+    restart: unless-stopped
+    image: openlistteam/openlist:latest
+    networks:
+      - traefik_external_public_web
+      - hlpj-alist
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik_external_public_web
+      #-----
+      traefik.http.routers.hlpj-alist.rule: Host(`${DOMAIN_HLPJ_ALIST}`)||Host(`${DOMAIN_HLPJ_FILE}`)
+      traefik.http.routers.hlpj-alist.entrypoints: cf
+      traefik.http.services.hlpj-alist.loadbalancer.server.port: 5244
+      traefik.http.routers.hlpj-alist.service: hlpj-alist
+      traefik.http.routers.hlpj-alist.middlewares: rybbit-hlpj-alist
+      #---rybbit rewrite
+      traefik.http.middlewares.rybbit-hlpj-alist.plugin.rewrite-body.rewrites[0].regex: </head>
+      traefik.http.middlewares.rybbit-hlpj-alist.plugin.rewrite-body.rewrites[0].replacement: <script defer data-site-id="2" src="https://rybbit.homelabproject.cc/api/script.js"></script></head>
+      # --- labelgate --- #
+      labelgate.tunnel.hlpj-file.hostname: ${DOMAIN_HLPJ_FILE}
+      labelgate.tunnel.hlpj-file.service: http://traefik:808
+      labelgate.tunnel.hlpj-alist.hostname: ${DOMAIN_HLPJ_ALIST}
+      labelgate.tunnel.hlpj-alist.service: http://traefik:808
+      #---direct
+      traefik.http.routers.hlpj-alist-local.rule: Host(`${DOMAIN_HLPJ}`)
+      traefik.http.routers.hlpj-alist-local.entrypoints: https
+      traefik.http.services.hlpj-alist-local.loadbalancer.server.port: 5244
+      traefik.http.routers.hlpj-alist-local.service: hlpj-alist-local
+  aria2-hlpj:
+    container_name: aria2-hlpj
+    networks:
+      - hlpj-alist
+    ports:
+      - ${HLPJ_LIST_ARIA2_RPC_PORT:-23102}:${HLPJ_LIST_ARIA2_RPC_PORT:-23102}
+      - ${HLPJ_LIST_ARIA2_LISTEN_PORT:-17668}:${HLPJ_LIST_ARIA2_LISTEN_PORT:-17668}
+      - ${HLPJ_LIST_ARIA2_LISTEN_PORT:-17668}:${HLPJ_LIST_ARIA2_LISTEN_PORT:-17668}/udp
+    environment:
+      - PUID=${UID_NIXOS_RL}
+      - PGID=${GID_NIXOS_RL}
+      - RPC_PORT=${HLPJ_LIST_ARIA2_RPC_PORT:-23102}
+      - LISTEN_PORT=${HLPJ_LIST_ARIA2_LISTEN_PORT:-17668}
+      - RPC_SECRET=${HLPJ_LIST_ARIA2_RPC_SECRET}
+    volumes:
+      - $DOCKER_DATA/hlpj-alist/aria2-config:/config
+      - $DOCKER_DATA/hlpj-alist/config/temp/aria2:/opt/openlist/data/temp/aria2
+    restart: unless-stopped
+    image: p3terx/aria2-pro:latest
+networks:
+  hlpj-alist:
+  traefik_external_public_web:
+    external: true

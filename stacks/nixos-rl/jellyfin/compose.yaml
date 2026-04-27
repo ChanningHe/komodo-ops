@@ -1,0 +1,56 @@
+services:
+  jellyfin:
+    #image: nyanmisaka/jellyfin:latest
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    user: 0:${GID_NIXOS_RL}
+    environment:
+      - PUID=${UID_NIXOS_RL}
+      - PGID=${GID_NIXOS_RL}
+      - TZ=${LOCAL_TZ}
+    volumes:
+      - type: bind
+        source: $DOCKER_DATA/jellyfin/config
+        target: /config
+        bind:
+          create_host_path: false
+      - $DOCKER_DATA/jellyfin/cache:/cache
+      - ${PATH_MEDIACENTRE}:${PATH_MEDIACENTRE}
+
+    ports:
+      - 8096:8096
+      - 8920:8920
+    restart: unless-stopped
+    # runtime: nvidia
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities:
+    #             - gpu
+    #           count: 1
+    #           driver: nvidia
+    networks:
+      -  traefik_external_public_web
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik_external_public_web
+      #-----
+      traefik.http.routers.jellyfin.rule: Host(`jf.${DOMAIN_HISC}`)
+      traefik.http.routers.jellyfin.entrypoints: cf
+      traefik.http.services.jellyfin.loadbalancer.server.port: 8096
+      traefik.http.routers.jellyfin.service: jellyfin
+      # #----
+      # dockflare.enable: "true"
+      # dockflare.0.hostname: jf.${DOMAIN_HISC}
+      # dockflare.0.service: http://traefik:808
+      # dockflare.0.zonename: ${DOMAIN_HISC}
+      # dockflare.access.group: public-default-bypass
+      #-----
+      traefik.http.routers.jellyfin-local.rule: Host(`jf.${DOMAIN_HISC}`)||Host(`jellyfin.${DOMAIN_HISC}`)||Host(`jellyfin.${DOMAIN_CC}`)
+      traefik.http.routers.jellyfin-local.entrypoints: https
+      traefik.http.routers.jellyfin-local.service: jellyfin
+networks:
+  traefik_external_public_web:
+    external: true

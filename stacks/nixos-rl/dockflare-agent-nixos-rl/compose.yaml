@@ -1,0 +1,43 @@
+name: dockflare-agent-nixos-rl
+services:
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:v0.4.1
+    container_name: docker-socket-proxy
+    restart: unless-stopped
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - CONTAINERS=1
+      - EVENTS=1
+      - NETWORKS=1
+      - IMAGES=1
+      - POST=1
+      - PING=1
+      - EXEC=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - default
+      
+  dockflare-agent:
+    image: alplat/dockflare-agent:latest
+    container_name: dockflare-agent
+    restart: unless-stopped
+    environment:
+      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:2025.10.0
+      - AGENT_DISPLAY_NAME=NIXOS-RL
+      - CLOUDFLARED_NETWORK_NAME=traefik_external_public_web
+      # -----
+      - DOCKER_HOST=${DOCKER_HOST:-tcp://docker-socket-proxy:2375}
+      - TZ=${LOCAL_TZ}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - DOCKFLARE_API_KEY=${DOCKFLARE_API_KEY}
+      - DOCKFLARE_MASTER_URL=${DOCKFLARE_MASTER_URL}
+    volumes:
+      - $DOCKER_DATA/dockflare-agent/data:/app/data
+    depends_on:
+      - docker-socket-proxy
+    networks:
+      - default
+
+networks:
+  default:

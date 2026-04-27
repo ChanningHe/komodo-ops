@@ -1,0 +1,16 @@
+version: "3.3"
+services:
+  iyuuplus-dev:
+    stdin_open: true
+    tty: true
+ #   user: 568:568
+    volumes:
+      - $DOCKER_DATA/iyuuplus/config:/iyuu
+      - $DOCKER_DATA/iyuuplus/data:/data
+      - $DOCKER_DATA/iyuuplus/fake-group:/etc/group
+    ports:
+      - 38780:8780
+    container_name: IYUUPlus
+    restart: always
+    image: iyuucn/iyuuplus-dev:latest
+    network_mode: bridge

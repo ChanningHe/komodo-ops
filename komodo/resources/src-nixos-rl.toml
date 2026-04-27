@@ -1,0 +1,503 @@
+[[server]]
+name = "nixos-rl"
+tags = ["nixos-rl"]
+[server.config]
+address = "ws://10.1.200.7:8120"
+enabled = true
+send_mem_alerts = false
+
+##
+
+[[stack]]
+name = "alist-mirrors"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+auto_update = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/alist-mirrors"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "aria2"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/aria2"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "attic-nix"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+auto_update = true
+auto_update_all_services = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/attic-nix"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "cadvisor"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/cadvisor"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "cc-svc"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/cc-svc"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "cinemore"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/cinemore"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "cloudreve"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/cloudreve"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "cookiecloud-app"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/cookiecloud-app"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "crowdsec"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/crowdsec"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "dockflare-agent-nixos-rl"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/dockflare-agent-nixos-rl"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "drawio"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/drawio"
+
+##
+
+[[stack]]
+name = "e5-renew"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/e5-renew"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "ems-pusher"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/ems-pusher"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["config", "pull", "up"]
+
+##
+
+[[stack]]
+name = "fastapi-dls"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/fastapi-dls"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "filebrowser"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/filebrowser"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "forgejo"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/forgejo"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "hlpj-alist"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/hlpj-alist"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "iyuuplus"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/iyuuplus"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "jellyfin"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/jellyfin"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "kms"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/kms"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "labelgate-agent-nixos-rl"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/labelgate-agent-nixos-rl"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "logger"
+tags = ["nixos-rl", "admin_monitor"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/logger"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "mirror-page"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/mirror-page"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "moviepilot-v2"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/moviepilot-v2"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "music-tag"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/music-tag"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "navidrome"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/navidrome"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "nginxwebui"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/nginxwebui"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "nix-cache"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/nix-cache"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+ignore_services = ["migrate-database"]
+
+##
+
+[[stack]]
+name = "nixosrl-kop-poecilia"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/nixosrl-kop-poecilia"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "open-webui"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/open-webui"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "pocket-id"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/pocket-id"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "public-svc-temp"
+template = true
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/public-svc-temp"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "qb"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/qb"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "qb-media"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/qb-media"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "registry-proxy"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/registry-proxy"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "rybbit"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/rybbit"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "safeline-waf"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/safeline-waf"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "stirling-pdf"
+tags = ["nixos-rl"]
+[stack.config]
+server = "nixos-rl"
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/stirling-pdf"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "subconverter"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/subconverter"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "tinyauth"
+tags = ["nixos-rl", "public-svc"]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/tinyauth"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "traefik_external"
+tags = [
+  "nixos-rl",
+  "public-svc",
+  "admin_monitor"
+]
+[stack.config]
+server = "nixos-rl"
+poll_for_updates = true
+destroy_before_deploy = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/nixos-rl/traefik_external"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[repo]]
+name = "komodo-secrets-nixos-rl"
+tags = ["nixos-rl"]
+[repo.config]
+server = "nixos-rl"
+git_provider = "git-local.homielab.cc:53110"
+git_https = false
+git_account = "ChanningHe"
+repo = "channinghe/komodo-secrets"
+path = "../komodo-secrets"

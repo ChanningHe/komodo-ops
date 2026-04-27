@@ -1,0 +1,21 @@
+services:
+  technitium-dns:
+    container_name: technitium-dns
+    hostname: technitium-dns
+    network_mode: host
+    image: technitium/dns-server:latest
+    # For DHCP deployments, use "host" network mode and remove all the port mappings, including the ports array by commenting them
+    # network_mode: "host"
+    ports:
+      - 5380:5380/tcp #DNS web console (HTTP)
+      # - "53443:53443/tcp" #DNS web console (HTTPS)
+      - 53:53/udp #DNS service
+      - 53:53/tcp #DNS service
+      # - "67:67/udp" #DHCP service
+    environment:
+      - DNS_SERVER_DOMAIN=ns1.local.homielab.cc
+    volumes:
+      - $DOCKER_DATA/technitium-dns/config:/etc/dns
+    restart: unless-stopped
+    #sysctls:
+    #  - net.ipv4.ip_local_port_range=1024 65000

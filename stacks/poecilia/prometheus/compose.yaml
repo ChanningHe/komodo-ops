@@ -1,0 +1,22 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 58474:9090
+    user: 0:0
+    volumes:
+      - $DOCKER_DATA/prometheus/config:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/etc/prometheus/data'
+    restart: always
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.prometheus.rule: Host(`prometheus.${DOMAIN_INT}`)
+      traefik.http.services.prometheus.loadbalancer.server.port: 9090
+      traefik.docker.network: traefik-poecilia_local_web
+networks:
+  traefik-poecilia_local_web:
+    external: true

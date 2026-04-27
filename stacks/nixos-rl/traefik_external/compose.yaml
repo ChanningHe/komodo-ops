@@ -1,0 +1,190 @@
+services:
+  traefik:
+    image: "traefik:v3.6"
+    restart: always
+    networks:
+      - public_web
+      - traefik_ex_admin
+      - crowdsec_net
+    depends_on:
+      - traefik-external-redis
+    command: --api.insecure=true --providers.docker
+    env_file: ./.env
+    ports:
+      #- "0.0.0.0:80:80"
+      #- "[::]:80:80"
+      - "0.0.0.0:443:443"
+      - "[::]:443:443"
+      - "31080:8080"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - $DOCKER_DATA/traefik_external/traefik/letsencrypt:/letsencrypt
+      - $DOCKER_DATA/traefik_external/traefik/certificates:/certificates
+      - $DOCKER_DATA/traefik_external/traefik/log:/var/log/traefik:rw
+      - $DOCKER_DATA/traefik_external/traefik/static_config:/etc/traefik:rw
+      - $DOCKER_DATA/traefik_external/traefik/dynamic_config:/config/dynamic:rw
+      - $DOCKER_DATA/traefik_external/traefik/ban.html:/config/ban.html:ro
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      kop.poecilia.traefik.enable: true
+      kop.poecilia.traefik.http.routers.traefik-dashboard-external.rule: Host(`traefik-public.${DOMAIN_INT}`)
+      kop.poecilia.traefik.http.routers.traefik-dashboard-external.entrypoints: websecure
+      kop.poecilia.traefik.http.services.traefik-dashboard-external.loadbalancer.server.port: 31080
+      kop.poecilia.traefik.http.routers.traefik-dashboard-external.service: traefik-dashboard-external
+      kop.namespace: poecilia
+      #homepage settings
+      homepage.group: Monitoring
+      homepage.name: Traefik (Public)
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/traefik.png
+      homepage.href: "https://traefik-public.${DOMAIN_INT}"
+      homepage.widget.type: traefik
+      homepage.widget.url: https://traefik-public.${DOMAIN_INT}
+
+  logrotate:
+    image: vegardit/traefik-logrotate:latest
+    network_mode: none
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw # required to send USR1 signal to Traefik after log rotation
+      - $DOCKER_DATA/traefik_external/traefik/log:/var/log/traefik:rw # folder containing access.log file
+    environment:
+      TZ: "${LOCAL_TZ}"
+      # all environment variables are optional and show the default values:
+      LOGROTATE_LOGS: "/var/log/traefik/*.log" # log files to rotate, directory must match volume mount
+      LOGROTATE_TRIGGER_INTERVAL: monthly # rotate daily, must be one of: daily, weekly, monthly, yearly
+      LOGROTATE_TRIGGER_SIZE: 50M # rotate if log file size reaches 50MB
+      LOGROTATE_MAX_BACKUPS: 7 # keep 14 backup copies per rotated log file
+      LOGROTATE_START_INDEX: 1 # first rotated file is called access.1.log
+      LOGROTATE_FILE_MODE: 0644 # file mode of the rotated file
+      LOGROTATE_FILE_USER: root # owning user of the rotated file
+      LOGROTATE_FILE_GROUP: root # owning group of the rotated file
+      CRON_SCHEDULE: "* * * * *"
+      CRON_LOG_LEVEL: 8 # see https://unix.stackexchange.com/a/414010/378036
+      # command to determine the id of the container running Traefik:
+      TRAEFIK_CONTAINER_ID_COMMAND: docker ps --no-trunc --quiet --filter label=org.opencontainers.image.title=Traefik
+
+  traefik-access-logs:
+    image: alpine
+    container_name: traefik-external-access-logs
+    volumes:
+      - $DOCKER_DATA/traefik_external/traefik/log:/var/log:ro
+    command: >
+      sh -c "tail -F /var/log/access.log"
+    network_mode: none
+    restart: unless-stopped
+
+  traefik-external-redis:
+    restart: always
+    image: redis:7-alpine
+    container_name: traefik-external-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - traefik_ex_admin
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+    volumes:
+      - $DOCKER_DATA/traefik_external/redis:/data
+
+  cloudflare_tunnel:
+    image: cloudflare/cloudflared:2026.2.0
+    restart: unless-stopped
+    command: tunnel run --token ${TRAEFIK_EX_CFTUNNEL_PUBLIC_TOKEN} --protocol http2
+    #command: tunnel run
+    # environment:
+    #     TUNNEL_METRICS: 0.0.0.0:20241
+    #     TUNNEL_TOKEN: ${TRAEFIK_EX_CFTUNNEL_PUBLIC_TOKEN}
+    networks:
+        - public_web
+
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:latest
+    container_name: traefik-ext-socket-proxy
+    networks:
+      - crowdsec_net
+      - kop_net
+    environment:
+      - CONTAINERS=1
+      - POST=0
+      - NODE=1
+      - INFO=1
+      #- PING=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 2375:2375
+    restart: always
+    read_only: true
+    tmpfs:
+      - /run
+
+  # newt:
+  #   image: fosrl/newt:latest
+  #   container_name: newt
+  #   restart: unless-stopped
+  #   env_file: ./.env
+  #   environment:
+  #     - DOCKER_SOCKET=unix:///var/run/docker.sock
+  #   networks:
+  #     - public_web
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  # traefik-kop-local:
+  #   #image: "ghcr.io/jittering/traefik-kop:latest"
+  #   image: channinghe/traefik-kop:test
+  #   restart: unless-stopped
+  #   env_file: ./.env
+  #   environment:
+  #     - "REDIS_ADDR=${IP_POECILIA}:6379"
+  #     - "DOCKER_HOST=tcp://socket-proxy:2375"
+  #     - "KOP_HOSTNAME=${HOSTNAME:-generic}-local"
+  #     - "BIND_IP=${IP_NIXOS_RL}"
+  #     - "NAMESPACE=poecilia"
+  #   depends_on:
+  #     - socket-proxy
+  #   networks:
+  #     - kop_net
+  
+  traefik-log-dashboard-agent-external:
+    image: hhftechnology/traefik-log-dashboard-agent:latest
+    container_name: traefik-log-dashboard-agent-external
+    restart: always
+    ports:
+      - "53948:5000"
+    volumes:
+      # traefik log
+      - $DOCKER_DATA/traefik_external/traefik/log:/var/log:ro
+      # agent data
+      - $DOCKER_DATA/traefik_external/traefik-log-agent-external/data/geoip:/geoip:ro
+      - $DOCKER_DATA/traefik_external/traefik-log-agent-external/data/positions-prod:/data
+    environment:
+      - TRAEFIK_LOG_DASHBOARD_ACCESS_PATH=/var/log/access.log
+      - TRAEFIK_LOG_DASHBOARD_GEOIP_ENABLED=true
+      - TRAEFIK_LOG_DASHBOARD_GEOIP_CITY_DB=/geoip/GeoLite2-City.mmdb
+      - TRAEFIK_LOG_DASHBOARD_GEOIP_COUNTRY_DB=/geoip/GeoLite2-Country.mmdb
+    labels:
+      kop.namespace: poecilia
+      kop.poecilia.traefik.enable: true
+      kop.poecilia.traefik.http.routers.traefik-log-agent.rule: Host(`traefik-log-agent.${DOMAIN_INT}`)
+      kop.poecilia.traefik.http.routers.traefik-log-agent.entrypoints: websecure
+      kop.poecilia.traefik.http.services.traefik-log-agent.loadbalancer.server.port: 53948
+
+networks:
+  traefik_ex_admin:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.97.0.0/24
+  public_web:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.99.0.0/16
+  crowdsec_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 171.25.0.0/24
+  kop_net:

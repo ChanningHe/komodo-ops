@@ -1,0 +1,80 @@
+services:
+  cloudreve:
+    image: cloudreve/cloudreve:latest
+    container_name: cloudreve-backend
+    depends_on:
+      - cloudreve-postgresql
+      - cloudreve-redis
+    restart: always
+    networks:
+      - cloudreve
+      - traefik_external_public_web
+    ports:
+      - 45212:5212
+    environment:
+      - CR_CONF_Database.Type=${CR_DB_TYPE}
+      - CR_CONF_Database.Host=${CR_DB_HOST}
+      - CR_CONF_Database.User=${CR_DB_USER}
+      - CR_CONF_Database.Name=${CR_DB_NAME}
+      - CR_CONF_Database.Password=${CR_DB_PASSWORD}
+      - CR_CONF_Database.Port=${CR_DB_PORT}
+      - CR_CONF_Redis.Server=${CR_REDIS_HOST}
+    volumes:
+      - $DOCKER_DATA/cloudreve/cloudreve-backend:/cloudreve/data
+      - ${PATH_SHARE}/cloudreve:${PATH_SHARE}/cloudreve
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik_external_public_web
+      #-----
+      traefik.http.routers.cloudreve.rule: Host(`${DOMAIN_CLOUDREVE}`)
+      traefik.http.routers.cloudreve.entrypoints: cf
+      traefik.http.services.cloudreve.loadbalancer.server.port: 5212
+      traefik.http.routers.cloudreve.service: cloudreve
+      traefik.http.routers.cloudreve.middlewares: rybbit-cloudreve
+      # #---cloudflared---
+      # dockflare.enable: "true"
+      # dockflare.0.hostname: ${DOMAIN_CLOUDREVE}
+      # dockflare.0.service: http://traefik:808
+      # dockflare.0.zonename: ${DOMAIN_CC}
+      # dockflare.access.group: Personal
+      # --- labelgate --- #
+      labelgate.tunnel.cloudreve.hostname: ${DOMAIN_CLOUDREVE}
+      labelgate.tunnel.cloudreve.service: http://traefik:808
+      labelgate.tunnel.cloudreve.access: jp-only
+      labelgate.tunnel.cloudreve.cleanup: "true"
+      
+      labelgate.access.jp-only.policy.include.country: "JP"
+      labelgate.access.jp-only.policy.decision: "bypass"
+
+      #---rybbit rewrite
+      traefik.http.middlewares.rybbit-cloudreve.plugin.rewrite-body.rewrites[0].regex: </head>
+      traefik.http.middlewares.rybbit-cloudreve.plugin.rewrite-body.rewrites[0].replacement: <script defer data-site-id="74bb49c134dd" src="https://rybbit.homelabproject.cc/api/script.js"></script></head>
+
+  cloudreve-postgresql:
+    image: postgres:17
+    container_name: cloudreve-postgresql
+    restart: always
+    networks:
+      - cloudreve
+    environment:
+      - POSTGRES_USER=${CR_DB_USER}
+      - POSTGRES_DB=${CR_DB_NAME}
+      - POSTGRES_PASSWORD=${CR_DB_PASSWORD}
+      #- POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - $DOCKER_DATA/cloudreve/postgresql:/var/lib/postgresql/data
+
+  cloudreve-redis:
+    image: redis:latest
+    restart: always
+    container_name: cloudreve-redis
+    networks:
+      - cloudreve
+    volumes:
+      - $DOCKER_DATA/cloudreve/redis:/data
+
+networks:
+  cloudreve:
+  traefik_external_public_web:
+    external: true

@@ -1,0 +1,27 @@
+name: Mirror to GitHub
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: mirror
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push mirror
+        env:
+          BACKUP_REPO_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
+          BACKUP_REPO_URL: ${{ secrets.BACKUP_REPO_URL }}
+        run: |
+          git remote add mirror "https://${BACKUP_REPO_TOKEN}@${BACKUP_REPO_URL#https://}"
+          git push --mirror mirror

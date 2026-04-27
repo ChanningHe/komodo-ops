@@ -1,0 +1,9 @@
+services:
+  ts-graphite-prometheus:
+    image: ghcr.io/supporterino/truenas-graphite-to-prometheus
+    restart: unless-stopped
+    ports:
+      #graphite input
+      - 39109:9109
+      #prometheus output
+      - 39108:9108

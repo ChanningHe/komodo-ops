@@ -1,0 +1,111 @@
+services:
+  # Next.js application
+  # nextjs:
+  #   container_name: nextjs
+  #   restart: unless-stopped
+  #   image: channinghe/mirror-page:myhomelab
+  #   environment:
+  #     # Site configuration
+  #     - NEXT_PUBLIC_SITE_TITLE=HomeLab Project's Mirrors
+  #     - NEXT_PUBLIC_SITE_SUBTITLE=Self-hosted unreliable apt mirrors
+  #     # Path to mirrors directory inside container
+  #     - MIRRORS_PATH=/data/mirrors
+  #     # README update interval (30 seconds)
+  #     - NEXT_PUBLIC_README_UPDATE_INTERVAL=30000
+  #   volumes:
+  #     # Mount mirrors directory (read-only)
+  #     - /mnt/Kiwi/Mirror/mirrors-data:/data/mirrors:ro
+  #   networks:
+  #     - mirror-network
+
+  # Caddy reverse proxy and static file server
+  caddy:
+    image: caddy:alpine
+    container_name: mirror-page-caddy
+    restart: unless-stopped
+    ports:
+      - "35881:80"
+    volumes:
+      # Mount mirrors directory (read-only)
+      - /mnt/Kiwi/Mirror/mirrors-data:/data/mirrors:ro
+    configs:
+      - source: caddy_config
+        target: /etc/caddy/Caddyfile
+    networks:
+      - mirror-network
+      - traefik_external_public_web
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik_external_public_web
+      #-----
+      traefik.http.routers.mirrors-nginx.rule: Host(`${DOMAIN_MIRRORS}`)
+      traefik.http.routers.mirrors-nginx.entrypoints: cf
+      traefik.http.services.mirrors-nginx.loadbalancer.server.port: 80
+      traefik.http.routers.mirrors-nginx.service: mirrors-nginx
+      traefik.http.routers.mirrors-nginx.middlewares: rybbit-mirrors-nginx
+      #---rybbit rewrite
+      traefik.http.middlewares.rybbit-mirrors-nginx.plugin.rewrite-body.rewrites[0].regex: </head>
+      traefik.http.middlewares.rybbit-mirrors-nginx.plugin.rewrite-body.rewrites[0].replacement: <script defer data-site-id="4" src="https://rybbit.homelabproject.cc/api/script.js"></script></head>
+      # #--
+      # cloudflare.tunnel.enable: "true"
+      # cloudflare.tunnel.0.hostname: ${DOMAIN_MIRRORS}
+      # cloudflare.tunnel.0.service: http://traefik:808
+      # cloudflare.tunnel.0.zonename: ${DOMAIN_HLC}
+      # --- labelgate --- #
+      labelgate.tunnel.mirrors-page.hostname: ${DOMAIN_MIRRORS}
+      labelgate.tunnel.mirrors-page.service: http://traefik:808
+      #-----
+      traefik.http.routers.mirrors-nginx-local.rule: Host(`mirrors.${DOMAIN_INT}`)
+      traefik.http.routers.mirrors-nginx-local.entrypoints: https
+      traefik.http.routers.mirrors-nginx-local.service: mirrors-nginx
+
+
+networks:
+  mirror-network:
+    driver: bridge
+  traefik_external_public_web:
+    external: true
+
+configs:
+  caddy_config:
+    content: |
+      # :80 {
+      #     # Handle Next.js routes
+      #     @nextjs {
+      #         path /api/* /_next/* /favicon.svg /robots.txt /
+      #     }
+      #     reverse_proxy @nextjs nextjs:3000
+
+      #     # Everything else serves static mirror files
+      #     root * /data/mirrors
+      #     file_server browse {
+      #         hide .git
+      #     }
+      # }
+      :80 {
+          handle /_next/* {
+              root * /data/mirrors/index
+              file_server
+          }
+          handle /favicon.svg {
+              root * /data/mirrors/index
+              file_server
+          }
+          # Serve the index page
+          handle / {
+              root * /data/mirrors/index
+              try_files /index.html
+              file_server
+          }
+          # Serve the index page for explicit index.html request
+          handle /index.html {
+              root * /data/mirrors/index
+              file_server
+          }
+          # Everything else serves static mirror files
+          root * /data/mirrors
+          file_server browse {
+              hide .git
+          }
+      }

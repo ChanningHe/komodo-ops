@@ -1,0 +1,39 @@
+services:
+  ffforge:
+    container_name: ffforge
+    image: ghcr.io/channinghe/ffforge:dev-0.0.2
+    restart: unless-stopped
+    ports:
+      - "38110:8080"
+    volumes:
+      - $PATH_MEDIACENTRE:/data
+      # Mount output directory
+      - $DOCKER_DATA/ffforge/output:/output
+      # Mount config directory
+      - $DOCKER_DATA/ffforge/config:/app/config
+    environment:
+      - PORT=8080
+      # Paths
+      - DATA_PATH=/data
+      - OUTPUT_PATH=/output
+      - CONFIG_PATH=/app/config
+      - DATABASE_PATH=/app/config/database/ffforge.db
+      - CORS_ORIGINS=http://localhost:3000
+    # ============ intel gpu configuration ============
+    # if you want to use Intel GPU, uncomment the following:
+    # devices:
+    #   - /dev/dri/renderD128:/dev/dri/renderD128
+    
+    # ============ nvidia gpu configuration ============
+    # if you want to use NVIDIA GPU, uncomment the following:
+    # runtime: nvidia
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+networks:
+  ffweb-network:
+    driver: bridge

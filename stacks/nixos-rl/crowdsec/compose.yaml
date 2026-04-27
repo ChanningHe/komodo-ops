@@ -1,0 +1,24 @@
+services:
+  crowdsec:
+    image: "crowdsecurity/crowdsec:latest"
+    container_name: crowdsec
+    networks:
+      - traefik_external_crowdsec_net
+    environment:
+      - "COLLECTIONS=crowdsecurity/linux crowdsecurity/traefik crowdsecurity/whitelist-good-actors crowdsecurity/appsec-crs crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
+      - "CUSTOM_HOSTNAME=crowdsec"
+      - "GID=${GID_NIXOS_RL}"
+      - "LEVEL_INFO=true"
+      - "TZ=${LOCAL_TZ}"
+    ports:
+      - "4242:4242/tcp"
+      - "6060:6060/tcp"
+      - "48387:8080/tcp"
+    restart: "always"
+    volumes:
+      - $DOCKER_DATA/crowdsec/config:/etc/crowdsec
+      - $DOCKER_DATA/crowdsec/data:/var/lib/crowdsec/data
+      - $DOCKER_DATA/crowdsec/logs:/var/log/crowdsec
+networks:
+  traefik_external_crowdsec_net:
+    external: true

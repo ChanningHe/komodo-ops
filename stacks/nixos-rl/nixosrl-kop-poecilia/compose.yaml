@@ -1,0 +1,22 @@
+services:
+  traefik-kop-local:
+    image: "ghcr.io/jittering/traefik-kop:latest"
+    #image: channinghe/traefik-kop:latest
+    #image: ghcr.io/jittering/traefik-kop:0.17.1-next-21ade83-amd64
+    restart: unless-stopped
+    environment:
+      - "REDIS_ADDR=${IP_POECILIA}:6379"
+      #- "DOCKER_HOST=tcp://socket-proxy:2375"
+      - "KOP_HOSTNAME=nixosrl-local"
+      - "BIND_IP=${IP_NIXOS_RL}"
+      - "NAMESPACE=poecilia"
+      - "DOCKER_PREFIX=kop.poecilia"
+      #- "DEBUG=true"
+      #- "REDIS_TTL=180"
+      #- "KOP_POLL_INTERVAL=30"
+    # depends_on:
+    #   - socket-proxy
+    # networks:
+    #   - kop_net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

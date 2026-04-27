@@ -1,0 +1,9 @@
+.DS_Store
+*.decrypted.env*
+
+# Private secrets patterns (contains your domain names etc.)
+.githooks/secrets-patterns
+.direnv/
+
+# Binaries
+# bin/

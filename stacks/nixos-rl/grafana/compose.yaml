@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+  grafana-oss:
+    ports:
+      - 38533:3000
+    container_name: grafana
+    restart: always
+    user: 0:0
+    volumes:
+      - ./grafana-storage:/var/lib/grafana
+    image: grafana/grafana-oss
+volumes:
+  grafana-storage: {}
+networks: {}

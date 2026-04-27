@@ -1,0 +1,34 @@
+services:
+  komodo-apprise-alerter:
+    image: foxxmd/komodo-apprise-alerter:latest
+    restart: unless-stopped
+    networks:
+      - apprise
+    depends_on:
+      - apprise-api
+    ports:
+      - "37120:7000"
+    environment:
+      - TZ=${LOCAL_TZ}
+      - APPRISE_ATTACH_SIZE=0 #optional
+      - APPRISE_HOST=apprise-api:8000
+      - APPRISE_STATELESS_URLS=${APPRISE_TG_URL}
+      - APPRISE_PERSISTENT_KEYS=${APPRISE_PERSISTENT_KEYS}
+  apprise-api:
+    image: lscr.io/linuxserver/apprise-api:latest
+    container_name: apprise-api
+    networks:
+      - apprise
+    environment:
+      - PUID=${PM_RT_UID}
+      - PGID=${PM_RT_GID}
+      - TZ=${LOCAL_TZ}
+      - APPRISE_ATTACH_SIZE=0 #optional
+    volumes:
+      - $DOCKER_DATA/apprise/apprise-api/config:/config
+      #- $DOCKER_DATA/apprise/apprise-api/attachments:/attachments #optional
+    ports:
+      - 38030:8000
+    restart: unless-stopped
+networks:
+  apprise:

@@ -1,0 +1,8 @@
+version: "3.3"
+services:
+  map-e-ca:
+    ports:
+      - 38184:80
+    container_name: map-e-cal
+    image: map-e-cal
+networks: {}

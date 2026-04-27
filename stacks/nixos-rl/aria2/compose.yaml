@@ -1,0 +1,19 @@
+services:
+  aria2:
+    container_name: aria2
+    ports:
+      - ${ARIA2_LISTEN_PORT:-16888}:${ARIA2_LISTEN_PORT:-16888}
+      - ${ARIA2_LISTEN_PORT:-16888}:${ARIA2_LISTEN_PORT:-16888}/udp
+      - 16800:16800
+    environment:
+      - PUID=0
+      - PGID=0
+      - RPC_PORT=${ARIA2_RPC_PORT}
+      - LISTEN_PORT=${ARIA2_LISTEN_PORT:-16888}
+      - RPC_SECRET=${ARIA2_RPC_SECRET}
+    volumes:
+      - $DOCKER_DATA/aria2:/config
+      - $PATH_MEDIA/downloads:/downloads
+    restart: unless-stopped
+    image: p3terx/aria2-pro:latest
+    network_mode: bridge

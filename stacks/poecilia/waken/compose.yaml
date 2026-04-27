@@ -1,0 +1,11 @@
+services:
+  waken:
+    image: ghcr.io/channinghe/waken:latest
+    network_mode: host
+    volumes:
+      - $DOCKER_DATA/waken/config:/app/waken/config
+    environment:
+      - WOL_PORT=19527
+      #- WOL_AUTH_TOKEN=your-secret-token
+      #- WOL_DB_PATH=/app/waken/config/wol.db
+    restart: unless-stopped

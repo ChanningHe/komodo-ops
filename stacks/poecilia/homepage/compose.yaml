@@ -1,0 +1,19 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS=*
+      # - PUID=${PM_RT_UID}
+      # - PGID=${PM_RT_GID}
+    volumes:
+      - $DOCKER_DATA/homepage/config:/app/config
+      - $DOCKER_DATA/homepage/icons:/app/public/icons
+      - $DOCKER_DATA/homepage/images:/app/public/images
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 53300:3000
+    restart: unless-stopped
+    # labels:
+    #   - diun.enable=true
+networks: {}

@@ -1,0 +1,57 @@
+services:
+  atticd:
+    container_name: atticd
+    image: ghcr.io/zhaofengli/attic:latest
+    command: ["-f", "/attic/server.toml"]
+    restart: unless-stopped
+    # ports:
+    #   - 8080:8080
+    networks:
+      - traefik_external_public_web
+      - default
+    volumes:
+      - $DOCKER_DATA/attic-nix/atticd/server.toml:/attic/server.toml
+      - $DOCKER_DATA/attic-nix/atticd/attic-data:/attic/storage
+    depends_on:
+      attic-postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://atticd:8080 || exit 1",
+        ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 15s
+    env_file:
+      - ./compose.env
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.http.routers.atticd.rule: Host(`attic.${DOMAIN_HSC}`)
+      traefik.http.services.atticd.loadbalancer.server.port: 8080
+      traefik.http.routers.atticd.service: atticd
+      traefik.docker.network: traefik_external_public_web
+      traefik.http.routers.atticd.entrypoints: https
+
+  attic-postgres:
+    container_name: attic-postgres
+    image: postgres:17.6-alpine
+    restart: unless-stopped
+    networks:
+      - default
+    volumes:
+      - $DOCKER_DATA/attic-nix/postgres-data:/var/lib/postgresql/data
+    env_file:
+      - ./compose.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+networks:
+  traefik_external_public_web:
+    external: true
+  default:

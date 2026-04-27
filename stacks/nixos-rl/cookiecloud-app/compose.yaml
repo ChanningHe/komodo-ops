@@ -1,0 +1,10 @@
+services:
+  cookiecloud:
+    image: easychen/cookiecloud:latest
+    container_name: cookiecloud-app
+    restart: always
+    volumes:
+      - $DOCKER_DATA/cookiecloud-data:/data/api/data
+    ports:
+      - 41088:8088
+networks: {}

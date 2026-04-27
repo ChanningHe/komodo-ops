@@ -1,0 +1,52 @@
+name: dockflare-controller
+services:
+  # dockflare-init:
+  #   image: alpine:3.20
+  #   command: ["sh", "-c", "chown -R 65532:65532 /app/data"]
+  #   volumes:
+  #     - $DOCKER_DATA/dockflare-controller/data:/app/data
+  #   networks:
+  #     - dockflare-internal
+  #   restart: "no"
+
+  dockflare:
+    image: alplat/dockflare:stable
+    container_name: dockflare
+    restart: unless-stopped
+    ports:
+      - "47227:5000"
+    volumes:
+      - $DOCKER_DATA/dockflare-controller/data:/app/data
+    environment:
+      #- USE_EXTERNAL_CLOUDFLARED=true
+      - REDIS_URL=redis://redis:6379/0
+      - REDIS_DB_INDEX=0  # Optional: specify Redis database index (0-15) for isolation from other containers
+    depends_on:
+      #dockflare-init:
+      #  condition: service_completed_successfully
+      redis:
+        condition: service_started
+    networks:
+      - dockflare-internal
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.dockflare.rule: Host(`dockflare.${DOMAIN_INT}`)
+      traefik.http.services.dockflare.loadbalancer.server.port: 5000
+      traefik.docker.network: traefik-poecilia_local_web
+
+  redis:
+    image: redis:7-alpine
+    container_name: dockflare-redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    volumes:
+      - $DOCKER_DATA/dockflare-controller/redis:/data
+    networks:
+      - dockflare-internal
+
+networks:
+  dockflare-internal:
+    name: dockflare-internal
+  traefik-poecilia_local_web:
+    external: true

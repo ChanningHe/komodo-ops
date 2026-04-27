@@ -1,0 +1,55 @@
+[[server]]
+name = "Pseudomugil"
+tags = ["Pseudomugil"]
+[server.config]
+address = "ws://10.177.177.200:58120"
+enabled = true
+
+##
+
+[[stack]]
+name = "aria2-p9l"
+tags = ["Pseudomugil"]
+[stack.config]
+server = "Pseudomugil"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/pseudomugil/aria2"
+additional_env_files = [
+  { path = "/tmp/.sops-test.env", track = false }
+]
+pre_deploy.command = """
+#TMPENV="/dev/shm/.sops_env_$$.env"
+# SOPS_AGE_KEY_FILE=/var/lib/komodo-periphery/keys.txt sops -d ../.pseudomugil.encrypted.env > "$TMPENV"
+echo "hello=changeme" >> /tmp/.sops-test.env
+#SOPS_AGE_KEY_FILE=/var/lib/komodo-periphery/keys.txt sops decrypt -i .pseudomugil.env
+"""
+post_deploy.command = """
+ #rm -f "$TMPENV"
+#SOPS_AGE_KEY_FILE=/var/lib/komodo-periphery/keys.txt sops encrypt -i .pseudomugil.env
+#SOPS_AGE_KEY_FILE=/var/lib/komodo-periphery/keys.txt sops exec-env ../.pseudomugil.encrypted.env '[[COMPOSE_COMMAND]]'
+"""
+
+##
+
+[[stack]]
+name = "ffforge"
+tags = ["Pseudomugil"]
+[stack.config]
+server = "Pseudomugil"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/pseudomugil/ffforge"
+
+##
+
+[[repo]]
+name = "komodo-secrets-Pseudomugil"
+tags = ["Pseudomugil"]
+[repo.config]
+server = "Pseudomugil"
+git_provider = "git-local.homielab.cc:53110"
+git_https = false
+git_account = "ChanningHe"
+repo = "channinghe/komodo-secrets"
+path = "../komodo-secrets"

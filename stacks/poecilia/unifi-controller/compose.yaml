@@ -1,0 +1,59 @@
+services:
+  unifi:
+    image: ghcr.io/goofball222/unifi
+    container_name: unifi
+    # networks:
+    #   - unifi-br
+    restart: unless-stopped
+    #   By default docker-compose will create a new bridge network for the services in the compose file.
+    #   Enable this to have the services/containers use the existing docker0/default bridge network.
+    network_mode: host
+    # links:
+    #   - unifidb
+    ports:
+      - 3478:3478/udp
+      - 8080:8080
+      - 8443:8443
+      - 8880:8880
+      - 8843:8843
+      #     Optional: Uncomment to enable speed tests from the UniFi iOS & Android apps
+      - 6789:6789
+      #     Optional: Uncomment for layer 2 broadcast discovery if container running on a host in the local LAN
+      - 10001:10001/udp
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DOCKER_DATA/unifi-controller/server/cert:/usr/lib/unifi/cert
+      - $DOCKER_DATA/unifi-controller/server/data:/usr/lib/unifi/data
+      - $DOCKER_DATA/unifi-controller/server/logs:/usr/lib/unifi/logs
+    environment:
+      - DB_MONGO_LOCAL=false
+      - DB_MONGO_URI=mongodb://${IP_POECILIA}:27317/unifi
+      - STATDB_MONGO_URI=mongodb://${IP_POECILIA}:27317/unifi_stat
+      - TZ=${LOCAL_TZ}
+      - UNIFI_DB_NAME=unifi
+      - SYSTEM_IP=${IP_POECILIA}
+    # labels:
+    #   traefik.enable: true
+    #   traefik.http.routers.unifi.rule: Host(`unifi.${DOMAIN_INT}`)
+    #   traefik.http.routers.unifi.entrypoints: websecure
+    #   traefik.http.services.unifi.loadbalancer.server.port: 37443
+    #   kop.namespace: poecilia
+
+  unifidb:
+    #   Use max mongo version 5.0.X. Higher versions are incompatible with the mongo driver built into Unifi.
+    #   Older versions are acceptable, ie: mongo:3.6
+    image: mongo:5.0
+    container_name: unifidb
+    # networks:
+    #   - unifi-br
+    ports:
+      - 27317:27017
+    restart: unless-stopped
+    #   By default docker-compose will create a new bridge network for the services in the compose file.
+    #   Enable this to have the services/containers use the existing docker0/default bridge network.
+    #    network_mode: bridge
+    volumes:
+      - $DOCKER_DATA/unifi-controller/db/data/:/data/db
+
+# networks:
+#   unifi-br:

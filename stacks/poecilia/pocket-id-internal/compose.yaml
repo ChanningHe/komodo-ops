@@ -1,0 +1,33 @@
+services:
+  pocket-id-internal:
+    image: ghcr.io/pocket-id/pocket-id:v2
+    container_name: pocket-id-internal
+    restart: unless-stopped
+    ports:
+      - 21381:1411
+    volumes:
+      - "$DOCKER_DATA/pocket-id-internal/data:/app/data"
+    # Optional healthcheck
+    healthcheck:
+      test: [ "CMD", "/app/pocket-id", "healthcheck" ]
+      interval: 1m30s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    environment:
+      - TZ=${LOCAL_TZ}
+      - APP_URL=${POCKETID_APP_URL}
+      - ENCRYPTION_KEY=${POCKETID_ENCRYPTION_KEY}
+      - TRUST_PROXY=false
+      - PUID=${PM_RL_UID}
+      - PGID=${PM_RL_GID}
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.pocket-id.rule: Host(`pocketid.${DOMAIN_INT}`)
+      traefik.http.services.pocket-id.loadbalancer.server.port: 1411
+      traefik.docker.network: traefik-poecilia_local_web
+networks:
+  traefik-poecilia_local_web:
+    external: true

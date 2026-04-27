@@ -1,0 +1,12 @@
+services:
+  kms:
+    container_name: kms
+    ports:
+      - 1688:1688
+    network_mode: bridge
+    environment:
+      - PUID=568
+      - PGID=568
+      - TZ=${LOCAL_TZ}
+    restart: unless-stopped
+    image: pykmsorg/py-kms:latest

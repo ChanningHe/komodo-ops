@@ -1,0 +1,59 @@
+services:
+  # Main Labelgate instance
+  labelgate:
+    #image: ghcr.io/channinghe/labelgate:v0
+    image: ghcr.io/channinghe/labelgate:dev
+    container_name: labelgate
+    restart: unless-stopped
+    #user: nonroot
+    group_add:
+      - "131"
+    volumes:
+      # Docker socket for container monitoring
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+      # Persistent storage
+      - $DOCKER_DATA/labelgate/config:/config/labelgate
+
+      # Optional: custom config file
+      #- $DOCKER_DATA/labelgate/config/labelgate.yaml:/config/labelgate/labelgate.yaml:ro
+    environment:
+      # Storage path (inside container)
+      - LABELGATE_STORAGE_PATH=/config/labelgate/labelgate.db
+      - LABELGATE_CONFIG=/config/labelgate/labelgate.toml
+      - LABELGATE_SYNC_ORPHAN_TTL=5s
+      - LABELGATE_SYNC_REMOVE_DELAY=1m
+      # Optional settings
+      - LABELGATE_LOG_LEVEL=debug
+      - LABELGATE_LOG_FORMAT=text
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.labelgate.rule: Host(`labelgate.${DOMAIN_INT}`)
+      traefik.http.services.labelgate.loadbalancer.server.port: 8080
+      traefik.docker.network: traefik-poecilia_local_web
+
+    ports:
+      # API Server
+      - "18180:8080"
+    # healthcheck:
+    #   disable: true
+    #  test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+    #  interval: 30s
+    #  timeout: 3s
+    #  retries: 3
+    #  start_period: 10s
+
+    #labels:
+    # Self-monitoring example (optional)
+    # labelgate.dns.api.hostname: api.example.com
+    # labelgate.dns.api.type: A
+    # labelgate.dns.api.target: auto
+    # labelgate.dns.api.proxied: "true"
+
+networks:
+  default:
+    name: labelgate-network
+  traefik-poecilia_local_web:
+    external: true

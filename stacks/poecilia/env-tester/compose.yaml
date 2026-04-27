@@ -1,0 +1,10 @@
+services:
+  env-tester:
+    image: nginx:latest
+    restart: unless-stopped
+    environment:
+      - ddd=$DOCKER_DATA
+      - HELLO=$DOCKER_DATA
+    env_file:
+      - ./compose.env
+networks: {}

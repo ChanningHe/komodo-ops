@@ -1,0 +1,14 @@
+services:
+  e5-renew:
+    ports:
+      - 31066:1066
+    environment:
+      - PUID=568
+      - PGID=568
+      - TZ=${LOCAL_TZ}
+    network_mode: bridge
+    volumes:
+      - $DOCKER_DATA/e5-renew/Deploy:/renewx/Deploy
+      - $DOCKER_DATA/e5-renew/appdata:/renewx/appdata
+    restart: unless-stopped
+    image: gladtbam/ms365_e5_renewx:latest

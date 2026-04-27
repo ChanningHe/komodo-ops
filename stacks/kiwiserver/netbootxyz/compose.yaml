@@ -1,0 +1,17 @@
+services:
+  netbootxyz:
+    image: ghcr.io/netbootxyz/netbootxyz
+    container_name: netbootxyz
+    network_mode: host
+    environment:
+      #- MENU_VERSION=2.0.47 # optional
+      - NGINX_PORT=53080 # optional
+      - WEB_APP_PORT=58081 # optional
+    volumes:
+      - $DOCKER_DATA/netbootxyz/config:/config # optional
+      - $DOCKER_DATA/netbootxyz/assets:/assets # optional
+    ports:
+      - 58081:58081 #optional, destination should match ${WEB_APP_PORT} variable above.
+      - 53080:53080 #optional, destination should match ${NGINX_PORT} variable above.
+    restart: unless-stopped
+networks: {}

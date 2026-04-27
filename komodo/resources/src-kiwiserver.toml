@@ -1,0 +1,143 @@
+[[server]]
+name = "kiwiserver"
+tags = ["KiwiServer"]
+[server.config]
+address = "https://10.1.10.5:8120"
+enabled = true
+send_mem_alerts = false
+mem_warning = 95.0
+mem_critical = 98.0
+
+##
+
+[[repo]]
+name = "komodo-secrets-KiwiServer"
+tags = ["KiwiServer"]
+[repo.config]
+server = "kiwiserver"
+git_provider = "git-local.homielab.cc:53110"
+git_https = false
+git_account = "ChanningHe"
+repo = "channinghe/komodo-secrets"
+path = "../komodo-secrets"
+
+##
+
+[[stack]]
+name = "apt-sync"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/apt-sync"
+
+##
+
+[[stack]]
+name = "immich"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/immich"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "mirrors-cnt"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/mirrors-cnt"
+
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "mt-photos"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/mt-photos"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+
+##
+
+[[stack]]
+name = "netbootxyz"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/netbootxyz"
+
+##
+
+[[stack]]
+name = "openspeedtest"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/openspeedtest"
+
+##
+
+[[stack]]
+name = "syncthing"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/syncthing"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "traefik-kop-poecilia"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/traefik-kop-poecilia"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "truecommand"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/truecommand"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "ts-graphite-prometheus"
+tags = ["KiwiServer", "admin_monitor"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/ts-graphite-prometheus"
+
+##
+
+[[stack]]
+name = "zerobyte"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/zerobyte"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"

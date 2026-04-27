@@ -1,0 +1,22 @@
+services:
+  labelgate-agent-nixos-rl:
+    #image: git.cloudcloud.cc/channinghe/labelgate:dev@sha256:9efe8621cfbf532bd5098a3f451a9b5421fc10058ddc94507309d5a4842671f1
+    image: ghcr.io/channinghe/labelgate:dev
+    container_name: labelgate-agent-nixos-rl
+    restart: unless-stopped
+    group_add:
+      - "131"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/machine-id:/etc/machine-id:ro
+    ports:
+      - 37717:37717
+    environment:
+      - LABELGATE_MODE=agent
+      - LABELGATE_CONNECT_MODE=inbound
+      - LABELGATE_CONNECT_LISTEN=:37717
+      - LABELGATE_CONNECT_AGENT_ID=nixos-rl
+      - LABELGATE_CONNECT_TOKEN=${LABELGATE_AGENT_TOKEN}
+      - LABELGATE_LOG_LEVEL=debug
+      - LABELGATE_LOG_FORMAT=text
+    network_mode: bridge

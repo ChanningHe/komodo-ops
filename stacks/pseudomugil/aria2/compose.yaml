@@ -1,0 +1,24 @@
+services:
+  aria2-aria2:
+    container_name: aria2-test
+    # ports:
+    #   - 26888:26888
+    #   - 26888:26888/udp
+    #   - 16800:16800
+    environment:
+      - PUID=0
+      - PGID=0
+      - RPC_PORT=$aria2_rpc_port
+      - LISTEN_PORT=26888
+      - hello=$hello
+    # volumes:
+    #   - $DOCKER_DATA/aria2:/config
+    #   - $PATH_MEDIA/downloads:/downloads
+    restart: unless-stopped
+    image: p3terx/aria2-pro:latest
+    # secrets:
+    #   - sopsenv
+networks: {}
+# secrets:
+#   sopsenv:
+#     file: ./sops.env

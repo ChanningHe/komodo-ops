@@ -1,0 +1,126 @@
+services:
+  traefik:
+    image: "traefik:v3.6"
+    networks:
+      - local_web
+      - traefik_admin
+    depends_on:
+      - traefik-poecilia-redis
+    command: --api.insecure=true --providers.docker
+    #env_file: ./.env
+    environment:
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+      - BOUNCER_HOST=crowdsec:8080
+    ports:
+      - "80:80"
+      - "443:443"
+      - "31080:8080"
+    restart: always
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - $DOCKER_DATA/traefik-poecilia/traefik/letsencrypt:/letsencrypt
+      - $DOCKER_DATA/traefik-poecilia/traefik/certificates:/certificates
+      - $DOCKER_DATA/traefik-poecilia/traefik/log:/var/log/traefik:rw
+      - $DOCKER_DATA/traefik-poecilia/traefik/static_config:/etc/traefik:rw
+      - $DOCKER_DATA/traefik-poecilia/traefik/dynamic_config:/config/dynamic:rw
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      traefik.enable: true
+      traefik.http.routers.traefik-dashboard-poecilia.rule: Host(`traefik-poecilia.${DOMAIN_INT}`)
+      traefik.http.services.traefik-dashboard-poecilia.loadbalancer.server.port: 8080
+      traefik.docker.network: traefik-poecilia_local_web
+      #kop.traefik-dashboard-external.bind.ip: ${IP_POECILIA}
+      homepage.group: Monitoring
+      homepage.name: Traefik ( poecilia )
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/traefik.png
+      homepage.href: "https://traefik-poecilia.${DOMAIN_INT}"
+      homepage.widget.type: traefik
+      homepage.widget.url: https://traefik-poecilia.${DOMAIN_INT}
+
+  logrotate:
+    image: vegardit/traefik-logrotate:latest
+    network_mode: none
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw # required to send USR1 signal to Traefik after log rotation
+      - $DOCKER_DATA/traefik-poecilia/traefik/log:/var/log/traefik:rw # folder containing access.log file
+    environment:
+      TZ: ${LOCAL_TZ}
+      # all environment variables are optional and show the default values:
+      LOGROTATE_LOGS: "/var/log/traefik/*.log" # log files to rotate, directory must match volume mount
+      LOGROTATE_TRIGGER_INTERVAL: monthly  # rotate daily, must be one of: daily, weekly, monthly, yearly
+      LOGROTATE_TRIGGER_SIZE: 100M        # rotate if log file size reaches 50MB
+      LOGROTATE_MAX_BACKUPS: 7          # keep 14 backup copies per rotated log file
+      LOGROTATE_START_INDEX: 1           # first rotated file is called access.1.log
+      LOGROTATE_FILE_MODE: 0644          # file mode of the rotated file
+      LOGROTATE_FILE_USER: root          # owning user of the rotated file
+      LOGROTATE_FILE_GROUP: root         # owning group of the rotated file
+      CRON_SCHEDULE: "* */5 * * *"
+      CRON_LOG_LEVEL: 8                  # see https://unix.stackexchange.com/a/414010/378036
+      # command to determine the id of the container running Traefik:
+      TRAEFIK_CONTAINER_ID_COMMAND: docker ps --no-trunc --quiet --filter label=org.opencontainers.image.title=Traefik
+    restart: always
+    
+  traefik-access-logs:
+    image: alpine
+    container_name: traefik-poecilia-access-logs
+    volumes:
+      - $DOCKER_DATA/traefik-poecilia/traefik/log:/var/log:ro
+    command: >
+      sh -c "tail -F /var/log/access.log"
+    network_mode: none
+    restart: unless-stopped
+    
+  traefik-poecilia-redis:
+    restart: always
+    image: redis:7-alpine
+    container_name: traefik-poecilia-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - traefik_admin
+      - kop_net
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+    volumes:
+      - $DOCKER_DATA/traefik-poecilia/redis:/data
+
+  logdy:
+    build:
+      context: https://github.com/logdyhq/logdy-core.git
+    read_only: true
+    # ports:
+    #   - "33579:8080"
+    networks:
+      - local_web
+    volumes:
+      - $DOCKER_DATA/traefik-poecilia/traefik/log:/var/log:ro
+      - $DOCKER_DATA/traefik-poecilia/logdy/logdy.json:/config/logdy.json
+    command:
+      - "--config"
+      - "/config/logdy.json"
+      - "follow"
+      #- "--full-read"
+      - "/var/log/access.log"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
+    labels:
+      traefik.enable: true
+      traefik.http.routers.logdy-traefik-poecilia.rule: Host(`logdy-local.${DOMAIN_INT}`)
+      traefik.http.services.logdy-traefik-poecilia.loadbalancer.server.port: 8080
+      traefik.docker.network: traefik-poecilia_local_web
+      # homepage.group: Monitoring
+      # homepage.name: Traefik Logs (External)
+      # homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/logdy.png
+      # homepage.href: "https://traefik-log-external.CHANGEME.casa"
+
+
+networks:
+  traefik_admin:
+  local_web:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.88.0.0/16
+  kop_net:

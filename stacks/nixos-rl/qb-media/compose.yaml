@@ -1,0 +1,34 @@
+services:
+  qb-media:
+    container_name: qb-media
+    ports:
+      - 10195:8080
+      - ${QBMEDIA_PORT:-12195}:${QBMEDIA_PORT:-12195}/udp
+      - ${QBMEDIA_PORT:-12195}:${QBMEDIA_PORT:-12195}
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=${LOCAL_TZ}
+    labels:
+      kop.poecilia.traefik.enable: true
+      kop.poecilia.traefik.http.routers.qb.rule: Host(`qb.${DOMAIN_INT}`)
+      kop.poecilia.traefik.http.routers.qb.entrypoints: websecure
+      kop.poecilia.traefik.http.routers.qb.service: qb
+      kop.poecilia.traefik.http.services.qb.loadbalancer.server.port: 10195
+      kop.namespace: poecilia
+      homepage.group: Home Service
+      homepage.name: Qbittorrent
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/qbittorrent.png
+      homepage.href: "https://qb.${DOMAIN_INT}"
+      homepage.widget.type: qbittorrent
+      homepage.widget.url: https://qb.${DOMAIN_INT}
+      homepage.widget.username: admin
+      homepage.widget.password: $QB_MEDIA_PASSWD
+    volumes:
+      - $DOCKER_DATA/qb-media/config:/config
+      - $PATH_MEDIA:$PATH_MEDIA
+      - $PATH_MEDIACENTRE:$PATH_MEDIACENTRE
+      - ${PATH_OTHERS}/cache/qb:/qb-cache
+    restart: unless-stopped
+    image: lscr.io/linuxserver/qbittorrent:latest
+networks: {}

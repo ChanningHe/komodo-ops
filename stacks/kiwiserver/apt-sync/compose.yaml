@@ -1,0 +1,89 @@
+services:
+  aptsync-proxmox:
+    environment:
+      - PUID=568
+      - PGID=568
+      - APTSYNC_UNLINK=1
+      - APTSYNC_URL=http://download.proxmox.com/debian/pve
+      - APTSYNC_DISTS=bookworm|pve-no-subscription|amd64|
+      - CRON=20 23,6,12,20 * * *
+      - TO=/data
+    volumes:
+      - /mnt/Kiwi/Mirror/mirrors-data/proxmox:/data
+      - /mnt/Kiwi/Mirror/mirrors-logs/aptsync-proxmox:/log
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    image: channinghe/apt-sync:aria2-config
+    restart: unless-stopped
+
+  aptsync-tailscale:
+    environment:
+      - PUID=568
+      - PGID=568
+      - APTSYNC_UNLINK=1
+      - APTSYNC_URL=https://pkgs.tailscale.com/stable/debian
+      - APTSYNC_DISTS=bookworm|main|arm64 amd64|:bullseye|main|arm64 amd64|
+      - CRON=20 23,6,12,18 * * *
+      - TO=/data
+    volumes:
+      - /mnt/Kiwi/Mirror/mirrors-data/tailscale:/data
+      - /mnt/Kiwi/Mirror/mirrors-logs/tailscale:/log
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    image: channinghe/apt-sync:aria2-config
+    restart: unless-stopped
+
+  # aptsync-pxvirt:
+  #   environment:
+  #     - PUID=568
+  #     - PGID=568
+  #     - APTSYNC_UNLINK=1
+  #     - APTSYNC_URL=https://download.lierfang.com/pxcloud/pxvirt
+  #     - APTSYNC_DISTS=bookworm|main|amd64 arm64
+  #       loong64|:bookworm|ceph-squid|amd64 arm64|:bookworm|ceph-reef|amd64
+  #       arm64|:bookworm|ceph-quincy|amd64|
+  #     - CRON="16 23,6,13,18 * * *"
+  #     - TO=/data
+  #     - ARIA2_DEBUG=false
+  #     - PARALLEL_DOWNLOADS=8
+  #     - INDEX_DEBUG=true
+  #   volumes:
+  #     - /mnt/Kiwi/Mirror/mirrors-data/pxvirt:/data
+  #     - /mnt/Kiwi/Mirror/mirrors-logs/aptsync-pxvirt:/log
+  #     - /etc/timezone:/etc/timezone:ro
+  #     - /etc/localtime:/etc/localtime:ro
+  #   image: channinghe/apt-sync:aria2c
+    
+  # aptsync-debian:
+  #   environment:
+  #     - PUID=568
+  #     - PGID=568
+  #     - APTSYNC_UNLINK=1
+  #     - APTSYNC_URL=http://deb.debian.org/debian
+  #     - APTSYNC_DISTS=bookworm|main contrib non-free non-free-firmware|amd64
+  #       arm64|:bullseye|main contrib non-free|amd64 arm64|:bookworm-updates|main contrib|amd64 	i18n|
+  #     - CRON="0 0,6,12,18 * * *"
+  #     - TO=/data
+  #     - PARALLEL_DOWNLOADS=8
+  #   volumes:
+  #     - /mnt/Kiwi/Mirror/mirrors-data/debian:/data
+  #     - /mnt/Kiwi/Mirror/mirrors-logs/aptsync-debian:/log
+  #   image: channinghe/apt-sync:aria2-config
+
+  # aptsync-truenas:
+  #   environment:
+  #     - PUID=568
+  #     - PGID=568
+  #     - APTSYNC_UNLINK=1
+  #     - CRON="0 2 * * *"
+  #     - TO=/data
+  #     - MIRRORS_LIST=/config/mirrors.list
+  #     - DEFAULT_ARCH=amd64
+  #     - PARALLEL_DOWNLOADS=16
+  #   volumes:
+  #     - /mnt/Kiwi/Mirror/mirrors-data:/data
+  #     - /mnt/Kiwi/Mirror/mirrors-logs/aptsync-truenas:/log
+  #     - $DOCKER_DATA/apt-sync/mirrors.list:/config/mirrors.list:ro
+  #     - /etc/timezone:/etc/timezone:ro
+  #     - /etc/localtime:/etc/localtime:ro
+  #   image: channinghe/apt-sync:aria2-config

@@ -1,0 +1,32 @@
+services:
+  syncthing:
+    image: syncthing/syncthing:2.0.13@sha256:6245d798ef695715eaa08f728ff3df91182570adfe77d0fe6d952b126e7601c1
+    container_name: kiwi-syncthing
+    hostname: kiwi-syncthing
+    user: ${SYNCTHING_UID}:${SYNCTHING_GID}
+    environment:
+      - PUID=${SYNCTHING_UID}
+      - PGID=${SYNCTHING_GID}
+    volumes:
+      - $DOCKER_DATA/syncthing/data:/var/syncthing
+      #- $DOCKER_DATA/syncthing/syncthing-group:/etc/group
+      - ${PATH_BKDJ}:${PATH_BKDJ}
+    ports:
+      - 38384:8384 # Web UI
+      - ${SYNCTHING_PORT}:22000/tcp # TCP file transfers
+      - ${SYNCTHING_PORT}:22000/udp # QUIC file transfers
+      - ${SYNCTHING_PORT_DC}:21027/udp # Receive local discovery broadcasts
+    restart: unless-stopped
+    healthcheck:
+      test: curl -fkLsS -m 2 127.0.0.1:8384/rest/noauth/health | grep -o --color=never
+        OK || exit 1
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    labels:
+      traefik.enable: true
+      traefik.http.routers.syncthing.rule: Host(`syncthing.${DOMAIN_INT}`)
+      traefik.http.routers.syncthing.entrypoints: websecure
+      traefik.http.services.syncthing.loadbalancer.server.port: 38384
+      kop.namespace: poecilia
+networks: {}

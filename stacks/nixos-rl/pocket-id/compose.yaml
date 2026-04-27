@@ -1,0 +1,43 @@
+services:
+  pocket-id:
+    image: ghcr.io/pocket-id/pocket-id:v2
+    restart: unless-stopped
+    ports:
+      - 31411:1411
+    volumes:
+      - "$DOCKER_DATA/pocket-id/data:/app/data"
+    # Optional healthcheck
+    healthcheck:
+      test: [ "CMD", "/app/pocket-id", "healthcheck" ]
+      interval: 1m30s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    environment:
+      - TZ=${LOCAL_TZ}
+      - APP_URL=${POCKETID_APP_URL}
+      - ENCRYPTION_KEY=${POCKETID_ENCRYPTION_KEY}
+      - TRUST_PROXY=false
+      - PUID=${UID_NIXOS_RL}
+      - PGID=${GID_NIXOS_RL}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.public=true"
+      - "traefik.docker.network=traefik_external_public_web"
+      - "traefik.http.routers.pocket-id.rule=Host(`${DOMAIN_POCKETID}`)"
+      - "traefik.http.routers.pocket-id.entrypoints=https,cf"
+      - "traefik.http.services.pocket-id.loadbalancer.server.port=1411"
+      - "traefik.http.routers.pocket-id.service=pocket-id"
+      #----
+      # - "dockflare.enable=true"
+      # - "dockflare.0.hostname=${DOMAIN_POCKETID}"
+      # - "dockflare.0.service=http://traefik:808"
+      # - "dockflare.0.zonename=${DOMAIN_CC}"
+      # - "dockflare.access.group=public-default-bypass"
+      - "labelgate.tunnel.pocket-id.hostname=${DOMAIN_POCKETID}"
+      - "labelgate.tunnel.pocket-id.service=http://traefik:808"
+    networks:
+      - traefik_external_public_web
+networks:
+  traefik_external_public_web:
+    external: true

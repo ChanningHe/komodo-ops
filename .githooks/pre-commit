@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Pre-commit hook: prevent secrets and private info from leaking into commits.
+# Delegates all detection to check_secrets.py for performance.
+#
+# Install: git config core.hooksPath .githooks
+#
+
+set -euo pipefail
+
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+git diff --cached --diff-filter=ACMR -U0 \
+  -- ':!*.png' ':!*.jpg' ':!*.gif' ':!*.ico' ':!*.woff' ':!*.woff2' ':!*.ttf' \
+  | python3 "$HOOK_DIR/check_secrets.py"

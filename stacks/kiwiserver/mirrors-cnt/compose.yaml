@@ -1,0 +1,24 @@
+services:
+  debian-ftprsync:
+    image: channinghe/ftprsync:latest
+    container_name: debian-ftprsync
+    user: 0:5000
+    restart: unless-stopped
+    environment:
+      - RSYNC_HOST=debian-mirror.sakura.ne.jp
+      - RSYNC_PATH=debian
+      - MIRRORNAME=${DOMAIN_HLC}
+      - TO=/data
+      - ENABLE_CRON=true
+      - CRON_SCHEDULE=20 23,6,12,20 * * *
+      - CRON_RANDOM_DELAY=10
+      - INFO_COUNTRY=${INFO_COUNTRY:-"JP"}
+      - INFO_LOCATION=${INFO_LOCATION:-"Japan"}
+      - INFO_THROUGHPUT=${INFO_THROUGHPUT:-"1Gb"}
+      - RUN_ON_STARTUP=true
+      - IGNORE_LOCK=true
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${PATH_MIRROR}/mirrors-data/debian:/data
+      - ${PATH_MIRROR}/mirrors-logs/debian:/config/log

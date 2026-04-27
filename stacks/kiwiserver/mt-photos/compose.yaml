@@ -1,0 +1,33 @@
+services:
+  mt-photos:
+    image: mtphotos/mt-photos:latest
+    restart: unless-stopped
+    ports:
+      - 28063:8063
+    environment:
+      - GPID=5000
+      - GUID=5000
+      - TZ=${LOCAL_TZ}
+      - API_AUTH_KEY=${MTPHOTOS_AI_API_AUTH_KEY}
+    volumes:
+      - ${DOCKER_DATA}/mt-photos/config:/config
+      - ${PATH_BACKUP}/Photo/mtphoto:/upload
+      - ${DOCKER_DATA}/mt-photos/mtphoto-fake-group:/etc/group
+    labels:
+      traefik.enable: true
+      traefik.http.routers.mt-photos.rule: Host(`photos.${DOMAIN_INT}`)
+      traefik.http.routers.mt-photos.entrypoints: websecure
+      traefik.http.services.mt-photos.loadbalancer.server.port: 28063
+      kop.namespace: poecilia
+  mt-photos-ai:
+    #port:8060
+    container_name: mt-photos-ai
+    stdin_open: true
+    restart: unless-stopped
+    environment:
+      - AUTO_LOAD_TXT_MODAL=on
+      - API_AUTH_KEY=${MTPHOTOS_AI_API_AUTH_KEY}
+    env_file: ./.env
+    image: mtphotos/mt-photos-ai:latest
+    
+networks: {}

@@ -1,0 +1,253 @@
+services:
+  ## docker hub
+  dockerhub:
+    container_name: reg-docker-hub
+    image: dqzboy/registry:latest
+    restart: always
+    environment:
+      - OTEL_TRACES_EXPORTER=none
+      #- http=http://host:port
+      #- https=http://host:port
+    volumes:
+      - $DOCKER_DATA/registry-proxy/registry/data:/var/lib/registry
+      - $DOCKER_DATA/registry-proxy/config/registry-hub.yml:/etc/distribution/config.yml
+      #- ./htpasswd:/auth/htpasswd
+    ports:
+      - 51000:5000
+    networks:
+      - registry-net
+      - traefik_external_public_web
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.http.routers.dh-mirrors.rule: Host(`dh-mirrors.${DOMAIN_HLC}`)
+      traefik.http.routers.dh-mirrors.entrypoints: cf
+      traefik.http.services.dh-mirrors.loadbalancer.server.port: 5000
+      #---local
+      traefik.http.routers.dh-mirrors-local.rule: Host(`dh-mirrors.${DOMAIN_HLC}`)
+      traefik.http.routers.dh-mirrors-local.entrypoints: https
+      traefik.http.routers.dh-mirrors-local.service: dh-mirrors
+      #---cloudflared---
+      # dockflare.enable: "true"
+      # dockflare.0.hostname: dh-mirrors.${DOMAIN_HLC}
+      # dockflare.0.service: http://traefik:808
+      # dockflare.access.group: public-default-bypass
+      labelgate.tunnel.dh-mirrors.hostname: dh-mirrors.${DOMAIN_HLC}
+      labelgate.tunnel.dh-mirrors.service: http://traefik:808
+      traefik.docker.network: traefik_external_public_web
+
+  ## ghcr.io
+  ghcr:
+    container_name: reg-ghcr
+    image: dqzboy/registry:latest
+    restart: always
+    environment:
+      - OTEL_TRACES_EXPORTER=none
+      #- http=http://host:port
+      #- https=http://host:port
+    volumes:
+      - $DOCKER_DATA/registry-proxy/registry/data:/var/lib/registry
+      - $DOCKER_DATA/registry-proxy/config/registry-ghcr.yml:/etc/distribution/config.yml
+      #- ./htpasswd:/auth/htpasswd
+    ports:
+      - 52000:5000
+    networks:
+      - registry-net
+      - traefik_external_public_web
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.http.routers.ghcr-mirrors.rule: Host(`ghcr-mirrors.${DOMAIN_HLC}`)
+      traefik.http.routers.ghcr-mirrors.entrypoints: cf
+      traefik.http.services.ghcr-mirrors.loadbalancer.server.port: 5000
+      #---local
+      traefik.http.routers.ghcr-mirrors-local.rule: Host(`ghcr-mirrors.${DOMAIN_HLC}`)
+      traefik.http.routers.ghcr-mirrors-local.entrypoints: https
+      traefik.http.routers.ghcr-mirrors-local.service: ghcr-mirrors
+      # #---cloudflared---
+      # dockflare.enable: "true"
+      # dockflare.0.hostname: ghcr-mirrors.${DOMAIN_HLC}
+      # dockflare.0.service: http://traefik:808
+      # dockflare.access.group: public-default-bypass
+      labelgate.tunnel.ghcr-mirrors.hostname: ghcr-mirrors.${DOMAIN_HLC}
+      labelgate.tunnel.ghcr-mirrors.service: http://traefik:808
+      traefik.docker.network: traefik_external_public_web
+  # ## gcr.io
+  # gcr:
+  #   container_name: reg-gcr
+  #   image: dqzboy/registry:latest
+  #   restart: always
+  #   environment:
+  #     - OTEL_TRACES_EXPORTER=none
+  #     #- http=http://host:port
+  #     #- https=http://host:port
+  #   volumes:
+  #     - ./registry/data:/var/lib/registry
+  #     - ./registry-gcr.yml:/etc/distribution/config.yml
+  #     #- ./htpasswd:/auth/htpasswd
+  #   ports:
+  #     - 53000:5000
+  #   networks:
+  #     - registry-net
+
+  # ## k8s.gcr.io
+  # k8sgcr:
+  #   container_name: reg-k8s-gcr
+  #   image: dqzboy/registry:latest
+  #   restart: always
+  #   environment:
+  #     - OTEL_TRACES_EXPORTER=none
+  #     #- http=http://host:port
+  #     #- https=http://host:port
+  #   volumes:
+  #     - ./registry/data:/var/lib/registry
+  #     - ./registry-k8sgcr.yml:/etc/distribution/config.yml
+  #     #- ./htpasswd:/auth/htpasswd
+  #   ports:
+  #     - 54000:5000
+  #   networks:
+  #     - registry-net
+
+  ## registry.k8s.io
+  # k8s:
+  #   container_name: reg-k8s
+  #   image: dqzboy/registry:latest
+  #   restart: always
+  #   environment:
+  #     - OTEL_TRACES_EXPORTER=none
+  #     #- http=http://host:port
+  #     #- https=http://host:port
+  #   volumes:
+  #     - ./registry/data:/var/lib/registry
+  #     - ./registry-k8s.yml:/etc/distribution/config.yml
+  #     #- ./htpasswd:/auth/htpasswd
+  #   ports:
+  #     - 55000:5000
+  #   networks:
+  #     - registry-net
+  
+  ## quay.io
+  # quay:
+  #   container_name: reg-quay
+  #   image: dqzboy/registry:latest
+  #   restart: always
+  #   environment:
+  #     - OTEL_TRACES_EXPORTER=none
+  #     #- http=http://host:port
+  #     #- https=http://host:port
+  #   volumes:
+  #     - ./registry/data:/var/lib/registry
+  #     - ./registry-quay.yml:/etc/distribution/config.yml
+  #     #- ./htpasswd:/auth/htpasswd
+  #   ports:
+  #     - 56000:5000
+  #   networks:
+  #     - registry-net
+
+  ## mcr.microsoft.com
+  # mcr:
+  #   container_name: reg-mcr
+  #   image: dqzboy/registry:latest
+  #   restart: always
+  #   environment:
+  #     - OTEL_TRACES_EXPORTER=none
+  #     #- http=http://host:port
+  #     #- https=http://host:port
+  #   volumes:
+  #     - ./registry/data:/var/lib/registry
+  #     - ./registry-mcr.yml:/etc/distribution/config.yml
+  #     #- ./htpasswd:/auth/htpasswd
+  #   ports:
+  #     - 57000:5000
+  #   networks:
+  #     - registry-net
+
+  # ## docker.elastic.co
+  # elastic:
+  #   container_name: reg-elastic
+  #   image: dqzboy/registry:latest
+  #   restart: always
+  #   environment:
+  #     - OTEL_TRACES_EXPORTER=none
+  #     #- http=http://host:port
+  #     #- https=http://host:port
+  #   volumes:
+  #     - ./registry/data:/var/lib/registry
+  #     - ./registry-elastic.yml:/etc/distribution/config.yml
+  #     #- ./htpasswd:/auth/htpasswd
+  #   ports:
+  #     - 58000:5000
+  #   networks:
+  #     - registry-net
+
+  # ## nvcr.io
+  # nvcr:
+  #   container_name: reg-nvcr
+  #   image: dqzboy/registry:latest
+  #   restart: always
+  #   environment:
+  #     - OTEL_TRACES_EXPORTER=none
+  #     #- http=http://host:port
+  #     #- https=http://host:port
+  #   volumes:
+  #     - ./registry/data:/var/lib/registry
+  #     - ./registry-nvcr.yml:/etc/distribution/config.yml
+  #     #- ./htpasswd:/auth/htpasswd
+  #   ports:
+  #     - 59000:5000
+  #   networks:
+  #     - registry-net
+
+
+  ghproxy:
+    image: 'wjqserver/ghproxy:latest'
+    restart: always
+    container_name: ghproxy
+    volumes:
+        - '$DOCKER_DATA/registry-proxy/ghproxy/log:/data/ghproxy/log'
+        - '$DOCKER_DATA/registry-proxy/ghproxy/config:/data/ghproxy/config'
+    #ports:
+    #    - '7210:8080'
+    networks:
+      - registry-net
+      - traefik_external_public_web
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik_external_public_web
+      traefik.http.routers.gh-mirrors.rule: Host(`gh-mirrors.${DOMAIN_HLC}`)
+      traefik.http.routers.gh-mirrors.entrypoints: cf
+      traefik.http.services.gh-mirrors.loadbalancer.server.port: 8080
+      #---local
+      traefik.http.routers.gh-mirrors-local.rule: Host(`gh-mirrors.${DOMAIN_HLC}`)
+      traefik.http.routers.gh-mirrors-local.entrypoints: https
+      traefik.http.routers.gh-mirrors-local.service: gh-mirrors
+      #---cloudflared---
+      # dockflare.enable: "true"
+      # dockflare.0.hostname: gh-mirrors.${DOMAIN_HLC}
+      # dockflare.0.service: http://traefik:808
+      # dockflare.access.group: public-default-bypass
+      labelgate.tunnel.gh-mirrors.hostname: gh-mirrors.${DOMAIN_HLC}
+      labelgate.tunnel.gh-mirrors.service: http://traefik:808
+
+  ## UI
+  registry-ui:
+    container_name: registry-ui
+    image: dqzboy/docker-registry-ui:latest
+    environment:
+      - DOCKER_REGISTRY_URL=http://reg-docker-hub:5000
+      # [必须]使用 openssl rand -hex 16 生成唯一值
+      - SECRET_KEY_BASE=${REGISTRYPROXY_SECRET_KEY_BASE}
+      # 启用Image TAG 的删除按钮
+      - ENABLE_DELETE_IMAGES=true
+      - NO_SSL_VERIFICATION=true
+    restart: always
+    ports:
+      - 50000:8080
+    networks:
+      - registry-net
+
+networks:
+  registry-net:
+  traefik_external_public_web:
+    external: true

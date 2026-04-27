@@ -1,0 +1,10 @@
+services:
+  glance:
+    container_name: glance
+    image: glanceapp/glance
+    restart: unless-stopped
+    volumes:
+      - $DOCKER_DATA/glance/config:/app/config
+      - $DOCKER_DATA/glance/assets:/app/assets
+    ports:
+      - 42390:8080

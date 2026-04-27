@@ -1,0 +1,31 @@
+services:
+  tinyauth:
+    image: ghcr.io/steveiliop56/tinyauth:v4.0-distroless
+    container_name: tinyauth
+    #env_file: ./.env
+    restart: unless-stopped
+    volumes:
+      - $DOCKER_DATA/tinyauth/data:/data
+    networks:
+      - traefik_external_public_web
+    dns:
+      - 1.1.1.1
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.http.routers.tinyauth.rule: Host(`${DOMAIN_TINYAUTH}`)
+      traefik.http.middlewares.tinyauth.forwardauth.address: http://tinyauth:3000/api/auth/traefik
+      # #---cloudflared---
+      # dockflare.enable: "true"
+      # dockflare.0.hostname: ${DOMAIN_TINYAUTH}
+      # dockflare.0.service: http://traefik:808
+      # dockflare.0.zonename: ${DOMAIN_HSC}
+      # dockflare.access.group: public-default-bypass
+      labelgate.tunnel.tinyauth.hostname: ${DOMAIN_TINYAUTH}
+      labelgate.tunnel.tinyauth.service: http://traefik:808
+    environment:
+      - APP_URL=${TINYAUTH_APP_URL}
+      - USERS=${TINYAUTH_USERS}
+networks:
+  traefik_external_public_web:
+    external: true

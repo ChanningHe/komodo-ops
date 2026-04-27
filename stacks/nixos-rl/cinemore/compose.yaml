@@ -1,0 +1,16 @@
+services:
+  cinemore-server:
+    container_name: cinemore-server
+    image: cinemore/cinemore-server:latest
+    restart: always
+    ports:
+      - "38824:8000"
+    volumes:
+      - $DOCKER_DATA/cinemore/server/data:/app/data
+      - $PATH_MEDIACENTRE:/media
+    labels:
+      kop.poecilia.traefik.enable: true
+      kop.poecilia.traefik.http.routers.cinemore.rule: Host(`cinemore.${DOMAIN_INT}`)
+      kop.poecilia.traefik.http.routers.cinemore.entrypoints: websecure
+      kop.poecilia.traefik.http.services.cinemore.loadbalancer.server.port: 38824
+      kop.namespace: poecilia

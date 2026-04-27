@@ -1,0 +1,16 @@
+version: "3.3"
+services:
+  truecommand:
+    volumes:
+      - $DOCKER_DATA/truecommand/data:/data
+    ports:
+      - 53730:80
+    image: ixsystems/truecommand:latest
+    restart: unless-stopped
+    labels:
+      traefik.enable: true
+      traefik.http.routers.truecommand.rule: Host(`truecommand.${DOMAIN_INT}`)
+      traefik.http.routers.truecommand.entrypoints: websecure
+      traefik.http.services.truecommand.loadbalancer.server.port: 53730
+      kop.namespace: poecilia
+networks: {}

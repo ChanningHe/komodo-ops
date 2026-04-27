@@ -1,0 +1,25 @@
+services:
+  grafana-oss:
+    ports:
+      - 38533:3000
+    container_name: grafana
+    restart: always
+    user: ${PM_RT_UID}:${PM_RT_GID}
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.grafana.rule: Host(`grafana.${DOMAIN_INT}`)|| Host(`grafana`)
+      traefik.http.services.grafana.loadbalancer.server.port: 3000
+      traefik.docker.network: traefik-poecilia_local_web
+      #
+      homepage.group: Monitoring
+      homepage.name: Grafana
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/grafana.png
+      homepage.href: "https://grafana.${DOMAIN_INT}"
+    volumes:
+      - $DOCKER_DATA/grafana/config:/var/lib/grafana
+    image: grafana/grafana-oss
+networks:
+  traefik-poecilia_local_web:
+    external: true

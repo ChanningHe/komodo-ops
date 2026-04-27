@@ -1,0 +1,24 @@
+services:
+  alist-aptmirrors:
+    image: xhofe/alist:v3.40.0
+    container_name: alist-aptmirrors
+    networks:
+      - traefik_external_public_web
+    volumes:
+      - $DOCKER_DATA/alist-mirrors/data:/opt/alist/data
+      - ${PATH_MIRROR}/mirrors-data:${PATH_MIRROR}/mirrors-data
+    ports:
+      - 35244:5244
+    environment:
+      - UMASK=022
+      - PGID=${GID_NIXOS_RL}
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.http.routers.alist-aptmirrors.rule: Host(`mirrors.${DOMAIN_HSC}`)
+      traefik.http.services.alist-aptmirrors.loadbalancer.server.port: 5244
+      traefik.docker.network: traefik_external_public_web
+    restart: unless-stopped
+networks:
+  traefik_external_public_web:
+    external: true

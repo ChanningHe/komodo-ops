@@ -1,0 +1,19 @@
+services:
+  uptime-kuma:
+    restart: always
+    ports:
+      - 43701:3001
+    volumes:
+      - $DOCKER_DATA/uptime-kuma/data:/app/data
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:2
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.uptime.rule: Host(`uptime.${DOMAIN_INT}`)|| Host(`uptime`)
+      traefik.http.services.uptime.loadbalancer.server.port: 3001
+      traefik.docker.network: traefik-poecilia_local_web
+networks:
+  traefik-poecilia_local_web:
+    external: true

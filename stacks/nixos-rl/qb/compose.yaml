@@ -1,0 +1,24 @@
+services:
+  qb:
+    container_name: qb
+    user: 0:${GID_NIXOS_RL}
+    ports:
+      - 10095:8080
+      - ${QBTMP_PORT:-11195}:${QBTMP_PORT:-11195}/udp
+      - ${QBTMP_PORT:-11195}:${QBTMP_PORT:-11195}
+    environment:
+      - PUID=0
+      - PGID=${GID_NIXOS_RL}
+      - TZ=${LOCAL_TZ}
+    volumes:
+      - $DOCKER_DATA/qb/config:/config
+      - $PATH_MEDIA:/pt
+      - type: bind
+        source: ${PATH_OTHERS}/archive-files/P
+        target: /P
+        bind:
+          create_host_path: false
+      - ${PATH_OTHERS}/cache/qb:/qb-cache
+    restart: unless-stopped
+    image: lscr.io/linuxserver/qbittorrent:latest
+networks: {}

@@ -1,0 +1,22 @@
+services:
+  zerobyte:
+    image: ghcr.io/nicotsx/zerobyte:v0.33.1
+    container_name: zerobyte
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - "34096:4096"
+    environment:
+      - TZ=Asia/Tokyo # Set your timezone here
+      - BASE_URL=https://zerobyte.${DOMAIN_INT} # Change this to your actual URL (use https:// for secure cookies)
+      - APP_SECRET=${ZEROBYTE_APP_SECRET} # Generate your own secret with `openssl rand -hex 32`
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DOCKER_DATA}/zerobyte:/var/lib/zerobyte
+    labels:
+      traefik.enable: true
+      traefik.http.routers.zerobyte.rule: Host(`zerobyte.${DOMAIN_INT}`)
+      traefik.http.routers.zerobyte.entrypoints: websecure
+      traefik.http.routers.zerobyte.service: zerobyte
+      traefik.http.services.zerobyte.loadbalancer.server.port: 34096
+      kop.namespace: poecilia
