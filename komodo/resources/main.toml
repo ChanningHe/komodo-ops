@@ -62,6 +62,19 @@ include_user_groups = true
 ##
 
 [[resource_sync]]
+name = "src-builder"
+tags = ["SyncRsTag"]
+[resource_sync.config]
+linked_repo = "komodo-ops"
+resource_path = [
+  "komodo/resources/builder.toml"
+]
+managed = true
+match_tags = ["builder"]
+
+##
+
+[[resource_sync]]
 name = "src-kiwiserver"
 tags = ["SyncRsTag"]
 [resource_sync.config]
@@ -88,6 +101,19 @@ match_tags = ["nixos-rl"]
 ##
 
 [[resource_sync]]
+name = "src-osaka-arm64"
+tags = ["SyncRsTag"]
+[resource_sync.config]
+linked_repo = "komodo-ops"
+resource_path = [
+  "komodo/resources/src-osaka-arm64.toml"
+]
+managed = true
+match_tags = ["Osaka-arm64"]
+
+##
+
+[[resource_sync]]
 name = "src-poecilia"
 tags = ["SyncRsTag"]
 [resource_sync.config]
@@ -110,19 +136,6 @@ resource_path = [
 ]
 managed = true
 match_tags = ["Pseudomugil"]
-
-##
-
-[[resource_sync]]
-name = "src-osaka-arm64"
-tags = ["SyncRsTag"]
-[resource_sync.config]
-linked_repo = "komodo-ops"
-resource_path = [
-  "komodo/resources/src-osaka-arm64.toml"
-]
-managed = true
-match_tags = ["Osaka-arm64"]
 
 ##
 
