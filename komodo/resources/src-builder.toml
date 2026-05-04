@@ -18,9 +18,8 @@ image_registry = [
 name = "komodo-periphery-sops"
 tags = ["builder"]
 [build.config]
-builder = "builder-kiwiserver"
+builder = "builder-poecilia"
 version = "2.1.2"
-use_buildx = true
 auto_increment_version = false
 image_name = "komodo-periphery"
 include_latest_tag = false
@@ -29,6 +28,7 @@ build_path = "build/komodo-periphery-sops"
 image_registry = [
   { domain = "registry.hub.docker.com", account = "channinghe" }
 ]
+use_buildx = true
 extra_args = [
   "--builder komodo-builder",
   "--platform linux/amd64,linux/arm64"
