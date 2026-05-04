@@ -67,7 +67,7 @@ tags = ["SyncRsTag"]
 [resource_sync.config]
 linked_repo = "komodo-ops"
 resource_path = [
-  "komodo/resources/builder.toml"
+  "komodo/resources/src-builder.toml"
 ]
 managed = true
 match_tags = ["builder"]
