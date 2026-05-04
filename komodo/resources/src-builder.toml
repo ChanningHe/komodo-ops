@@ -20,6 +20,7 @@ tags = ["builder"]
 [build.config]
 builder = "builder-kiwiserver"
 version = "2.1.2"
+use_buildx = true
 auto_increment_version = false
 image_name = "komodo-periphery"
 include_latest_tag = false
