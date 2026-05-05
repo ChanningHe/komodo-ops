@@ -2,7 +2,7 @@ services:
   forgejo-int:
     image: codeberg.org/forgejo/forgejo:15
     container_name: forgejo-int
-    user: 5000:5000
+    #user: 5000:5000
     environment:
       - USER_UID=5000
       - USER_GID=5000
