@@ -3,6 +3,7 @@ name = "poecilia"
 tags = ["Poecilia"]
 [server.config]
 address = "https://periphery:8120"
+external_address = "10.1.10.8"
 enabled = true
 
 ##
@@ -44,6 +45,19 @@ additional_env_files = [
   { path = "compose.env", track = true }
 ]
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "forgejo-int"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/forgejo-int"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["config", "pull", "up"]
 
 ##
 
@@ -182,19 +196,6 @@ server = "poecilia"
 poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/poecilia/waken"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-compose_cmd_wrapper_include = ["config", "pull", "up"]
-
-##
-
-[[stack]]
-name = "forgejo-int"
-tags = ["Poecilia"]
-[stack.config]
-server = "poecilia"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/poecilia/forgejo-int"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 compose_cmd_wrapper_include = ["config", "pull", "up"]
 
