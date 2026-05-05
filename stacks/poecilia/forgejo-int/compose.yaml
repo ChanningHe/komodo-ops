@@ -2,7 +2,7 @@ services:
   forgejo-int:
     image: codeberg.org/forgejo/forgejo:15
     container_name: forgejo-int
-    #user: 5000:5000
+    #user: 5000:5000 rootless only
     environment:
       - USER_UID=5000
       - USER_GID=5000
@@ -26,8 +26,7 @@ services:
       traefik.public: true
       traefik.docker.network: traefik-poecilia_local_web
       #-----
-      traefik.http.routers.forgejo-int.rule: Host(`forgejo.${DOMAIN_INT}`)
-      traefik.http.routers.forgejo-int.entrypoints: https
+      traefik.http.routers.forgejo-int.rule: Host(`forgejo.${DOMAIN_INT}`) || Host(`git.${DOMAIN_INT}`)
       traefik.http.services.forgejo-int.loadbalancer.server.port: 3000
       traefik.http.routers.forgejo-int.service: forgejo-int
 
