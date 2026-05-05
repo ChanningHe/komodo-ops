@@ -187,6 +187,19 @@ compose_cmd_wrapper_include = ["config", "pull", "up"]
 
 ##
 
+[[stack]]
+name = "forgejo-int"
+tags = ["Poecilia"]
+[stack.config]
+server = "poecilia"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/forgejo-int"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["config", "pull", "up"]
+
+##
+
 [[repo]]
 name = "komodo-secrets-Poecilia"
 tags = ["Poecilia"]

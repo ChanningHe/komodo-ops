@@ -1,0 +1,55 @@
+services:
+  forgejo-int:
+    image: codeberg.org/forgejo/forgejo:15
+    container_name: forgejo-int
+    user: 5000:5000
+    environment:
+      - USER_UID=5000
+      - USER_GID=5000
+      - FORGEJO__database__DB_TYPE=postgres
+      - FORGEJO__database__HOST=forgejo-postgres:5432
+      - FORGEJO__database__NAME=forgejo
+      - FORGEJO__database__USER=forgejo-int
+      - FORGEJO__database__PASSWD=${FORGEJO_INT_DB_PASSWORD}
+    restart: always
+    networks:
+      - default
+      - traefik-poecilia_local_web
+    volumes:
+      - $DOCKER_DATA/forgejo-int/forgejo:/data
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "11300:3000"
+      - "11222:22"
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik-poecilia_local_web
+      #-----
+      traefik.http.routers.forgejo-int.rule: Host(`forgejo.${DOMAIN_INT}`)
+      traefik.http.routers.forgejo-int.entrypoints: https
+      traefik.http.services.forgejo-int.loadbalancer.server.port: 3000
+      traefik.http.routers.forgejo-int.service: forgejo-int
+
+  forgejo-postgres:
+    image: postgres:14
+    container_name: forgejo-postgres
+    restart: always
+    command:
+      - "postgres"
+      - "-c"
+      - "full_page_writes=off"
+    environment:
+      - POSTGRES_DB=forgejo
+      - POSTGRES_USER=forgejo-int
+      - POSTGRES_PASSWORD=${FORGEJO_INT_DB_PASSWORD}
+    networks:
+      - default
+    volumes:
+      - $DOCKER_DATA/forgejo-int/postgres:/var/lib/postgresql/data
+
+networks:
+  default:
+    external: false
+  traefik-poecilia_local_web:
+    external: true
