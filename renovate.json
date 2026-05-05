@@ -1,6 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended",
+    "workarounds:bitnamiDockerImageVersioning",
+    "workarounds:doNotUpgradeFromAlpineStableToEdge"
+  ],
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard",
   "assignees": ["ChanningHe"],
@@ -8,30 +12,74 @@
   "configMigration": true,
   "prHourlyLimit": 0,
   "includePaths": ["stacks/poecilia/glance/**"],
+  "prConcurrentLimit": 0,
+  "minimumReleaseAge": "4 day",
   "docker-compose": {
+    "major": {
+      "dependencyDashboardApproval": true
+    },
+    "pinDigests": true,
+    "vulnerabilityAlerts": {
+      "addLabels": ["security"]
+    },
     "hostRules": [
-      {
-        "matchHost": "docker.io",
-        "concurrentRequestLimit": 2
-      }
+      { "matchHost": "docker.io", "concurrentRequestLimit": 2 },
+      { "matchHost": "ghcr.io", "concurrentRequestLimit": 2 },
+      { "matchHost": "gcr.io", "concurrentRequestLimit": 2 },
+      { "matchHost": "lscr.io", "concurrentRequestLimit": 2 }
     ],
+    "prBodyNotes": ["Updates for stacks in `{{packageFileDir}}`."],
+    "registryAliases": {
+      "index.docker.io": "registry-docker.example.com",
+      "docker.io": "registry-docker.example.com"
+    },
     "packageRules": [
       {
-        "matchPackageNames": "redis",
-        "matchCurrentVersion": "6.2-alpine",
+        "matchDatasources": ["docker"],
+        "registryUrls": ["https://registry-docker.example.com"]
+      },
+      {
+        "matchPackageNames": ["/.*/"],
+        "addLabels": ["{{updateType}}"],
+        "commitMessageExtra": "in stack {{packageFileDir}} from {{currentVersion}} to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
+        "enabled": true
+      },
+      {
+        "description": "Common images that may have breaking changes between any non-patch versions (will only open patch PRs)",
+        "matchPackageNames": [
+          "/influxdb/",
+          "/mysql/",
+          "/mongo/",
+          "/elasticsearch/",
+          "/keydb/",
+          "/rabbitmq/",
+          "/mariadb/",
+          "/etcd/"
+        ],
+        "matchUpdateTypes": ["major", "minor"],
         "enabled": false
       },
       {
-        "matchPackageNames": "tensorchord/pgvecto-rs",
+        "description": "Common images that may have breaking changes between major versions (will only open patch/minor PRs)",
+        "matchPackageNames": [
+          "/couchdb/",
+          "/redis/",
+          "/valkey/",
+          "/postgres/",
+          "/postgis/",
+          "/pgadmin/",
+          "/clickhouse/",
+          "/grafana/"
+        ],
+        "matchUpdateTypes": ["major"],
         "enabled": false
       },
       {
-        "matchPackageNames": "ghcr.io/hotio/duplicacy",
-        "versionCompatibility": "^(?<compatibility>release-)(?<version>.+)$"
-      },
-      {
-        "matchPackageNames": ["ghcr.io/linuxserver/jellyfin"],
-        "allowedVersions": "<2021"
+        "description": "Linuxserver tag parsing",
+        "versioning": "regex:^(?<compatibility>.*?)-(?<major>v?\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)[\\.-]*r?(?<build>\\d+)*-*r?(?<release>\\w+)*",
+        "matchPackageNames": [
+          "/^(ghcr.io\\/linuxserver\\/|lscr.io\\/linuxserver\\/).*/"
+        ]
       }
     ]
   }
