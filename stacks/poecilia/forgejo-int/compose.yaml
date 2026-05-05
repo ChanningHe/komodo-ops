@@ -16,7 +16,7 @@ services:
       - default
       - traefik-poecilia_local_web
     volumes:
-      - $DOCKER_DATA/forgejo-int/forgejo:/data
+      - $DOCKER_DATA/forgejo-int/forgejo:/var/lib/gitea
       - /etc/localtime:/etc/localtime:ro
     ports:
       - "11300:3000"
