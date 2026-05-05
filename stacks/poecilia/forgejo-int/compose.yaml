@@ -1,6 +1,6 @@
 services:
   forgejo-int:
-    image: codeberg.org/forgejo/forgejo:15-rootless
+    image: codeberg.org/forgejo/forgejo:15
     container_name: forgejo-int
     user: 5000:5000
     environment:
@@ -16,7 +16,7 @@ services:
       - default
       - traefik-poecilia_local_web
     volumes:
-      - $DOCKER_DATA/forgejo-int/forgejo:/var/lib/gitea
+      - $DOCKER_DATA/forgejo-int/forgejo:/data
       - /etc/localtime:/etc/localtime:ro
     ports:
       - "11300:3000"
