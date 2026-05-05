@@ -496,7 +496,7 @@ name = "komodo-secrets-nixos-rl"
 tags = ["nixos-rl"]
 [repo.config]
 server = "nixos-rl"
-git_provider = "git-local.homielab.cc:53110"
+git_provider = "10.1.10.8:53110"
 git_https = false
 git_account = "ChanningHe"
 repo = "channinghe/komodo-secrets"

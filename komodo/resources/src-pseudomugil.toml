@@ -48,7 +48,7 @@ name = "komodo-secrets-Pseudomugil"
 tags = ["Pseudomugil"]
 [repo.config]
 server = "Pseudomugil"
-git_provider = "git-local.homielab.cc:53110"
+git_provider = "10.1.10.8:53110"
 git_https = false
 git_account = "ChanningHe"
 repo = "channinghe/komodo-secrets"
