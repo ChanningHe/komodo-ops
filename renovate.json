@@ -1,0 +1,38 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate Dashboard",
+  "assignees": ["ChanningHe"],
+  "labels": ["renovate"],
+  "configMigration": true,
+  "prHourlyLimit": 0,
+  "includePaths": ["stacks/poecilia/glance/**"],
+  "docker-compose": {
+    "hostRules": [
+      {
+        "matchHost": "docker.io",
+        "concurrentRequestLimit": 2
+      }
+    ],
+    "packageRules": [
+      {
+        "matchPackageNames": "redis",
+        "matchCurrentVersion": "6.2-alpine",
+        "enabled": false
+      },
+      {
+        "matchPackageNames": "tensorchord/pgvecto-rs",
+        "enabled": false
+      },
+      {
+        "matchPackageNames": "ghcr.io/hotio/duplicacy",
+        "versionCompatibility": "^(?<compatibility>release-)(?<version>.+)$"
+      },
+      {
+        "matchPackageNames": ["ghcr.io/linuxserver/jellyfin"],
+        "allowedVersions": "<2021"
+      }
+    ]
+  }
+}
