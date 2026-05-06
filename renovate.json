@@ -14,6 +14,7 @@
   "includePaths": ["stacks/**"],
   "prConcurrentLimit": 0,
   "minimumReleaseAge": "4 day",
+  "commitMessagePrefix": "[Renovate] chore(deps):",
   "docker-compose": {
     "major": {
       "dependencyDashboardApproval": true
@@ -41,7 +42,8 @@
       {
         "matchPackageNames": ["/.*/"],
         "addLabels": ["{{updateType}}"],
-        "commitMessageExtra": "in stack {{packageFileDir}} from {{currentVersion}} to {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}",
+        "commitMessageTopic": "{{depName}}",
+        "commitMessageExtra": "[{{currentVersion}} -> {{#if isPinDigest}}{{{newDigestShort}}}{{else}}{{#if isMajor}}{{prettyNewMajor}}{{else}}{{#if isSingleVersion}}{{prettyNewVersion}}{{else}}{{#if newValue}}{{{newValue}}}{{else}}{{{newDigestShort}}}{{/if}}{{/if}}{{/if}}{{/if}}] in {{packageFileDir}}",
         "enabled": true
       },
       {
