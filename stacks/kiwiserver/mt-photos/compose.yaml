@@ -27,7 +27,6 @@ services:
     environment:
       - AUTO_LOAD_TXT_MODAL=on
       - API_AUTH_KEY=${MTPHOTOS_AI_API_AUTH_KEY}
-    env_file: ./.env
     image: mtphotos/mt-photos-ai:latest@sha256:1257f057837c863778903dc91eb5e71c88edba9ec2805bbc82937d318d51ab24
     
 networks: {}
