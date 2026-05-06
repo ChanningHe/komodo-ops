@@ -374,7 +374,7 @@ compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 [[stack]]
 name = "public-svc-temp"
 template = true
-tags = ["nixos-rl", "public-svc"]
+tags = ["nixos-rl", "critical-infra"]
 [stack.config]
 server = "nixos-rl"
 linked_repo = "komodo-ops"
