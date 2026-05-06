@@ -154,7 +154,7 @@ compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 
 [[stack]]
 name = "traefik-poecilia"
-tags = ["Poecilia"]
+tags = ["Poecilia", "critical-infra"]
 [stack.config]
 server = "poecilia"
 poll_for_updates = true
