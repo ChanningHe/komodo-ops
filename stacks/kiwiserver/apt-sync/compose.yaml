@@ -13,7 +13,7 @@ services:
       - /mnt/Kiwi/Mirror/mirrors-logs/aptsync-proxmox:/log
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    image: channinghe/apt-sync:aria2-config
+    image: channinghe/apt-sync:aria2-config@sha256:867826436042c28c6bd6b1ed78a495c3ea959126669fa953d7cdd549f47da1a3
     restart: unless-stopped
 
   aptsync-tailscale:
@@ -30,7 +30,7 @@ services:
       - /mnt/Kiwi/Mirror/mirrors-logs/tailscale:/log
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    image: channinghe/apt-sync:aria2-config
+    image: channinghe/apt-sync:aria2-config@sha256:867826436042c28c6bd6b1ed78a495c3ea959126669fa953d7cdd549f47da1a3
     restart: unless-stopped
 
   # aptsync-pxvirt:
