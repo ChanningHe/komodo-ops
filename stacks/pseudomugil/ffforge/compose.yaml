@@ -1,7 +1,7 @@
 services:
   ffforge:
     container_name: ffforge
-    image: ghcr.io/channinghe/ffforge:dev-0.0.2
+    image: ghcr.io/channinghe/ffforge:dev-0.0.2@sha256:685626e317192972c3b6c79bb93ceac6de8b489ff068dedcf6b7c8226c2e040d
     restart: unless-stopped
     ports:
       - "38110:8080"
