@@ -25,7 +25,7 @@ services:
       - /etc/localtime:/etc/localtime
     ports:
       - 30372:3100
-    image: grafana/loki:2.9.3@sha256:eb92f1a439171542fd718f929fad38c917b3cad15ec830ba4742e2ba5ab03313
+    image: grafana/loki:2.9.17@sha256:c4a25af6f2709fa625d88ee5df494a332a85f30e9575854031667823ecc5be04
     command: -config.file=/config/loki-config.yaml
 
 networks:
