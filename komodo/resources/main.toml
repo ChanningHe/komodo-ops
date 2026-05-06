@@ -38,6 +38,204 @@ executions = [
 
 ##
 
+[[procedure]]
+name = "updateOnPrMerge"
+tags = ["SyncRsTag"]
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "batch-deploy-changed-and-exclude", execution.params.args.TAGS = "critical-infra", execution.params.args.COMMIT = false, enabled = true }
+]
+
+##
+
+[[action]]
+name = "batch-deploy-changed-and-exclude"
+tags = ["SyncRsTag"]
+[action.config]
+file_contents = """
+// add values to each filter to NOT re-deploy if stack contains X
+const REPOS = ARGS.REPOS === undefined ? [] : ARGS.REPOS.split(','); // Stack X Repo 'MyName/MyRepo' includes ANY part of string Y from list
+const SERVER_IDS = ARGS.SERVER_IDS === undefined ? [] : ARGS.SERVER_ID.split(','); // Stack X Server '67659da61af880a9d21f25be' matches string Y from list
+const TAGS = ARGS.TAGS === undefined ? [] : ARGS.TAGS.split(','); // Stack X Tags A,B,C like 'myCoolTag' matches string Y from list
+const STACKS = ARGS.STACKS === undefined ? [] : ARGS.STACKS.split(','); // Stack 'my-cool-stack' matches ANY part of string Y from list
+const SERVICES = ARGS.SERVICES === undefined ? [] : ARGS.SERVICES.split(','); // Stack X Service 'my-cool-service' includes ANY part of string Y from list
+const IMAGES = ARGS.IMAGES === undefined ? [] : ARGS.IMAGES.split(','); // Stack X Image 'lscr.io/linuxserver/socket-proxy:latest' includes ANY part of string Y from list
+
+// if ARGS.COMMIT is not present and `true` then this action will only "dry run" the changes
+// it will log to console what it *would* do but will not actually execute any changes
+const commit = ARGS.COMMIT === 'true' || ARGS.COMMIT === true;
+
+// used for getting common values found in two different lists
+const intersect = (a: Array<any>, b: Array<any>) => {
+    const setA = new Set(a);
+    const setB = new Set(b);
+    const intersection = new Set([...setA].filter(x => setB.has(x)));
+    return Array.from(intersection);
+}
+
+// formats stack names nicely in console out
+const formatColumns = (arr: string[], numCols: number) => {
+  if (!arr || arr.length === 0) return "";
+
+  // Calculate the width of each column (based on longest string in that column)
+  const colWidths = Array.from({ length: numCols }, (_, colIndex) => {
+    let maxWidth = 0;
+    for (let i = colIndex; i < arr.length; i += numCols) {
+      if (arr[i].length > maxWidth) maxWidth = arr[i].length;
+    }
+    return maxWidth;
+  });
+
+  // Build the output row by row
+  const rows = [];
+  for (let i = 0; i < arr.length; i += numCols) {
+    const rowItems = arr.slice(i, i + numCols);
+    const row = rowItems
+      .map((item, colIndex) => item.padEnd(colWidths[colIndex]))
+      .join("  "); // 2-space separator between columns
+    rows.push(row.trimEnd());
+  }
+
+  return rows.join("\n");
+}
+
+const availableUpdates = await komodo.read('ListStacks', {});
+
+let userTags: string[] = [];
+let tagsList: Types.ListTagsResponse;
+if(TAGS.length > 0) {
+  tagsList = await komodo.read('ListTags', {});
+  userTags = tagsList.filter(x => TAGS.includes(x.name)).map(x => x._id.$oid);
+}
+
+const excluded: string[] = [];
+
+const candidates = availableUpdates.filter(x => {
+  if(REPOS.length > 0 && REPOS.some(x => x.info.repo.includes(x))) {
+      excluded.push(`${x.name} => repo`);
+      return false;
+  }
+  if(SERVER_IDS.length > 0 && SERVER_IDS.includes(x.info.server_id)) {
+    excluded.push(`${x.name} => server`);
+    return false;
+  }
+  if(TAGS.length > 0 && intersect(userTags, x.tags).length > 0) {
+    const intersectedTags = intersect(userTags, x.tags);
+    excluded.push(`${x.name} => tags ${tagsList.filter(x => intersectedTags.includes(x._id.$oid)).map(x => x.name).join(',')}`);
+    return false;
+  }
+  if(STACKS.length > 0 && STACKS.some(y => x.name.includes(y))) {
+    excluded.push(`${x.name} => stack`);
+    return false;
+  }
+  if(SERVICES.length > 0) {
+    const s = x.info.services.map(x => x.service);
+    if(s.some(x => SERVICES.some(y => x.includes(y)))) {
+      excluded.push(`${x.name} => service`);
+      return false;
+    }
+  }
+  if(IMAGES.length > 0) {
+    const s = x.info.services.map(x => x.image);
+    if(s.some(x => IMAGES.includes(y => y.includes(s)))) {
+      excluded.push(`${x.name} => image`);
+      return false;
+    }
+  }
+  return true;
+});
+
+if(excluded.length > 0) {
+  console.log(`Excluded ${excluded.length} Stacks:\n${formatColumns(excluded, 3)}`);
+}
+
+console.log(`\n${commit === false ? '[DRY RUN] ' : ''}Will deploy ${candidates.length} if changed:
+${formatColumns(candidates.map(x => x.name), 3)}`);
+
+if(commit) {
+  await komodo.execute('BatchDeployStackIfChanged', {pattern: candidates.map(x => x.name).join(',')});
+}
+"""
+
+##
+
+[[action]]
+name = "renovateGitCommit"
+tags = ["SyncRsTag"]
+[action.config]
+file_contents = """
+// ARGS
+// RENOVATE_USER => username of the renovate bot
+// BASE_BRANCH => branch being merged into
+// PROCEDURE_ID => id of procedure to trigger
+// COMMIT => bool, whether to trigger procedure
+
+const body = ARGS.WEBHOOK_BODY;
+const commit = ARGS.COMMIT === 'true' || ARGS.COMMIT === true;
+
+const {
+  commits = []
+} = body;
+
+if(commits.length > 0) {
+  const {
+    ref,
+  } = body;
+
+  if(ARGS.RENOVATE_USER === undefined) {
+    throw new Error('RENOVATE_USER arg must be defined!');
+  }
+
+  if(ARGS.BASE_BRANCH !== undefined) {
+    if(!ref.includes(ARGS.BASE_BRANCH)) {
+      console.log(`Base Branch wanted '${ARGS.BASE_BRANCH} but found ${ref}, ignoring this webhook event.'`);
+      return;
+    }
+  } else {
+    console.log('No Base Branch check required.');
+  }
+
+  const renovateCommits = commits.filter(x => {
+    const {
+      author: {
+        username: authorUser
+      } = {},
+      committer: {
+        username: commitUser
+      } = {}
+    } = x;
+    return authorUser === ARGS.RENOVATE_USER || commitUser === ARGS.RENOVATE_USER;
+  });
+
+  if(renovateCommits.length === 0) {
+    console.log(`No commits by username ${ARGS.RENOVATE_USER}`);
+    return;
+  }
+
+  console.log(`Found ${renovateCommits.length} by username ${ARGS.RENOVATE_USER}:\n${renovateCommits.map(x => x.message).join('\n')}`);
+
+  const pid = ARGS.PROCEDURE_ID;
+  console.log(`${commit === false ? '[DRY RUN] ' : ''} Triggering procedure ${pid}`);
+  if(undefined === pid) {
+    throw new Error('Cannot trigger procedure because no ID was provided as arg PROCEDURE_ID');
+  }
+  if(commit) {
+    komodo.execute('RunProcedure', {procedure: pid});
+  }
+}
+"""
+arguments = """
+PROCEDURE_ID=69f9ae68f95514d1aa8965f3 # the procedure ID from step 3, get it from the procedure's page URL
+RENOVATE_USER=renovate-bot # the username of the renovate bot on your forgejo instance
+#BASE_BRANCH=main # uncomment this and specify branch to trigger only if commits are in this branch
+COMMIT=true
+"""
+
+##
+
 [[alerter]]
 name = "TG-Alerter"
 tags = ["SyncRsTag"]
