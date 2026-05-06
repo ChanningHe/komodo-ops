@@ -4,10 +4,9 @@ services:
     container_name: traefik-dashboard
     # ports:
     #   - "3000:3000"
-    environment:
-      - NODE_ENV=production
     restart: unless-stopped
     environment:
+      - NODE_ENV=production
       - AGENT_API_URL=http://${IP_NIXOS_RL}:53948
       - AGENT_API_TOKEN=${TRAEFIK_LOG_DASHBOARD_AUTH_TOKEN}
     networks:
