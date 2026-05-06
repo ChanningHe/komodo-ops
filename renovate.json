@@ -11,7 +11,7 @@
   "labels": ["renovate"],
   "configMigration": true,
   "prHourlyLimit": 0,
-  "includePaths": ["stacks/poecilia/glance/**"],
+  "includePaths": ["stacks/**"],
   "prConcurrentLimit": 0,
   "minimumReleaseAge": "4 day",
   "docker-compose": {
@@ -29,15 +29,15 @@
       { "matchHost": "lscr.io", "concurrentRequestLimit": 2 }
     ],
     "prBodyNotes": ["Updates for stacks in `{{packageFileDir}}`."],
-    "registryAliases": {
-      "index.docker.io": "registry-docker.example.com",
-      "docker.io": "registry-docker.example.com"
-    },
+    // "registryAliases": {
+    //   "index.docker.io": "registry-docker.example.com",
+    //   "docker.io": "registry-docker.example.com"
+    // },
     "packageRules": [
-      {
-        "matchDatasources": ["docker"],
-        "registryUrls": ["https://registry-docker.example.com"]
-      },
+      // {
+      //   "matchDatasources": ["docker"],
+      //   "registryUrls": ["https://registry-docker.example.com"]
+      // },
       {
         "matchPackageNames": ["/.*/"],
         "addLabels": ["{{updateType}}"],

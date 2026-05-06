@@ -47,8 +47,8 @@ git config core.hooksPath .githooks
 
 ## TODO
 
-- [ ] Pin all image tags (remove `latest` and other floating tags)
-- [ ] Adopt [Renovate](https://docs.renovatebot.com/) for automated dependency and image updates
+- [x] Pin all image tags (remove `latest` and other floating tags)
+- [x] Adopt [Renovate](https://docs.renovatebot.com/) for automated dependency and image updates
 
 ## License
 
