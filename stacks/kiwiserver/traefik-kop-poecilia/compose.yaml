@@ -1,7 +1,7 @@
 services:
 
   traefik-kop-local:
-    image: "ghcr.io/jittering/traefik-kop:latest"
+    image: "ghcr.io/jittering/traefik-kop:0.19.4@sha256:e772673cc437070646229354e55fb1b5b348cf4d7fade5514e3b61c1f3d0b319"
     restart: unless-stopped
     environment:
       - "REDIS_ADDR=${IP_POECILIA}:6379"
@@ -15,7 +15,7 @@ services:
       - kop_net
 
   socket-proxy:
-    image: lscr.io/linuxserver/socket-proxy:latest
+    image: lscr.io/linuxserver/socket-proxy:3.2.17@sha256:a8f16b7a30a6863fe5caf4750ae86f53e59de6600069f21b6d7592fdec031683
     container_name: socket-proxy
     networks:
       - kop_net

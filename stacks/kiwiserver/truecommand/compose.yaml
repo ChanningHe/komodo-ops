@@ -5,7 +5,7 @@ services:
       - $DOCKER_DATA/truecommand/data:/data
     ports:
       - 53730:80
-    image: ixsystems/truecommand:latest
+    image: ixsystems/truecommand:3.3.0@sha256:35a6bb629397c70b4fa79426df5bdd548d5bc0c283bbf592e4394ba3b54c8761
     restart: unless-stopped
     labels:
       traefik.enable: true

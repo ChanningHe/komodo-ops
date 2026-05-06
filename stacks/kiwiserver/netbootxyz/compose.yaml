@@ -1,6 +1,6 @@
 services:
   netbootxyz:
-    image: ghcr.io/netbootxyz/netbootxyz
+    image: ghcr.io/netbootxyz/netbootxyz:0.7.6-nbxyz18@sha256:bfe21f85fcb9cc7e76b77fafcfb23c3c3ee6d06b27ef066d61ec1de04c2cca78
     container_name: netbootxyz
     network_mode: host
     environment:

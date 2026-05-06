@@ -1,6 +1,6 @@
 services:
   debian-ftprsync:
-    image: channinghe/ftprsync:latest
+    image: channinghe/ftprsync:latest@sha256:549933d638b93f7160b0647465026065523da365dcd54a4472d168431941096a
     container_name: debian-ftprsync
     user: 0:5000
     restart: unless-stopped

@@ -1,6 +1,6 @@
 services:
   mt-photos:
-    image: mtphotos/mt-photos:latest
+    image: mtphotos/mt-photos:latest@sha256:5b00f8fc87dad030b75c28a5f4322da273d1240cf7e244ad6be25b180a7bd2ff
     restart: unless-stopped
     ports:
       - 28063:8063
@@ -28,6 +28,6 @@ services:
       - AUTO_LOAD_TXT_MODAL=on
       - API_AUTH_KEY=${MTPHOTOS_AI_API_AUTH_KEY}
     env_file: ./.env
-    image: mtphotos/mt-photos-ai:latest
+    image: mtphotos/mt-photos-ai:latest@sha256:1257f057837c863778903dc91eb5e71c88edba9ec2805bbc82937d318d51ab24
     
 networks: {}
