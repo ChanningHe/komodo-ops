@@ -6,7 +6,7 @@ services:
     volumes:
       - $DOCKER_DATA/uptime-kuma/data:/app/data
     container_name: uptime-kuma
-    image: louislam/uptime-kuma:2
+    image: louislam/uptime-kuma:2@sha256:9aeb4e51d038047f414309c77a1af553281ca535723cb88907d907269d0a908e
     networks:
       - traefik-poecilia_local_web
     labels:

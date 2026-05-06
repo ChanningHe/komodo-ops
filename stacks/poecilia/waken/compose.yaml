@@ -1,6 +1,6 @@
 services:
   waken:
-    image: ghcr.io/channinghe/waken:latest
+    image: ghcr.io/channinghe/waken:latest@sha256:5f2564bce270b3c50dfb767a48f4f128dd1aee4995c3c50adbca9c7b8d4bc782
     network_mode: host
     volumes:
       - $DOCKER_DATA/waken/config:/app/waken/config

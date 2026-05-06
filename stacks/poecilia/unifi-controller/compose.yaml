@@ -1,6 +1,6 @@
 services:
   unifi:
-    image: ghcr.io/goofball222/unifi
+    image: ghcr.io/goofball222/unifi:latest@sha256:6e9bc51fd9472323ec43d53d2348150eb9ba1e3e8e12d7465dae259963ce8f76
     container_name: unifi
     # networks:
     #   - unifi-br
@@ -42,7 +42,7 @@ services:
   unifidb:
     #   Use max mongo version 5.0.X. Higher versions are incompatible with the mongo driver built into Unifi.
     #   Older versions are acceptable, ie: mongo:3.6
-    image: mongo:5.0
+    image: mongo:5.0@sha256:5e3e87afd24d75e722884d777c5713d254f7e88ba65381b5d6484f75a21b73e3
     container_name: unifidb
     # networks:
     #   - unifi-br

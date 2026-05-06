@@ -19,7 +19,7 @@ services:
       homepage.href: "https://grafana.${DOMAIN_INT}"
     volumes:
       - $DOCKER_DATA/grafana/config:/var/lib/grafana
-    image: grafana/grafana-oss
+    image: grafana/grafana-oss:13.0.1@sha256:0f86bada30d65ef9d0183b90c1e2682ac92d53d95da8bed322b984ea78a4a73a
 networks:
   traefik-poecilia_local_web:
     external: true

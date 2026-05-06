@@ -10,7 +10,7 @@ services:
   # https://hub.docker.com/r/timescale/timescaledb
   timescaledb-zfs:
     container_name: timescaledb-zfs
-    image: timescale/timescaledb:2.19.1-pg14
+    image: timescale/timescaledb:2.19.1-pg14@sha256:518103699942457417cd84c2b0c0105bd82ad07012c2ca06806e7ab5bb59a31e
 
     # Assume firewalled + password POSTGRES_PASSWORD hardened
     network_mode: host

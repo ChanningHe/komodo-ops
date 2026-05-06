@@ -10,7 +10,7 @@ services:
   #   restart: "no"
 
   dockflare:
-    image: alplat/dockflare:stable
+    image: alplat/dockflare:stable@sha256:45269172a7f0d48cfa1c4ee47edcff602194c6f13683c075e0d3a3b9647c5f71
     container_name: dockflare
     restart: unless-stopped
     ports:
@@ -36,7 +36,7 @@ services:
       traefik.docker.network: traefik-poecilia_local_web
 
   redis:
-    image: redis:7-alpine
+    image: redis:7-alpine@sha256:286bd4264adb303147270bb2d735352497e950f7b73b2ca42364d63d7daf61ee
     container_name: dockflare-redis
     restart: unless-stopped
     command: ["redis-server", "--save", "", "--appendonly", "no"]

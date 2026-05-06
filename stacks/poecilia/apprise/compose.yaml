@@ -1,6 +1,6 @@
 services:
   komodo-apprise-alerter:
-    image: foxxmd/komodo-apprise-alerter:latest
+    image: foxxmd/komodo-apprise-alerter:0.0.5@sha256:724d38931b5311b5f4b6b124ae4f5080bc0748eef83b786927c5ec8531c0d12e
     restart: unless-stopped
     networks:
       - apprise
@@ -15,7 +15,7 @@ services:
       - APPRISE_STATELESS_URLS=${APPRISE_TG_URL}
       - APPRISE_PERSISTENT_KEYS=${APPRISE_PERSISTENT_KEYS}
   apprise-api:
-    image: lscr.io/linuxserver/apprise-api:latest
+    image: lscr.io/linuxserver/apprise-api:v1.4.1-ls239@sha256:e00fdea7e395502dc484b50ee9f781a04c8831a84dded3b58a746fa75e5cf76c
     container_name: apprise-api
     networks:
       - apprise

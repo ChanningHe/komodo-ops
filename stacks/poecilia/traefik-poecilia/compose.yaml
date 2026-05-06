@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: "traefik:v3.6"
+    image: "traefik:v3.6@sha256:f79c88ed5252ae1e31c757a9796d751461ddb502437b8d8526db9e12605a82eb"
     networks:
       - local_web
       - traefik_admin
@@ -39,7 +39,7 @@ services:
       homepage.widget.url: https://traefik-poecilia.${DOMAIN_INT}
 
   logrotate:
-    image: vegardit/traefik-logrotate:latest
+    image: vegardit/traefik-logrotate:latest@sha256:a1dda881ae7c4d0ec1a862d87360aea125460775f8e804b5c0519d875d58d5fb
     network_mode: none
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw # required to send USR1 signal to Traefik after log rotation
@@ -62,7 +62,7 @@ services:
     restart: always
     
   traefik-access-logs:
-    image: alpine
+    image: alpine:3.23.4@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
     container_name: traefik-poecilia-access-logs
     volumes:
       - $DOCKER_DATA/traefik-poecilia/traefik/log:/var/log:ro
@@ -73,7 +73,7 @@ services:
     
   traefik-poecilia-redis:
     restart: always
-    image: redis:7-alpine
+    image: redis:7-alpine@sha256:286bd4264adb303147270bb2d735352497e950f7b73b2ca42364d63d7daf61ee
     container_name: traefik-poecilia-redis
     ports:
       - "6379:6379"

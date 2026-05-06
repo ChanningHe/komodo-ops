@@ -1,6 +1,6 @@
 services:
   forgejo-int:
-    image: codeberg.org/forgejo/forgejo:15
+    image: codeberg.org/forgejo/forgejo:15@sha256:bff07e43f5c84449e9dc6dca2c0a16c6f9eb285405d7f1bc631a360fd963f3fc
     container_name: forgejo-int
     #user: 5000:5000 rootless only
     environment:
@@ -23,7 +23,7 @@ services:
       - "11222:22"
 
   forgejo-postgres:
-    image: postgres:14
+    image: postgres:14@sha256:bbb8851608e3ff4901156bf6a4bf90735a9d44ae014c03811bfdb2f9c354b18b
     container_name: forgejo-postgres
     restart: always
     command:
