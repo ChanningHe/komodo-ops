@@ -2,7 +2,7 @@ services:
   fastapi-dls:
     ports:
       - 41443:443
-    image: makedie/fastapi-dls:1.4.1@sha256:948e81e095406b7fed0ffc1f61536559fee14c206f0b1b9aaa58bc08b427eb44
+    image: makedie/fastapi-dls:1.5.4@sha256:3c4074dd566b36e7a2f3c338d870b9f5d8aae85eb865b3611d3d27a66089069a
     restart: unless-stopped
     environment:
       - DLS_URL=${IP_NIXOS_RL}
