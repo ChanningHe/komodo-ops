@@ -1,6 +1,6 @@
 services:
   cookiecloud:
-    image: easychen/cookiecloud:latest
+    image: easychen/cookiecloud:2023.01.20.16.39@sha256:eac0477cfa7534a0952c37be70ba622355365119f88eba625bfa4d183a5487ea
     container_name: cookiecloud-app
     restart: always
     volumes:

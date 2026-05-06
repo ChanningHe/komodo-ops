@@ -1,6 +1,6 @@
 services:
   subweb-old:
-    image: careywong/subweb:latest
+    image: careywong/subweb:latest@sha256:a8da0f3d6c810a51bc1d58a52b5225687645e2c08bb7e620af9d33a8ba364441
     container_name: subweb-old
     ports:
       - "39430:80"
@@ -10,7 +10,7 @@ services:
     environment:
       - VUE_APP_SUBCONVERTER_DEFAULT_BACKEND=${DOMAIN_SUBCONVERTER_WEB}
   subweb-new:
-    image: stilleshan/subweb
+    image: stilleshan/subweb:2.0@sha256:36016b50f2d1d0116c8466f1fc32dc12316becaf2c8c839aa3b0dc18971a9de2
     container_name: subweb-new
     ports:
       - "39234:80"
@@ -44,7 +44,7 @@ services:
 
   subconverter:
     #image: ghcr.io/metacubex/subconverter:latest
-    image: asdlokj1qpi23/subconverter:latest
+    image: asdlokj1qpi23/subconverter:latest@sha256:8e078a1b156e554d2d6438e0b155a7624bb094d6c6e5eb5f756912893bf9e11f
     container_name: subconverter
     ports:
       - "15051:25500"

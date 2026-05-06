@@ -1,7 +1,7 @@
 services:
   nixosrl-kop-poecilia:
     #image: "ghcr.io/jittering/traefik-kop:latest"
-    image: channinghe/traefik-kop:test
+    image: channinghe/traefik-kop:test@sha256:cce0beece50bb50a428568f7ce4196b43bb65ddb6121631bf0ef59ecf0ac68f9
     restart: unless-stopped
     environment:
       - "REDIS_ADDR=${IP_POECILIA}:6379"

@@ -15,5 +15,5 @@ services:
       - $DOCKER_DATA/aria2:/config
       - $PATH_MEDIA/downloads:/downloads
     restart: unless-stopped
-    image: p3terx/aria2-pro:latest
+    image: p3terx/aria2-pro:latest@sha256:086d1a37c586edb07ec0fb956bf9edd89d1d38d138ad5309ff96d510c8c9a011
     network_mode: bridge

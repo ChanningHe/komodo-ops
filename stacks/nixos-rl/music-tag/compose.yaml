@@ -1,7 +1,7 @@
 
 services:
   music-tag:
-    image: xhongc/music_tag_web:latest
+    image: xhongc/music_tag_web:2.7.2@sha256:76517d8c7d7cbaeb72de1eb086394ab5d6ebcf1150ca65ce55a08ab7f91f3063
     container_name: music-tag-web
     ports:
       - "38239:8002"

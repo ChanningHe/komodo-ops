@@ -1,6 +1,6 @@
 services:
   ems-pusher:
-    image: ghcr.io/channinghe/ems2sns:latest
+    image: ghcr.io/channinghe/ems2sns:latest@sha256:0384caa3f995ecf00679f68f3fe00e17eb30d58196ae1c17bb5f0ef6527ad9ed
     container_name: ems-pusher
     restart: unless-stopped
     user: ${GID_NIXOS_RL}:${GID_NIXOS_RL}

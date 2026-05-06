@@ -1,6 +1,6 @@
 services:
   rybbit_backend:
-    image: ghcr.io/rybbit-io/rybbit-backend:latest
+    image: ghcr.io/rybbit-io/rybbit-backend:v2.5.0@sha256:fd00f61abe592f872a0e4ac13f8c7b190ab2810e72f898faea4809d7ced46eef
     #image: ghcr.io/rybbit-io/rybbit-backend:v1.6.1
     container_name: rybbit_backend
     env_file:
@@ -62,7 +62,7 @@ services:
     restart: unless-stopped
 
   rybbit-client:
-    image: ghcr.io/rybbit-io/rybbit-client:latest
+    image: ghcr.io/rybbit-io/rybbit-client:v2.5.0@sha256:741908be311a23ee4e58c5f82c6740bf75bbe4f7430ff2aec420f6189b1378b8
     #image: ghcr.io/rybbit-io/rybbit-client:v1.6.1
     container_name: rybbit-client
     # env_file:
@@ -95,7 +95,7 @@ services:
 
   rybbit-clickhouse:
     container_name: rybbit-clickhouse
-    image: clickhouse/clickhouse-server:25.4.2
+    image: clickhouse/clickhouse-server:25.4.2@sha256:5311f717b7a3ee1e8ed2c198fee498c636ba6c2da3e39dbe45769088ebc858d0
     networks:
       - default
     volumes:
@@ -131,7 +131,7 @@ services:
     restart: unless-stopped
 
   rybbit-postgres:
-    image: postgres:17.4
+    image: postgres:17.4@sha256:304ab813518754228f9f792f79d6da36359b82d8ecf418096c636725f8c930ad
     container_name: rybbit-postgres
     env_file:
       - ./.env

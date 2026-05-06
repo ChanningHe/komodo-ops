@@ -1,6 +1,6 @@
 services:
   tinyauth:
-    image: ghcr.io/steveiliop56/tinyauth:v4.0-distroless
+    image: ghcr.io/steveiliop56/tinyauth:v4.0-distroless@sha256:3f4e251f5e184da1ab0627c45b056453f18259c3bb231edbb4a9347ba741a73f
     container_name: tinyauth
     #env_file: ./.env
     restart: unless-stopped

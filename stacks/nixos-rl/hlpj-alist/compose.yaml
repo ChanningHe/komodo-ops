@@ -14,7 +14,7 @@ services:
       - ${PATH_SHARE}/foxipan:${PATH_SHARE}/foxipan
       - $DOCKER_DATA/hlpj-alist/group-fake:/etc/group
     restart: unless-stopped
-    image: openlistteam/openlist:latest
+    image: openlistteam/openlist:v4.2.1@sha256:532a559b20711b67e5156462a79c9704e895f67eba2f2511b43bf5cda3ccbaa5
     networks:
       - traefik_external_public_web
       - hlpj-alist
@@ -59,7 +59,7 @@ services:
       - $DOCKER_DATA/hlpj-alist/aria2-config:/config
       - $DOCKER_DATA/hlpj-alist/config/temp/aria2:/opt/openlist/data/temp/aria2
     restart: unless-stopped
-    image: p3terx/aria2-pro:latest
+    image: p3terx/aria2-pro:latest@sha256:086d1a37c586edb07ec0fb956bf9edd89d1d38d138ad5309ff96d510c8c9a011
 networks:
   hlpj-alist:
   traefik_external_public_web:

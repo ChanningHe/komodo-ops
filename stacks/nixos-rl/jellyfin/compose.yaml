@@ -1,7 +1,7 @@
 services:
   jellyfin:
     #image: nyanmisaka/jellyfin:latest
-    image: jellyfin/jellyfin:latest
+    image: jellyfin/jellyfin:10.11.8@sha256:1694ff069f0c9dafb283c36765175606866769f5d72f2ed56b6a0f1be922fc37
     container_name: jellyfin
     user: 0:${GID_NIXOS_RL}
     environment:

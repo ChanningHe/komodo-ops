@@ -1,6 +1,6 @@
 services:
   cloudreve:
-    image: cloudreve/cloudreve:latest
+    image: cloudreve/cloudreve:4.15.0@sha256:a713a0421219af320e81f482c80a68576b049c39544df31734ffecdb8804f6da
     container_name: cloudreve-backend
     depends_on:
       - cloudreve-postgresql
@@ -52,7 +52,7 @@ services:
       traefik.http.middlewares.rybbit-cloudreve.plugin.rewrite-body.rewrites[0].replacement: <script defer data-site-id="74bb49c134dd" src="https://rybbit.homelabproject.cc/api/script.js"></script></head>
 
   cloudreve-postgresql:
-    image: postgres:17
+    image: postgres:17@sha256:5b96f1a16bd9768b060dd2ffe55cb6225c4d9ef4d214a8b21eb08134869a97e4
     container_name: cloudreve-postgresql
     restart: always
     networks:
@@ -66,7 +66,7 @@ services:
       - $DOCKER_DATA/cloudreve/postgresql:/var/lib/postgresql/data
 
   cloudreve-redis:
-    image: redis:latest
+    image: redis:8.6.3@sha256:25dbb04fc4d6d190eda327dab551631500b0f9ac8f9808e8e63b7fda1ddff196
     restart: always
     container_name: cloudreve-redis
     networks:

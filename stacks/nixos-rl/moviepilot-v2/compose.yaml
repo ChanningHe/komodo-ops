@@ -3,7 +3,7 @@ services:
     stdin_open: true
     tty: true
     #image: ghcr.io/jxxghp/moviepilot:2.9.9
-    image: channinghe/moviepilot:dev
+    image: channinghe/moviepilot:dev@sha256:4379407cfa2f44bb88d299f47a9f4a11b1e5dcd9d552a2833bf4edcbdbce35b5
     container_name: moviepilot-v2
     user: 0:${GID_NIXOS_RL}
     #network_mode: host
@@ -33,7 +33,7 @@ services:
       kop.namespace: poecilia
     restart: always
   qb-tmp:
-    image: lscr.io/linuxserver/qbittorrent:latest
+    image: lscr.io/linuxserver/qbittorrent:5.1.4@sha256:c9990949e968e99333f47f49da7d16e81ba6e1469c8c46807a65b984c9e8b6ff
     container_name: qb-tmp
     networks:
       - defualt

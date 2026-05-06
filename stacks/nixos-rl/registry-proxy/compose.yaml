@@ -2,7 +2,7 @@ services:
   ## docker hub
   dockerhub:
     container_name: reg-docker-hub
-    image: dqzboy/registry:latest
+    image: dqzboy/registry:latest@sha256:d3ddc3b3e391254b20209872c60c83d448162332f92a9635be1ca1f0a1b89be5
     restart: always
     environment:
       - OTEL_TRACES_EXPORTER=none
@@ -39,7 +39,7 @@ services:
   ## ghcr.io
   ghcr:
     container_name: reg-ghcr
-    image: dqzboy/registry:latest
+    image: dqzboy/registry:latest@sha256:d3ddc3b3e391254b20209872c60c83d448162332f92a9635be1ca1f0a1b89be5
     restart: always
     environment:
       - OTEL_TRACES_EXPORTER=none
@@ -200,7 +200,7 @@ services:
 
 
   ghproxy:
-    image: 'wjqserver/ghproxy:latest'
+    image: 'wjqserver/ghproxy:4.3.4@sha256:c0857d824954ffd80b558f6c246178f0093bcce7664eb5a6fec340061b3ed2d7'
     restart: always
     container_name: ghproxy
     volumes:
@@ -233,7 +233,7 @@ services:
   ## UI
   registry-ui:
     container_name: registry-ui
-    image: dqzboy/docker-registry-ui:latest
+    image: dqzboy/docker-registry-ui:latest@sha256:17289ed43e4c140dd4f2b637947785f90370cac1c8e805007a1cf213d031f767
     environment:
       - DOCKER_REGISTRY_URL=http://reg-docker-hub:5000
       # [必须]使用 openssl rand -hex 16 生成唯一值

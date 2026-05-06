@@ -1,6 +1,6 @@
 services:
   crowdsec:
-    image: "crowdsecurity/crowdsec:latest"
+    image: "crowdsecurity/crowdsec:v1.7.7@sha256:6ca53ad26196ca59ddd4fa692a586b73d8fcde085046163b9ca2f04887dca563"
     container_name: crowdsec
     networks:
       - traefik_external_crowdsec_net

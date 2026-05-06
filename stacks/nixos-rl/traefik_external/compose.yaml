@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: "traefik:v3.6"
+    image: "traefik:v3.6@sha256:f79c88ed5252ae1e31c757a9796d751461ddb502437b8d8526db9e12605a82eb"
     restart: always
     networks:
       - public_web
@@ -42,7 +42,7 @@ services:
       homepage.widget.url: https://traefik-public.${DOMAIN_INT}
 
   logrotate:
-    image: vegardit/traefik-logrotate:latest
+    image: vegardit/traefik-logrotate:latest@sha256:a1dda881ae7c4d0ec1a862d87360aea125460775f8e804b5c0519d875d58d5fb
     network_mode: none
     restart: unless-stopped
     volumes:
@@ -65,7 +65,7 @@ services:
       TRAEFIK_CONTAINER_ID_COMMAND: docker ps --no-trunc --quiet --filter label=org.opencontainers.image.title=Traefik
 
   traefik-access-logs:
-    image: alpine
+    image: alpine:3.23.4@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
     container_name: traefik-external-access-logs
     volumes:
       - $DOCKER_DATA/traefik_external/traefik/log:/var/log:ro
@@ -76,7 +76,7 @@ services:
 
   traefik-external-redis:
     restart: always
-    image: redis:7-alpine
+    image: redis:7-alpine@sha256:286bd4264adb303147270bb2d735352497e950f7b73b2ca42364d63d7daf61ee
     container_name: traefik-external-redis
     ports:
       - "6379:6379"
@@ -88,7 +88,7 @@ services:
       - $DOCKER_DATA/traefik_external/redis:/data
 
   cloudflare_tunnel:
-    image: cloudflare/cloudflared:2026.2.0
+    image: cloudflare/cloudflared:2026.2.0@sha256:404528c1cd63c3eb882c257ae524919e4376115e6fe57befca8d603656a91a4c
     restart: unless-stopped
     command: tunnel run --token ${TRAEFIK_EX_CFTUNNEL_PUBLIC_TOKEN} --protocol http2
     #command: tunnel run
@@ -99,7 +99,7 @@ services:
         - public_web
 
   socket-proxy:
-    image: lscr.io/linuxserver/socket-proxy:latest
+    image: lscr.io/linuxserver/socket-proxy:3.2.17@sha256:a8f16b7a30a6863fe5caf4750ae86f53e59de6600069f21b6d7592fdec031683
     container_name: traefik-ext-socket-proxy
     networks:
       - crowdsec_net
@@ -148,7 +148,7 @@ services:
   #     - kop_net
   
   traefik-log-dashboard-agent-external:
-    image: hhftechnology/traefik-log-dashboard-agent:latest
+    image: hhftechnology/traefik-log-dashboard-agent:3.1.1@sha256:4c9853d486a0e3108678fd00aeda86ce1b269c0ae1b1c2ab9e5c81760e12d53a
     container_name: traefik-log-dashboard-agent-external
     restart: always
     ports:

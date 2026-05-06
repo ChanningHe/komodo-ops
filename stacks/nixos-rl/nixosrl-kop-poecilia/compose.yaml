@@ -1,6 +1,6 @@
 services:
   traefik-kop-local:
-    image: "ghcr.io/jittering/traefik-kop:latest"
+    image: "ghcr.io/jittering/traefik-kop:0.19.4@sha256:e772673cc437070646229354e55fb1b5b348cf4d7fade5514e3b61c1f3d0b319"
     #image: channinghe/traefik-kop:latest
     #image: ghcr.io/jittering/traefik-kop:0.17.1-next-21ade83-amd64
     restart: unless-stopped

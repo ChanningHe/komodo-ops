@@ -1,7 +1,7 @@
 services:
   cinemore-server:
     container_name: cinemore-server
-    image: cinemore/cinemore-server:latest
+    image: cinemore/cinemore-server:latest@sha256:a48fd4dcd337dec3bb9d4b578ffed188f827c15208292e3069e0694956aa52b7
     restart: always
     ports:
       - "38824:8000"

@@ -12,7 +12,7 @@ services:
   #   restart: "no"
 
   migrate-database:
-    image: kalbasit/ncps:latest
+    image: kalbasit/ncps:v0.9.4@sha256:c5c9976c0b1ad34330eec92c64106942821deff033a9c157fc063011d7207e59
     volumes:
       - $DOCKER_DATA/nix-cache/storage:/storage
     command: >
@@ -22,7 +22,7 @@ services:
       - traefik_external_public_web
       
   ncps:
-    image: kalbasit/ncps:latest
+    image: kalbasit/ncps:v0.9.4@sha256:c5c9976c0b1ad34330eec92c64106942821deff033a9c157fc063011d7207e59
     depends_on:
       migrate-database:
         condition: service_completed_successfully

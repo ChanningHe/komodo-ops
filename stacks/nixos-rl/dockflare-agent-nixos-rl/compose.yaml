@@ -1,7 +1,7 @@
 name: dockflare-agent-nixos-rl
 services:
   docker-socket-proxy:
-    image: tecnativa/docker-socket-proxy:v0.4.1
+    image: tecnativa/docker-socket-proxy:v0.4.1@sha256:3400c429c5f9e1b21d62130fb93b16e2e772d4fb7695bd52fc2b743800b9fe9e
     container_name: docker-socket-proxy
     restart: unless-stopped
     environment:
@@ -19,7 +19,7 @@ services:
       - default
       
   dockflare-agent:
-    image: alplat/dockflare-agent:latest
+    image: alplat/dockflare-agent:latest@sha256:5271be75bc25b5610b1f726f159e1a72e9fb9ca6e8717525381efeefc6977013
     container_name: dockflare-agent
     restart: unless-stopped
     environment:

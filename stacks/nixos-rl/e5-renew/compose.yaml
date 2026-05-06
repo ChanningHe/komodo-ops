@@ -11,4 +11,4 @@ services:
       - $DOCKER_DATA/e5-renew/Deploy:/renewx/Deploy
       - $DOCKER_DATA/e5-renew/appdata:/renewx/appdata
     restart: unless-stopped
-    image: gladtbam/ms365_e5_renewx:latest
+    image: gladtbam/ms365_e5_renewx:latest@sha256:05f402f0fb1b6e0cfa2ad07b96b5268b2a7f56350b3ea8fb6f5ce82d26a38b11

@@ -1,7 +1,7 @@
 services:
   atticd:
     container_name: atticd
-    image: ghcr.io/zhaofengli/attic:latest
+    image: ghcr.io/zhaofengli/attic:latest@sha256:18574aba70fc89d2b695273fbe2e7b2f8ad7e8e786b4cc535124fbe14bada1d0
     command: ["-f", "/attic/server.toml"]
     restart: unless-stopped
     # ports:
@@ -38,7 +38,7 @@ services:
 
   attic-postgres:
     container_name: attic-postgres
-    image: postgres:17.6-alpine
+    image: postgres:17.6-alpine@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
     restart: unless-stopped
     networks:
       - default

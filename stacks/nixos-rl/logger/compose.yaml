@@ -11,7 +11,7 @@ services:
       - $DOCKER_DATA/logger/promtail/config:/config
       - /etc/localtime:/etc/localtime
       - $DOCKER_DATA/traefik_external/traefik/log/:/var/log/traefik:ro
-    image: grafana/promtail:2.9.3
+    image: grafana/promtail:2.9.3@sha256:b338a29de45ef8ffa96f882f3a36306b1e61262b2a560ff523e0e2633cccbbc4
     command: -config.file=/config/promtail-config.yaml
   loki:
     container_name: loki
@@ -25,7 +25,7 @@ services:
       - /etc/localtime:/etc/localtime
     ports:
       - 30372:3100
-    image: grafana/loki:2.9.3
+    image: grafana/loki:2.9.3@sha256:eb92f1a439171542fd718f929fad38c917b3cad15ec830ba4742e2ba5ab03313
     command: -config.file=/config/loki-config.yaml
 
 networks:

@@ -1,6 +1,6 @@
 services:
   cc-svc:
-    image: ghcr.io/wei-shaw/claude-relay-service:latest
+    image: ghcr.io/wei-shaw/claude-relay-service:v1.1.303@sha256:612177483cd2a831c21735ad4f60443e56c8f60e9363d669c6e799ac29163d70
     restart: unless-stopped
     ports:
       - 42841:3000
@@ -74,7 +74,7 @@ services:
 
   # 📊 Redis Database
   redis:
-    image: redis:7-alpine
+    image: redis:7-alpine@sha256:286bd4264adb303147270bb2d735352497e950f7b73b2ca42364d63d7daf61ee
     restart: unless-stopped
     # expose:
     #   - "6379"

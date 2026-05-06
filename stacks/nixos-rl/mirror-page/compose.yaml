@@ -20,7 +20,7 @@ services:
 
   # Caddy reverse proxy and static file server
   caddy:
-    image: caddy:alpine
+    image: caddy:2.11.2-alpine@sha256:834468128c7696cec0ceea6172f7d692daf645ae51983ca76e39da54a97c570d
     container_name: mirror-page-caddy
     restart: unless-stopped
     ports:
