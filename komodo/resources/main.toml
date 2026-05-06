@@ -46,7 +46,7 @@ tags = ["SyncRsTag"]
 name = "Stage 1"
 enabled = true
 executions = [
-  { execution.type = "RunAction", execution.params.action = "batch-deploy-changed-and-exclude", execution.params.args.TAGS = "critical-infra", execution.params.args.COMMIT = false, enabled = true }
+  { execution.type = "RunAction", execution.params.action = "batch-deploy-changed-and-exclude", execution.params.args.TAGS = "critical-infra", execution.params.args.COMMIT = true, enabled = true }
 ]
 
 ##
