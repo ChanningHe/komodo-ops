@@ -174,18 +174,6 @@ compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 ##
 
 [[stack]]
-name = "filebrowser"
-tags = ["nixos-rl"]
-[stack.config]
-server = "nixos-rl"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/nixos-rl/filebrowser"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
-##
-
-[[stack]]
 name = "forgejo"
 tags = ["nixos-rl", "public-svc"]
 [stack.config]
