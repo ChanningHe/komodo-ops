@@ -1,0 +1,39 @@
+services:
+  dockerio-distribution-mirror:
+    # may need to use distribution/distribution:edge@sha256:d9fb44957a42f4413c13e01c3bcba7036a875057ee201207c4324e74ca84e2e5
+    # until >= distribution:3.1.1 is released due to needing these PRs
+    # https://github.com/distribution/distribution/pull/4846
+    # https://github.com/distribution/distribution/pull/4856
+    image: distribution/distribution:3.1.1@sha256:bca24727f4002e51f959c18c42e816e4d1078198081a9837e16b8b7d7e43ebf8
+    networks:
+      - traefik-poecilia_local_web
+      - default
+    volumes:
+      # file store for cached data
+      - $DOCKER_DATA/dockerio-distribution/distribution/registries/dockerio:/var/lib/registry
+    environment:
+      REGISTRY_PROXY_REMOTEURL: https://registry-1.docker.io # the upstream registry to cache
+      REGISTRY_PROXY_USERNAME: ChanningHe
+      REGISTRY_PROXY_PASSWORD: ${DOCKERHUB_PASSWORD}
+      REGISTRY_PROXY_TTL: 12h # how long to cache manifests for
+      REGISTRY_TAGS_MAXTAGS: 10000 # REQUIRED for use with renovatebot
+      # valkey service and config below is optional
+      REGISTRY_REDIS_ADDRS: "[distribution-valkey:6379]"
+      REGISTRY_STORAGE_DELETE_ENABLED: true
+      REGISTRY_STORAGE_CACHE_BLOBDESCRIPTOR: redis
+    labels:
+      traefik.enable: true
+      traefik.http.routers.distribution-docker.rule: Host(`registry-docker.${DOMAIN_INT}`)
+      traefik.http.services.distribution-docker.loadbalancer.server.port: 5000
+      traefik.docker.network: traefik-poecilia_local_web
+
+  distribution-valkey:
+    image: valkey/valkey:9.0.3@sha256:3b55fbaa0cd93cf0d9d961f405e4dfcc70efe325e2d84da207a0a8e6d8fde4f9
+    networks:
+      - default
+    volumes:
+      - $DOCKER_DATA/dockerio-distribution/redis:/data
+networks:
+  traefik-poecilia_local_web:
+    external: true
+  default:
