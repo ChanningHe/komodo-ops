@@ -10,7 +10,7 @@ services:
   #   restart: "no"
 
   dockflare:
-    image: alplat/dockflare:stable@sha256:45269172a7f0d48cfa1c4ee47edcff602194c6f13683c075e0d3a3b9647c5f71
+    image: alplat/dockflare:stable@sha256:2c9ec73c4d7fcdda18db366a1a3c4abc59c65dfba345665571e8112519f8f2a2
     container_name: dockflare
     restart: unless-stopped
     ports:
