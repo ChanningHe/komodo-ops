@@ -17,7 +17,7 @@ config.schedule = "Every day at 09:30"
 
 [[procedure.config.stage]]
 name = "Stage 1"
-enabled = true
+enabled = false
 executions = [
   { execution.type = "GlobalAutoUpdate", execution.params.skip_auto_update = false, enabled = true }
 ]
@@ -46,7 +46,7 @@ tags = ["SyncRsTag"]
 name = "Stage 1"
 enabled = true
 executions = [
-  { execution.type = "RunAction", execution.params.action = "batch-deploy-changed-and-exclude", execution.params.args.TAGS = ["critical-infra", "template"], execution.params.args.STACKS = ["test"], execution.params.args.COMMIT = true, enabled = true }
+  { execution.type = "RunAction", execution.params.action = "batch-deploy-changed-and-exclude", execution.params.args.COMMIT = true, execution.params.args.STACKS = ["test"], execution.params.args.TAGS = ["critical-infra", "template"], enabled = true }
 ]
 
 ##
