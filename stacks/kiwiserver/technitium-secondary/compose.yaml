@@ -1,6 +1,7 @@
 services:
   technitium-secondary:
     image: technitium/dns-server:14.2.0
+    container_name: technitium-secondary
     privileged: true
     restart: always
     environment:
