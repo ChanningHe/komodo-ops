@@ -10,19 +10,6 @@ mem_critical = 98.0
 
 ##
 
-[[repo]]
-name = "komodo-secrets-KiwiServer"
-tags = ["KiwiServer"]
-[repo.config]
-server = "kiwiserver"
-git_provider = "10.1.10.8:53110"
-git_https = false
-git_account = "ChanningHe"
-repo = "channinghe/komodo-secrets"
-path = "../komodo-secrets"
-
-##
-
 [[stack]]
 name = "apt-sync"
 tags = ["KiwiServer"]
@@ -52,7 +39,6 @@ tags = ["KiwiServer"]
 server = "kiwiserver"
 linked_repo = "komodo-ops"
 run_directory = "stacks/kiwiserver/mirrors-cnt"
-
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 
 ##
@@ -65,7 +51,6 @@ server = "kiwiserver"
 linked_repo = "komodo-ops"
 run_directory = "stacks/kiwiserver/mt-photos"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
 
 ##
 
@@ -97,6 +82,19 @@ server = "kiwiserver"
 linked_repo = "komodo-ops"
 run_directory = "stacks/kiwiserver/syncthing"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
+name = "technitium-secondary"
+tags = ["KiwiServer", "critical-infra"]
+[stack.config]
+server = "kiwiserver"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/technitium-secondary"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["config", "pull", "up"]
 
 ##
 
@@ -144,13 +142,13 @@ compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 
 ##
 
-[[stack]]
-name = "technitium-secondary"
-tags = ["KiwiServer", "critical-infra"]
-[stack.config]
+[[repo]]
+name = "komodo-secrets-KiwiServer"
+tags = ["KiwiServer"]
+[repo.config]
 server = "kiwiserver"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/poecilia/technitium-secondary"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-compose_cmd_wrapper_include = ["config", "pull", "up"]
+git_provider = "10.1.10.8:53110"
+git_https = false
+git_account = "ChanningHe"
+repo = "channinghe/komodo-secrets"
+path = "../komodo-secrets"
