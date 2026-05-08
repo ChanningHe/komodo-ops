@@ -1,6 +1,6 @@
 services:
   technitium-secondary:
-    image: technitium/dns-server:14.2.0
+    image: technitium/dns-server:14.2.0@sha256:b6a39621a5c6b37e6ca8c4b428a7e39531041e19be4b28285657c8c74374950b
     container_name: technitium-secondary
     privileged: true
     restart: always
@@ -12,7 +12,7 @@ services:
     volumes:
       - $DOCKER_DATA/technitium-secondary/data:/etc/dns
   keepalived:
-    image: shawly/keepalived:edge-4a11a97
+    image: shawly/keepalived:edge-4a11a97@sha256:3c9abead7cd9bc97e07624732b2eafd324e070ce38616b955f1b4f665d2659fa
     restart: always
     environment:
       KEEPALIVED_VIRTUAL_IP: 10.1.10.2
