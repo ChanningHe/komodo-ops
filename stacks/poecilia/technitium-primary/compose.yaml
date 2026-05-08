@@ -1,6 +1,6 @@
 services:
   technitium-primary:
-    container_name: technitium-dns
+    container_name: technitium-primary
     hostname: technitium-dns
     image: technitium/dns-server:14.2.0
     network_mode: host
