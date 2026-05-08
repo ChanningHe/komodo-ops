@@ -1,0 +1,39 @@
+services:
+  technitium-primary:
+    container_name: technitium-dns
+    hostname: technitium-dns
+    image: technitium/dns-server:14.2.0
+    network_mode: host
+    # just useless config
+    ports:
+      - 5380:5380/tcp #DNS web console (HTTP)
+      # - "53443:53443/tcp" #DNS web console (HTTPS)
+    environment:
+      - DNS_SERVER_LOG_USING_LOCAL_TIME=true
+    volumes:
+      - $DOCKER_DATA/technitium-dns/config:/etc/dns
+    restart: always
+    #sysctls:
+    #  - net.ipv4.ip_local_port_range=1024 65000
+  keepalived:
+    image: shawly/keepalived:edge-4a11a97
+    restart: always
+    environment:
+      TZ: Asia/Tokyo
+      # change to primary LAN interface used by the host
+      KEEPALIVED_INTERFACE: enp3s0
+      # Host IP of the other machine (Secondary Technitium Server)
+      KEEPALIVED_CHECK_IP: 10.1.10.5
+      KEEPALIVED_VIRTUAL_IP: 10.1.10.2
+      KEEPALIVED_VIRTUAL_MASK: 24
+      # DNS check port
+      KEEPALIVED_CHECK_PORT: 53
+      KEEPALIVED_VRID: 150
+
+      KEEPALIVED_PRIORITY: 255
+      KEEPALIVED_STATE: MASTER
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_BROADCAST
+networks: {}

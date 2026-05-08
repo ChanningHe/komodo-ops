@@ -1,0 +1,32 @@
+services:
+  technitium-secondary:
+    image: technitium/dns-server:14.2.0
+    privileged: true
+    restart: always
+    environment:
+      - DNS_SERVER_LOG_USING_LOCAL_TIME=true
+    network_mode: host
+    ports:
+      - 5380:5380/tcp
+    volumes:
+      - $DOCKER_DATA/technitium-secondary/data:/etc/dns
+  keepalived:
+    image: shawly/keepalived:edge-4a11a97
+    restart: always
+    environment:
+      KEEPALIVED_VIRTUAL_IP: 10.1.10.2
+      # change to primary LAN interface used by the host
+      KEEPALIVED_INTERFACE: br0
+      # Check IP should be the IP of the primary DNS server
+      KEEPALIVED_CHECK_IP: 10.1.10.8
+      KEEPALIVED_VIRTUAL_MASK: 24
+      KEEPALIVED_CHECK_PORT: 53
+      KEEPALIVED_VRID: 150
+      KEEPALIVED_PRIORITY: 100
+      KEEPALIVED_STATE: BACKUP
+      TZ: Asia/Tokyo
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_BROADCAST
+networks: {}

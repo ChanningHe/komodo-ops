@@ -8,6 +8,19 @@ enabled = true
 
 ##
 
+[[repo]]
+name = "komodo-secrets-Poecilia"
+tags = ["Poecilia"]
+[repo.config]
+server = "poecilia"
+git_provider = "10.1.10.8:53110"
+git_https = false
+git_account = "ChanningHe"
+repo = "channinghe/komodo-secrets"
+path = "../komodo-secrets"
+
+##
+
 [[stack]]
 name = "apprise"
 tags = ["Poecilia"]
@@ -215,13 +228,13 @@ compose_cmd_wrapper_include = ["config", "pull", "up"]
 
 ##
 
-[[repo]]
-name = "komodo-secrets-Poecilia"
-tags = ["Poecilia"]
-[repo.config]
+[[stack]]
+name = "technitium-primary"
+tags = ["Poecilia", "critical-infra"]
+[stack.config]
 server = "poecilia"
-git_provider = "10.1.10.8:53110"
-git_https = false
-git_account = "ChanningHe"
-repo = "channinghe/komodo-secrets"
-path = "../komodo-secrets"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/technitium-primary"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["config", "pull", "up"]
