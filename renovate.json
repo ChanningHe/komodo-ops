@@ -43,7 +43,7 @@
         "matchPackageNames": ["/.*/"],
         "addLabels": ["{{updateType}}"],
         "commitMessageTopic": "{{depName}}",
-        "commitMessageExtra": "[{{displayFrom}} -> {{displayTo}}] in {{packageFileDir}}",
+        "commitMessageExtra": "[{{displayFrom}} -> {{displayTo}}]{{#if packageFileDir}} in {{packageFileDir}}{{/if}}",
         "enabled": true
       },
       {
