@@ -46,7 +46,7 @@ tags = ["SyncRsTag"]
 name = "Stage 1"
 enabled = true
 executions = [
-  { execution.type = "RunAction", execution.params.action = "batch-deploy-changed-and-exclude", execution.params.args.TAGS = ["critical-infra", "template"], execution.params.args.STACKS = ["public-svc-temp", "pgl-zfs"], execution.params.args.COMMIT = true, enabled = true }
+  { execution.type = "RunAction", execution.params.action = "batch-deploy-changed-and-exclude", execution.params.args.TAGS = ["critical-infra", "template"], execution.params.args.STACKS = ["test"], execution.params.args.COMMIT = true, enabled = true }
 ]
 
 ##
@@ -67,6 +67,10 @@ const IMAGES = ARGS.IMAGES === undefined ? [] : ARGS.IMAGES.split(','); // Stack
 // if ARGS.COMMIT is not present and `true` then this action will only "dry run" the changes
 // it will log to console what it *would* do but will not actually execute any changes
 const commit = ARGS.COMMIT === 'true' || ARGS.COMMIT === true;
+
+// Komodo Stack has a top-level `template` boolean; templates should not be batch-deployed
+// unless the caller explicitly opts in by passing INCLUDE_TEMPLATES=true.
+const includeTemplates = ARGS.INCLUDE_TEMPLATES === 'true' || ARGS.INCLUDE_TEMPLATES === true;
 
 // used for getting common values found in two different lists
 const intersect = (a: Array<any>, b: Array<any>) => {
@@ -114,6 +118,10 @@ if(TAGS.length > 0) {
 const excluded: string[] = [];
 
 const candidates = availableUpdates.filter(x => {
+  if(!includeTemplates && x.template) {
+    excluded.push(`${x.name} => template`);
+    return false;
+  }
   if(REPOS.length > 0 && REPOS.some(x => x.info.repo.includes(x))) {
       excluded.push(`${x.name} => repo`);
       return false;
