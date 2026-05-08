@@ -75,7 +75,7 @@ const includeTemplates = ARGS.INCLUDE_TEMPLATES === 'true' || ARGS.INCLUDE_TEMPL
 // Comma-separated stack states to include. Default: 'Running'.
 // Variants: Deploying|Running|Paused|Stopped|Created|Restarting|Dead|Removing|Unhealthy|Down|Unknown
 // https://github.com/moghtech/komodo/blob/main/client/core/rs/src/entities/stack.rs
-const INCLUDE_STATES = (ARGS.INCLUDE_STATES || 'Running').split(',').map(s => s.trim().toLowerCase());
+const STATES = (ARGS.STATES || 'Running').split(',').map(s => s.trim().toLowerCase());
 
 // used for getting common values found in two different lists
 const intersect = (a: Array<any>, b: Array<any>) => {
@@ -127,8 +127,8 @@ const candidates = availableUpdates.filter(x => {
     excluded.push(`${x.name} => template`);
     return false;
   }
-  if(!INCLUDE_STATES.includes(String(x.info.state).toLowerCase())) {
-    excluded.push(`${x.name} => state:${x.info.state}`);
+  if(!STATES.includes(String(x.info.state).toLowerCase())) {
+    excluded.push(`${x.name} => state ${x.info.state}`);
     return false;
   }
   if(REPOS.length > 0 && REPOS.some(x => x.info.repo.includes(x))) {
