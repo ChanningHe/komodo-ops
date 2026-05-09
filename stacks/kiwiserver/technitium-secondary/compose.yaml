@@ -1,6 +1,6 @@
 services:
   technitium-secondary:
-    image: technitium/dns-server:14.2.0@sha256:b6a39621a5c6b37e6ca8c4b428a7e39531041e19be4b28285657c8c74374950b
+    image: technitium/dns-server:15.2.0@sha256:23d3b63d959e997800b095fe93009b3fae271b5258234ff2ade8535cb33682c8
     container_name: technitium-secondary
     privileged: true
     restart: always
