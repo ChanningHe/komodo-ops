@@ -26,8 +26,8 @@ services:
       homepage.name: Forgejo Internal
       homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/forgejo.png
       homepage.href: "https://forgejo.${DOMAIN_INT}"
-      homepage.widget.type: gitea
-      homepage.widget.url: https://forgejo.${DOMAIN_INT}
+      #homepage.widget.type: gitea
+      #homepage.widget.url: https://forgejo.${DOMAIN_INT}
   forgejo-postgres:
     image: postgres:14@sha256:bbb8851608e3ff4901156bf6a4bf90735a9d44ae014c03811bfdb2f9c354b18b
     container_name: forgejo-postgres
