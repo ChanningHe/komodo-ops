@@ -33,6 +33,10 @@ services:
       traefik.http.routers.labelgate.rule: Host(`labelgate.${DOMAIN_INT}`)
       traefik.http.services.labelgate.loadbalancer.server.port: 8080
       traefik.docker.network: traefik-poecilia_local_web
+      homepage.group: Dev
+      homepage.name: Labelgate
+      homepage.icon: https://raw.githubusercontent.com/ChanningHe/labelgate/refs/heads/main/assets/icon-dark.svg
+      homepage.href: "https://labelgate.${DOMAIN_INT}"
 
     ports:
       # API Server
