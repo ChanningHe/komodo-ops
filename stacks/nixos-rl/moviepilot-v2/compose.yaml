@@ -31,6 +31,11 @@ services:
       kop.poecilia.traefik.http.routers.moviepilot.entrypoints: websecure
       kop.poecilia.traefik.http.services.moviepilot.loadbalancer.server.port: 38296
       kop.namespace: poecilia
+      homepage.group: Home Service
+      homepage.name: MoviePilot
+      homepage.icon: https://movie-pilot.org/assets/icon.png
+      homepage.href: "https://mp.${DOMAIN_INT}" 
+
     restart: always
   qb-tmp:
     image: lscr.io/linuxserver/qbittorrent:5.1.4@sha256:c9990949e968e99333f47f49da7d16e81ba6e1469c8c46807a65b984c9e8b6ff
