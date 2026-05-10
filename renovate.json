@@ -7,11 +7,17 @@
   ],
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard",
-  "assignees": ["ChanningHe"],
-  "labels": ["renovate"],
+  "assignees": [
+    "ChanningHe"
+  ],
+  "labels": [
+    "renovate"
+  ],
   "configMigration": true,
   "prHourlyLimit": 0,
-  "includePaths": ["stacks/**"],
+  "includePaths": [
+    "stacks/**"
+  ],
   "prConcurrentLimit": 0,
   "minimumReleaseAge": "4 day",
   "commitMessagePrefix": "[Renovate] chore(deps):",
@@ -21,15 +27,31 @@
     },
     "pinDigests": true,
     "vulnerabilityAlerts": {
-      "addLabels": ["security"]
+      "addLabels": [
+        "security"
+      ]
     },
     "hostRules": [
-      { "matchHost": "docker.io", "concurrentRequestLimit": 2 },
-      { "matchHost": "ghcr.io", "concurrentRequestLimit": 2 },
-      { "matchHost": "gcr.io", "concurrentRequestLimit": 2 },
-      { "matchHost": "lscr.io", "concurrentRequestLimit": 2 }
+      {
+        "matchHost": "docker.io",
+        "concurrentRequestLimit": 2
+      },
+      {
+        "matchHost": "ghcr.io",
+        "concurrentRequestLimit": 2
+      },
+      {
+        "matchHost": "gcr.io",
+        "concurrentRequestLimit": 2
+      },
+      {
+        "matchHost": "lscr.io",
+        "concurrentRequestLimit": 2
+      }
     ],
-    "prBodyNotes": ["Updates for stacks in `{{packageFileDir}}`."],
+    "prBodyNotes": [
+      "Updates for stacks in `{{packageFileDir}}`."
+    ],
     // "registryAliases": {
     //   "index.docker.io": "registry-docker.example.com",
     //   "docker.io": "registry-docker.example.com"
@@ -40,10 +62,14 @@
       //   "registryUrls": ["https://registry-docker.example.com"]
       // },
       {
-        "matchPackageNames": ["/.*/"],
-        "addLabels": ["{{updateType}}"],
+        "matchPackageNames": [
+          "/.*/"
+        ],
+        "addLabels": [
+          "{{updateType}}"
+        ],
         "commitMessageTopic": "{{depName}}",
-        "commitMessageExtra": "[{{displayFrom}} -> {{displayTo}}]{{#if packageFileDir}} in {{packageFileDir}}{{/if}}",
+        "commitMessageExtra": "[{{displayFrom}} -> {{displayTo}}] in {{packageFileDir}}",
         "enabled": true
       },
       {
@@ -58,7 +84,10 @@
           "/mariadb/",
           "/etcd/"
         ],
-        "matchUpdateTypes": ["major", "minor"],
+        "matchUpdateTypes": [
+          "major",
+          "minor"
+        ],
         "enabled": false
       },
       {
@@ -73,7 +102,9 @@
           "/clickhouse/",
           "/grafana/"
         ],
-        "matchUpdateTypes": ["major"],
+        "matchUpdateTypes": [
+          "major"
+        ],
         "enabled": false
       },
       {
