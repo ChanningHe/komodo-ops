@@ -1,7 +1,7 @@
 services:
   qb:
     container_name: qb
-    #user: 0:${GID_NIXOS_RL}
+    user: 0:${GID_NIXOS_RL}
     ports:
       - 10095:8080
       - ${QBTMP_PORT:-11195}:${QBTMP_PORT:-11195}/udp
