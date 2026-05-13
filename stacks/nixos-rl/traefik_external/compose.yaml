@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: "traefik:v3.6@sha256:f79c88ed5252ae1e31c757a9796d751461ddb502437b8d8526db9e12605a82eb"
+    image: "traefik:v3.6.16@sha256:f79c88ed5252ae1e31c757a9796d751461ddb502437b8d8526db9e12605a82eb"
     restart: always
     networks:
       - public_web
@@ -96,7 +96,7 @@ services:
     #     TUNNEL_METRICS: 0.0.0.0:20241
     #     TUNNEL_TOKEN: ${TRAEFIK_EX_CFTUNNEL_PUBLIC_TOKEN}
     networks:
-        - public_web
+      - public_web
 
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:3.2.17@sha256:a8f16b7a30a6863fe5caf4750ae86f53e59de6600069f21b6d7592fdec031683
@@ -146,7 +146,7 @@ services:
   #     - socket-proxy
   #   networks:
   #     - kop_net
-  
+
   traefik-log-dashboard-agent-external:
     image: hhftechnology/traefik-log-dashboard-agent:3.1.1@sha256:4c9853d486a0e3108678fd00aeda86ce1b269c0ae1b1c2ab9e5c81760e12d53a
     container_name: traefik-log-dashboard-agent-external

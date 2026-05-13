@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: "traefik:v3.6@sha256:f79c88ed5252ae1e31c757a9796d751461ddb502437b8d8526db9e12605a82eb"
+    image: "traefik:v3.6.16@sha256:f79c88ed5252ae1e31c757a9796d751461ddb502437b8d8526db9e12605a82eb"
     networks:
       - local_web
       - traefik_admin
@@ -48,19 +48,19 @@ services:
       TZ: ${LOCAL_TZ}
       # all environment variables are optional and show the default values:
       LOGROTATE_LOGS: "/var/log/traefik/*.log" # log files to rotate, directory must match volume mount
-      LOGROTATE_TRIGGER_INTERVAL: monthly  # rotate daily, must be one of: daily, weekly, monthly, yearly
-      LOGROTATE_TRIGGER_SIZE: 100M        # rotate if log file size reaches 50MB
-      LOGROTATE_MAX_BACKUPS: 7          # keep 14 backup copies per rotated log file
-      LOGROTATE_START_INDEX: 1           # first rotated file is called access.1.log
-      LOGROTATE_FILE_MODE: 0644          # file mode of the rotated file
-      LOGROTATE_FILE_USER: root          # owning user of the rotated file
-      LOGROTATE_FILE_GROUP: root         # owning group of the rotated file
+      LOGROTATE_TRIGGER_INTERVAL: monthly # rotate daily, must be one of: daily, weekly, monthly, yearly
+      LOGROTATE_TRIGGER_SIZE: 100M # rotate if log file size reaches 50MB
+      LOGROTATE_MAX_BACKUPS: 7 # keep 14 backup copies per rotated log file
+      LOGROTATE_START_INDEX: 1 # first rotated file is called access.1.log
+      LOGROTATE_FILE_MODE: 0644 # file mode of the rotated file
+      LOGROTATE_FILE_USER: root # owning user of the rotated file
+      LOGROTATE_FILE_GROUP: root # owning group of the rotated file
       CRON_SCHEDULE: "* */5 * * *"
-      CRON_LOG_LEVEL: 8                  # see https://unix.stackexchange.com/a/414010/378036
+      CRON_LOG_LEVEL: 8 # see https://unix.stackexchange.com/a/414010/378036
       # command to determine the id of the container running Traefik:
       TRAEFIK_CONTAINER_ID_COMMAND: docker ps --no-trunc --quiet --filter label=org.opencontainers.image.title=Traefik
     restart: always
-    
+
   traefik-access-logs:
     image: alpine:3.23.4@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
     container_name: traefik-poecilia-access-logs
@@ -70,7 +70,7 @@ services:
       sh -c "tail -F /var/log/access.log"
     network_mode: none
     restart: unless-stopped
-    
+
   traefik-poecilia-redis:
     restart: always
     image: redis:7-alpine@sha256:6ab0b6e7381779332f97b8ca76193e45b0756f38d4c0dcda72dbb3c32061ab99
@@ -81,7 +81,7 @@ services:
       - traefik_admin
       - kop_net
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: ["CMD", "redis-cli", "ping"]
     volumes:
       - $DOCKER_DATA/traefik-poecilia/redis:/data
 
@@ -114,7 +114,6 @@ services:
       # homepage.name: Traefik Logs (External)
       # homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/logdy.png
       # homepage.href: "https://traefik-log-external.CHANGEME.casa"
-
 
 networks:
   traefik_admin:
