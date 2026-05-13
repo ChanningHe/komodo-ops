@@ -15,7 +15,7 @@ services:
     volumes:
       - $DOCKER_DATA/qb/config:/config
       - $PATH_MEDIA:/pt
-      - $DOCKER_DATA/qb/fakegroup:/etc/group:ro
+      #- $DOCKER_DATA/qb/fakegroup:/etc/group:ro
       - ${PATH_OTHERS}/cache/qb:/qb-cache
       - ${PATH_CP_OTHERS}/archive-files/P:/P
     restart: unless-stopped
