@@ -10,6 +10,8 @@ services:
       - PUID=0
       - PGID=${GID_NIXOS_RL}
       - TZ=${LOCAL_TZ}
+    group_add:
+      - "5000"
     volumes:
       - $DOCKER_DATA/qb/config:/config
       - $PATH_MEDIA:/pt	      
