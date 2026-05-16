@@ -42,7 +42,7 @@ services:
   unifidb:
     #   Use max mongo version 5.0.X. Higher versions are incompatible with the mongo driver built into Unifi.
     #   Older versions are acceptable, ie: mongo:3.6
-    image: mongo:5.0@sha256:5e3e87afd24d75e722884d777c5713d254f7e88ba65381b5d6484f75a21b73e3
+    image: mongo:5.0@sha256:41108d183e972dcbf98d09ed83f6cfc89a471a3f15d06f9d64a95e45d9db8dd2
     container_name: unifidb
     # networks:
     #   - unifi-br
