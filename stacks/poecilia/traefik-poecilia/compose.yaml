@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: "traefik:v3.6.16@sha256:f79c88ed5252ae1e31c757a9796d751461ddb502437b8d8526db9e12605a82eb"
+    image: "traefik:v3.7.1@sha256:6b9cbca6fac42ab0075f5437d8dc1685cfd188626d8d515839ea94f8b6271c42"
     networks:
       - local_web
       - traefik_admin
