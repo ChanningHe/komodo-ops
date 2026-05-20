@@ -29,7 +29,7 @@ services:
       #homepage.widget.type: gitea
       #homepage.widget.url: https://git.${DOMAIN_INT}
   forgejo-postgres:
-    image: postgres:14@sha256:bbb8851608e3ff4901156bf6a4bf90735a9d44ae014c03811bfdb2f9c354b18b
+    image: postgres:14@sha256:4519de92ae505d7ea7274c4e73105e12cc892efedbfd02d7c0bd9811280f883c
     container_name: forgejo-postgres
     restart: always
     command:
