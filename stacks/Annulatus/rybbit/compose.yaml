@@ -62,7 +62,7 @@ services:
     restart: unless-stopped
 
   rybbit-client:
-    image: ghcr.io/rybbit-io/rybbit-client:v2.5.0@sha256:741908be311a23ee4e58c5f82c6740bf75bbe4f7430ff2aec420f6189b1378b8
+    image: ghcr.io/rybbit-io/rybbit-client:v2.6.1@sha256:c8ea9acfad5c90695f262e91e111a7ba5b148c25bb6650ab34a0eae2a03d97ff
     #image: ghcr.io/rybbit-io/rybbit-client:v1.6.1
     container_name: rybbit-client
     # env_file:
