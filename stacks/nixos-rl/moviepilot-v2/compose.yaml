@@ -49,8 +49,8 @@ services:
       - WEBUI_PORT=${MP_QB_PORT_WEB}
       #- TORRENTING_PORT=6881
     volumes:
-      - $DOCKER_DATA/moviepilot-v2/qb-tmp/config:/config
-      - $DOCKER_DATA/moviepilot-v2/qb-tmp/downloads:/downloads #optional
+      - ${DOCKER_DATA}/moviepilot-v2/qb-tmp/config:/config
+      - ${PATH_KW_OTHERS}/cache/qb-tmp/downloads:/downloads #optional
     ports:
       - ${MP_QB_PORT_WEB:-56922}:${MP_QB_PORT_WEB:-8080}
       - ${MP_QB_PORT_BT:-6881}:${MP_QB_PORT_BT:-6881}/udp
