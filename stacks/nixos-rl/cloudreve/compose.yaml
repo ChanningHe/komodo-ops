@@ -22,6 +22,14 @@ services:
     volumes:
       - $DOCKER_DATA/cloudreve/cloudreve-backend:/cloudreve/data
       - ${PATH_SHARE}/cloudreve:${PATH_SHARE}/cloudreve
+    deploy:
+      resources:
+        limits:
+          memory: 4G 
+          cpus: '4.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
     labels:
       traefik.enable: true
       traefik.public: true
