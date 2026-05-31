@@ -14,7 +14,7 @@ services:
       - ${PATH_SHARE}/foxipan:${PATH_SHARE}/foxipan
       - $DOCKER_DATA/hlpj-alist/group-fake:/etc/group
     restart: unless-stopped
-    image: openlistteam/openlist:v4.2.1@sha256:532a559b20711b67e5156462a79c9704e895f67eba2f2511b43bf5cda3ccbaa5
+    image: openlistteam/openlist:v4.2.2@sha256:e518d69feb6a2ee7a0db7c4c9a5111e0ab155ec81b7654e39ca917f5678ce0f5
     networks:
       - traefik_external_public_web
       - hlpj-alist
