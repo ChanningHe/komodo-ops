@@ -41,12 +41,6 @@ services:
       traefik.http.routers.jellyfin.entrypoints: cf
       traefik.http.services.jellyfin.loadbalancer.server.port: 8096
       traefik.http.routers.jellyfin.service: jellyfin
-      # #----
-      # dockflare.enable: "true"
-      # dockflare.0.hostname: jf.${DOMAIN_HISC}
-      # dockflare.0.service: http://traefik:808
-      # dockflare.0.zonename: ${DOMAIN_HISC}
-      # dockflare.access.group: public-default-bypass
       #-----
       traefik.http.routers.jellyfin-local.rule: Host(`jf.${DOMAIN_HISC}`)||Host(`jellyfin.${DOMAIN_HISC}`)||Host(`jellyfin.${DOMAIN_CC}`)
       traefik.http.routers.jellyfin-local.entrypoints: https
