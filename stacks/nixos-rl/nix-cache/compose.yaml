@@ -26,8 +26,8 @@ services:
     depends_on:
       migrate-database:
         condition: service_completed_successfully
-    # ports:
-    #   - "8501:8501"
+    ports:
+      - "28501:8501"
     volumes:
       - $DOCKER_DATA/nix-cache/storage:/storage
     environment:
