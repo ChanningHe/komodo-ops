@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   drawio:
-    image: jgraph/drawio:30.0.2@sha256:63ba7ecd6722edc6fba7ee5285c37cf0e133205e5bf20d0a71646e76caddc1e7
+    image: jgraph/drawio:30.0.2@sha256:c01c93e16bcd52db3339269bf6c5826e4568a0e266b669fcac49d56f305e6653
     container_name: drawio
     restart: unless-stopped
     ports:
