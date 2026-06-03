@@ -1,6 +1,6 @@
 services:
   subweb-old:
-    image: careywong/subweb:latest@sha256:a8da0f3d6c810a51bc1d58a52b5225687645e2c08bb7e620af9d33a8ba364441
+    image: careywong/subweb:latest@sha256:47ad4afa5feeec3340feb6d53f69a793e1096a25424da1f8a5b88ed07815eef2
     container_name: subweb-old
     ports:
       - "39430:80"
