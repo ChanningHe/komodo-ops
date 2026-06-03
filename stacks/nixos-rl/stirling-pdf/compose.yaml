@@ -18,7 +18,7 @@ services:
       - LANGS=zh_CN
     labels:
       # --- labelgate --- #
-      labelgate.tunnel.pdf.hostname: pdfttt.${DOMAIN_HSC}
+      labelgate.tunnel.pdf.hostname: pdft.${DOMAIN_HSC}
       labelgate.tunnel.pdf.service: http://stirling-pdf:8080
       labelgate.tunnel.pdf.access: test-policy
       labelgate.access.test-policy.policy.include.country: "JP"
