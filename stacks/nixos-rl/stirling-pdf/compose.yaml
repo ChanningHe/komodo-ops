@@ -27,7 +27,7 @@ services:
       traefik.enable: true
       traefik.public: true
       traefik.docker.network: traefik_external_public_web
-      traefik.http.routers.pdfttt.rule: Host(`pdfttt.${DOMAIN_CC}`)
+      traefik.http.routers.pdfttt.rule: Host(`pdft.${DOMAIN_CC}`)
       traefik.http.routers.pdfttt.entrypoints: cf
       traefik.http.services.pdfttt.loadbalancer.server.port: 8080
       traefik.http.routers.pdfttt.service: pdfttt
