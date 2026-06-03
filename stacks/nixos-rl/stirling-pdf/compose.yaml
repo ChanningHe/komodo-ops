@@ -18,17 +18,17 @@ services:
       - LANGS=zh_CN
     labels:
       # --- labelgate --- #
-      labelgate.tunnel.pdf.hostname: pdft.${DOMAIN_HSC}
-      labelgate.tunnel.pdf.service: http://stirling-pdf:8080
-      labelgate.tunnel.pdf.access: test-policy
-      labelgate.access.test-policy.policy.include.country: "JP"
-      labelgate.access.test-policy.policy.decision: "allow"
+      # labelgate.tunnel.pdf.hostname: pdft.${DOMAIN_HSC}
+      # labelgate.tunnel.pdf.service: http://stirling-pdf:8080
+      # labelgate.tunnel.pdf.access: test-policy
+      # labelgate.access.test-policy.policy.include.country: "JP"
+      # labelgate.access.test-policy.policy.decision: "allow"
       #---
       traefik.enable: true
       traefik.public: true
       traefik.docker.network: traefik_external_public_web
       traefik.http.routers.pdfttt.rule: Host(`pdft.${DOMAIN_CC}`)
-      traefik.http.routers.pdfttt.entrypoints: cf
+      traefik.http.routers.pdfttt.entrypoints: cf, http
       traefik.http.services.pdfttt.loadbalancer.server.port: 8080
       traefik.http.routers.pdfttt.service: pdfttt
 
