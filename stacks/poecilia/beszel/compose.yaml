@@ -33,7 +33,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     devices:
       - /dev/nvme0:/dev/nvme0
-      - /dev/nvme0:/dev/nvme0
+      - /dev/nvme1:/dev/nvme1
     cap_add:
       - SYS_RAWIO
       - SYS_ADMIN
