@@ -15,7 +15,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.beszel-hub.rule=Host(`beszel.${DOMAIN_INT}`)"
-      - "traefik.http.services.labelgate.loadbalancer.server.port=8090"
+      - "traefik.http.services.beszel-hub.loadbalancer.server.port=8090"
     # healthcheck:
     #   test: ['CMD', '/beszel', 'health', '--url', 'http://localhost:8090']
     #   interval: 120s
