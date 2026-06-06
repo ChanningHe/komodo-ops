@@ -35,7 +35,7 @@ services:
       LISTEN: /beszel_socket/beszel.sock
       HUB_URL: http://localhost:38090
       TOKEN: ${BESZEL_AGENT_TOKEN}
-      KEY: ${}BESZEL_AGENT_KEY}
+      KEY: ${BESZEL_AGENT_KEY}
     # healthcheck:
     #   test: ['CMD', '/agent', 'health']
     #   interval: 120s
