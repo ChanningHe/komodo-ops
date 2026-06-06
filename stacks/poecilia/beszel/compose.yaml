@@ -31,6 +31,8 @@ services:
       - ${DOCKER_DATA}/beszel/beszel-agent/data:/var/lib/beszel-agent
       - ${DOCKER_DATA}/beszel/beszel_socket:/beszel_socket
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      # For systemd
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro
     devices:
       - /dev/nvme0:/dev/nvme0
       - /dev/nvme1:/dev/nvme1
