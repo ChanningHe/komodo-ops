@@ -14,6 +14,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DATA}/zerobyte:/var/lib/zerobyte
       - ${DOCKER_DATA}/zerobyte/rclone/config:/root/.config/rclone:ro
+      # data 
+      - ${PATH_BACKUP}:${PATH_BACKUP}
     labels:
       traefik.enable: true
       traefik.http.routers.zerobyte.rule: Host(`zerobyte.${DOMAIN_INT}`)
