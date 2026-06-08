@@ -13,7 +13,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DATA}/zerobyte:/var/lib/zerobyte
-      - ${DOCKER_DATA}/zerobyte/rclone/config/rclone.conf:/root/.config/rclone:ro
+      - ${DOCKER_DATA}/zerobyte/rclone/config:/root/.config/rclone:ro
     labels:
       traefik.enable: true
       traefik.http.routers.zerobyte.rule: Host(`zerobyte.${DOMAIN_INT}`)
