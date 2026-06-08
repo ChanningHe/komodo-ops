@@ -13,7 +13,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${DOCKER_DATA}/zerobyte:/var/lib/zerobyte
-      - ${DOCKER_DATA}/zerobyte/rclone/config:/root/.config/rclone:ro
+      - ${DOCKER_DATA}/zerobyte/rclone/config:/root/.config/rclone
       # data 
       - ${PATH_BACKUP}:${PATH_BACKUP}:ro
       - ${PATH_PV}:${PATH_PV}:ro
