@@ -139,6 +139,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/kiwiserver/zerobyte"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["config", "pull", "up"]
 
 ##
 
