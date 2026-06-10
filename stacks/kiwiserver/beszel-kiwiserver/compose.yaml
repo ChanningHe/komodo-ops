@@ -1,6 +1,6 @@
 services:
   beszel-agent:
-    image: henrygd/beszel-agent
+    image: henrygd/beszel-agent:alpine
     container_name: beszel-kiwiserver
     restart: unless-stopped
     network_mode: host
