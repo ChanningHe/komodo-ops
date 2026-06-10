@@ -13,14 +13,14 @@ services:
       - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro
     devices:
       # disk
-      - /dev/sdb:/dev/sdb
-      - /dev/sdc:/dev/sdc
-      - /dev/sdd:/dev/sdd
-      - /dev/sde:/dev/sde
-      - /dev/sdf:/dev/sdf
-      - /dev/sdg:/dev/sdg
-      - /dev/sdh:/dev/sdh
-      - /dev/sdi:/dev/sdi
+      - /dev/sdb:/dev/sdb:ro
+      - /dev/sdc:/dev/sdc:ro
+      - /dev/sdd:/dev/sdd:ro
+      - /dev/sde:/dev/sde:ro
+      - /dev/sdf:/dev/sdf:ro
+      - /dev/sdg:/dev/sdg:ro
+      - /dev/sdh:/dev/sdh:ro
+      - /dev/sdi:/dev/sdi:ro
       - /dev/nvme0:/dev/nvme0:ro
       - /dev/nvme1:/dev/nvme1:ro
       - /dev/nvme2:/dev/nvme2:ro
