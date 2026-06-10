@@ -1,6 +1,6 @@
 services:
   beszel:
-    image: henrygd/beszel:latest
+    image: henrygd/beszel:latest@sha256:a849ad80814b6a1a3be665304dcace5d4854b3bed7bde4dd1227e8ce1b82d477
     container_name: beszel-hub
     restart: unless-stopped
     environment:
@@ -23,7 +23,7 @@ services:
     #   timeout: 5s
 
   beszel-agent:
-    image: henrygd/beszel-agent:alpine
+    image: henrygd/beszel-agent:alpine@sha256:c6e925e00784b90eab68e2b813e4c722cf185f378d77e1129a97c064ca5fa7e4
     container_name: beszel-agent
     restart: unless-stopped
     network_mode: host
