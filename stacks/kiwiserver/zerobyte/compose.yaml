@@ -17,6 +17,7 @@ services:
       # data 
       - ${PATH_BACKUP}:${PATH_BACKUP}:ro
       - ${PATH_PV}:${PATH_PV}:ro
+      - ${PATH_LU}:${PATH_LU}:ro
     labels:
       traefik.enable: true
       traefik.http.routers.zerobyte.rule: Host(`zerobyte.${DOMAIN_INT}`)
