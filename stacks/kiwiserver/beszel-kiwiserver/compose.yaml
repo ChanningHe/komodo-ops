@@ -29,8 +29,8 @@ services:
       - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro
     environment:
       LISTEN: 45876
-      KEY: ${BESZEL_AGENT_TOKEN}
-      TOKEN: ${BESZEL_AGENT_KEY}
+      KEY: ${BESZEL_AGENT_KEY}
+      TOKEN: ${BESZEL_AGENT_TOKEN}
       HUB_URL: ${BESZEL_HUB_URL}
     cap_add:
       - SYS_RAWIO # S.M.A.R.T
