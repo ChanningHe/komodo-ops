@@ -9,6 +9,9 @@ services:
       - ${DOCKER_DATA}/beszel-kiwiserver/beszel_agent_data:/var/lib/beszel-agent
       # monitor other disks / partitions by mounting a folder in /extra-filesystems
       # - /mnt/disk/.beszel:/extra-filesystems/sda1:ro
+      # systemd
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro
+    devices:
       # disk
       - /dev/sdb:/dev/sdb
       - /dev/sdc:/dev/sdc
@@ -25,8 +28,7 @@ services:
       - /dev/nvme4:/dev/nvme4:ro
       - /dev/nvme5:/dev/nvme5:ro
       - /dev/nvme6:/dev/nvme6:ro
-      # systemd
-      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro
+
     environment:
       LISTEN: 45876
       KEY: ${BESZEL_AGENT_KEY}
