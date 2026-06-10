@@ -1,0 +1,37 @@
+services:
+  beszel-agent:
+    image: henrygd/beszel-agent
+    container_name: beszel-kiwiserver
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${DOCKER_DATA}/beszel-kiwiserver/beszel_agent_data:/var/lib/beszel-agent
+      # monitor other disks / partitions by mounting a folder in /extra-filesystems
+      # - /mnt/disk/.beszel:/extra-filesystems/sda1:ro
+      # disk
+      - /dev/sdb:/dev/sdb:ro
+      - /dev/sdc:/dev/sdc:ro
+      - /dev/sdd:/dev/sdd:ro
+      - /dev/sde:/dev/sde:ro
+      - /dev/sdf:/dev/sdf:ro
+      - /dev/sdg:/dev/sdg:ro
+      - /dev/sdh:/dev/sdh:ro
+      - /dev/sdi:/dev/sdi:ro
+      - /dev/nvme0:/dev/nvme0:ro
+      - /dev/nvme1:/dev/nvme1:ro
+      - /dev/nvme2:/dev/nvme2:ro
+      - /dev/nvme3:/dev/nvme3:ro
+      - /dev/nvme4:/dev/nvme4:ro
+      - /dev/nvme5:/dev/nvme5:ro
+      - /dev/nvme6:/dev/nvme6:ro
+      # systemd
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro
+    environment:
+      LISTEN: 45876
+      KEY: ${BESZEL_AGENT_TOKEN}
+      TOKEN: ${BESZEL_AGENT_KEY}
+      HUB_URL: ${BESZEL_HUB_URL}
+    cap_add:
+      - SYS_RAWIO # S.M.A.R.T
+      - SYS_ADMIN # NVMe S.M.A.R.T.
