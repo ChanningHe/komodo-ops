@@ -25,8 +25,13 @@ services:
       timeout: 10s
       retries: 10
       start_period: 15s
-    env_file:
-      - ./compose.env
+    environment:
+      - POSTGRES_DB=${ATTIC_POSTGRES_DB}
+      - POSTGRES_USER=${ATTIC_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${ATTIC_POSTGRES_PASSWORD}
+      - DATABASE_URL=${ATTIC_DATABASE_URL}
+      #ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64="<openssl rand 64 | base64 -w0>"
+      - ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64=${ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64}
     labels:
       traefik.enable: true
       traefik.public: true
@@ -44,10 +49,19 @@ services:
       - default
     volumes:
       - $DOCKER_DATA/attic-nix/postgres-data:/var/lib/postgresql/data
-    env_file:
-      - ./compose.env
+    environment:
+      - POSTGRES_DB=${ATTIC_POSTGRES_DB}
+      - POSTGRES_USER=${ATTIC_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${ATTIC_POSTGRES_PASSWORD}
+      - DATABASE_URL=${ATTIC_DATABASE_URL}
+      #ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64="<openssl rand 64 | base64 -w0>"
+      - ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64=${ATTIC_SERVER_TOKEN_HS256_SECRET_BASE64}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${ATTIC_POSTGRES_USER} -d ${ATTIC_POSTGRES_DB}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
