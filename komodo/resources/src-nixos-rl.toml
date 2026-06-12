@@ -469,7 +469,8 @@ name = "traefik_external"
 tags = [
   "nixos-rl",
   "public-svc",
-  "admin_monitor"
+  "admin_monitor",
+  "critical-infra"
 ]
 [stack.config]
 server = "nixos-rl"
