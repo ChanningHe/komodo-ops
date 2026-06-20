@@ -330,6 +330,19 @@ match_tags = ["nixos-rl"]
 ##
 
 [[resource_sync]]
+name = "src-Annulatus"
+tags = ["SyncRsTag"]
+[resource_sync.config]
+linked_repo = "komodo-ops"
+resource_path = [
+  "komodo/resources/src-Annulatus.toml"
+]
+managed = true
+match_tags = ["Annulatus"]
+
+##
+
+[[resource_sync]]
 name = "src-osaka-arm64"
 tags = ["SyncRsTag"]
 [resource_sync.config]
