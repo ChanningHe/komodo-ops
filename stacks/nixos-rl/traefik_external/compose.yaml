@@ -147,29 +147,29 @@ services:
   #   networks:
   #     - kop_net
 
-  traefik-log-dashboard-agent-external:
-    image: hhftechnology/traefik-log-dashboard-agent:3.1.1@sha256:4c9853d486a0e3108678fd00aeda86ce1b269c0ae1b1c2ab9e5c81760e12d53a
-    container_name: traefik-log-dashboard-agent-external
-    restart: always
-    ports:
-      - "53948:5000"
-    volumes:
-      # traefik log
-      - $DOCKER_DATA/traefik_external/traefik/log:/var/log:ro
-      # agent data
-      - $DOCKER_DATA/traefik_external/traefik-log-agent-external/data/geoip:/geoip:ro
-      - $DOCKER_DATA/traefik_external/traefik-log-agent-external/data/positions-prod:/data
-    environment:
-      - TRAEFIK_LOG_DASHBOARD_ACCESS_PATH=/var/log/access.log
-      - TRAEFIK_LOG_DASHBOARD_GEOIP_ENABLED=true
-      - TRAEFIK_LOG_DASHBOARD_GEOIP_CITY_DB=/geoip/GeoLite2-City.mmdb
-      - TRAEFIK_LOG_DASHBOARD_GEOIP_COUNTRY_DB=/geoip/GeoLite2-Country.mmdb
-    labels:
-      kop.namespace: poecilia
-      kop.poecilia.traefik.enable: true
-      kop.poecilia.traefik.http.routers.traefik-log-agent.rule: Host(`traefik-log-agent.${DOMAIN_INT}`)
-      kop.poecilia.traefik.http.routers.traefik-log-agent.entrypoints: websecure
-      kop.poecilia.traefik.http.services.traefik-log-agent.loadbalancer.server.port: 53948
+  # traefik-log-dashboard-agent-external:
+  #   image: hhftechnology/traefik-log-dashboard-agent:3.1.1@sha256:4c9853d486a0e3108678fd00aeda86ce1b269c0ae1b1c2ab9e5c81760e12d53a
+  #   container_name: traefik-log-dashboard-agent-external
+  #   restart: always
+  #   ports:
+  #     - "53948:5000"
+  #   volumes:
+  #     # traefik log
+  #     - $DOCKER_DATA/traefik_external/traefik/log:/var/log:ro
+  #     # agent data
+  #     - $DOCKER_DATA/traefik_external/traefik-log-agent-external/data/geoip:/geoip:ro
+  #     - $DOCKER_DATA/traefik_external/traefik-log-agent-external/data/positions-prod:/data
+  #   environment:
+  #     - TRAEFIK_LOG_DASHBOARD_ACCESS_PATH=/var/log/access.log
+  #     - TRAEFIK_LOG_DASHBOARD_GEOIP_ENABLED=true
+  #     - TRAEFIK_LOG_DASHBOARD_GEOIP_CITY_DB=/geoip/GeoLite2-City.mmdb
+  #     - TRAEFIK_LOG_DASHBOARD_GEOIP_COUNTRY_DB=/geoip/GeoLite2-Country.mmdb
+  #   labels:
+  #     kop.namespace: poecilia
+  #     kop.poecilia.traefik.enable: true
+  #     kop.poecilia.traefik.http.routers.traefik-log-agent.rule: Host(`traefik-log-agent.${DOMAIN_INT}`)
+  #     kop.poecilia.traefik.http.routers.traefik-log-agent.entrypoints: websecure
+  #     kop.poecilia.traefik.http.services.traefik-log-agent.loadbalancer.server.port: 53948
 
 networks:
   traefik_ex_admin:
