@@ -10,6 +10,20 @@ repo = "channinghe/komodo-ops"
 ##
 
 [[procedure]]
+name = "Backup Core Database"
+tags = ["SyncRsTag"]
+config.schedule = "Every day at 01:00"
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+  { execution.type = "BackupCoreDatabase", execution.params = {}, enabled = true }
+]
+
+##
+
+[[procedure]]
 name = "Global Auto Poll Daily"
 tags = ["SyncRsTag"]
 config.schedule_timezone = "Asia/Tokyo"
