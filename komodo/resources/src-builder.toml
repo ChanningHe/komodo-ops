@@ -19,7 +19,7 @@ name = "komodo-periphery-sops"
 tags = ["builder"]
 [build.config]
 builder = "builder-poecilia"
-version = "2.1.2"
+version = "2.2.0"
 auto_increment_version = false
 image_name = "komodo-periphery"
 include_latest_tag = false
