@@ -5,6 +5,6 @@ services:
     image: makedie/fastapi-dls:2.0.2@sha256:546c102c2b8a8253210ce380e25e8c5df79ba58ae5c7d14d672933b51a30a24a
     restart: unless-stopped
     environment:
-      - DLS_URL=${IP_NIXOS_RL}
+      - DLS_URL=${IP_ANNULATUS}
       - DLS_PORT=41443
 networks: {}

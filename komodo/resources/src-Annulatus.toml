@@ -117,18 +117,6 @@ compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 ##
 
 [[stack]]
-name = "dockflare-agent-Annulatus"
-tags = ["Annulatus"]
-[stack.config]
-server = "Annulatus"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/Annulatus/dockflare-agent-Annulatus"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
-##
-
-[[stack]]
 name = "drawio"
 tags = ["Annulatus"]
 [stack.config]
@@ -231,12 +219,12 @@ compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 ##
 
 [[stack]]
-name = "labelgate-agent-Annulatus"
+name = "labelgate-agent-annulatus"
 tags = ["Annulatus"]
 [stack.config]
 server = "Annulatus"
 linked_repo = "komodo-ops"
-run_directory = "stacks/Annulatus/labelgate-agent-Annulatus"
+run_directory = "stacks/Annulatus/labelgate-agent-annulatus"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 
 ##
@@ -325,13 +313,13 @@ ignore_services = ["migrate-database"]
 ##
 
 [[stack]]
-name = "nixosrl-kop-poecilia"
+name = "annulatus-kop-poecilia"
 tags = ["Annulatus"]
 [stack.config]
 server = "Annulatus"
 poll_for_updates = true
 linked_repo = "komodo-ops"
-run_directory = "stacks/Annulatus/nixosrl-kop-poecilia"
+run_directory = "stacks/Annulatus/annulatus-kop-poecilia"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 
 ##

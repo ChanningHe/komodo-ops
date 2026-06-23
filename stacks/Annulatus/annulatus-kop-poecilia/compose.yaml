@@ -7,8 +7,8 @@ services:
     environment:
       - "REDIS_ADDR=${IP_POECILIA}:6379"
       #- "DOCKER_HOST=tcp://socket-proxy:2375"
-      - "KOP_HOSTNAME=nixosrl-local"
-      - "BIND_IP=${IP_NIXOS_RL}"
+      - "KOP_HOSTNAME=Annulatus-local"
+      - "BIND_IP=${IP_ANNULATUS}"
       - "NAMESPACE=poecilia"
       - "DOCKER_PREFIX=kop.poecilia"
       #- "DEBUG=true"
