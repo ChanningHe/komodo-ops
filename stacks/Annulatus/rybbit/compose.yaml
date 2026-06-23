@@ -6,7 +6,7 @@ services:
     # env_file:
     #   - ./compose.env
     ports:
-      - "${RYBBIT_HOST_BACKEND_PORT}"
+      - 23001:3001
     environment:
       - NODE_ENV=production
       - CLICKHOUSE_HOST=http://rybbit-clickhouse:8123
@@ -68,7 +68,7 @@ services:
     # env_file:
     #   - ./compose.env
     ports:
-      - "${RYBBIT_HOST_CLIENT_PORT}"
+      - 23002:3002
       #- 23002:3002
     environment:
       - NODE_ENV=production
