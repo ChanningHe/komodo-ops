@@ -48,18 +48,6 @@ compose_cmd_wrapper_include = ["config", "pull", "up"]
 ##
 
 [[stack]]
-name = "dockflare-controller"
-tags = ["Poecilia"]
-[stack.config]
-server = "poecilia"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/poecilia/dockflare-controller"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
-##
-
-[[stack]]
 name = "env-tester"
 tags = ["Poecilia"]
 [stack.config]
