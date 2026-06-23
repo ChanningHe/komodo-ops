@@ -151,6 +151,16 @@ compose_cmd_wrapper_include = ["config", "pull", "up"]
 
 ##
 
+[[stack]]
+name = "rdma-exporter"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/rdma-exporter"
+
+##
+
 [[repo]]
 name = "komodo-secrets-KiwiServer"
 tags = ["KiwiServer"]
