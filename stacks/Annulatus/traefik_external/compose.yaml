@@ -97,6 +97,7 @@ services:
     #     TUNNEL_TOKEN: ${TRAEFIK_EX_CFTUNNEL_PUBLIC_TOKEN}
     networks:
       - public_web
+      - lan_v6
 
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:3.2.17@sha256:a8f16b7a30a6863fe5caf4750ae86f53e59de6600069f21b6d7592fdec031683
@@ -187,4 +188,14 @@ networks:
     ipam:
       config:
         - subnet: 171.25.0.0/24
+  lan_v6:
+    driver: macvlan
+    enable_ipv6: true
+    driver_opts:
+      parent: enp1s0
+    ipam:
+      config:
+        - subnet: ${LOCAL_V6_SVC}::/64
+          gateway: ${LOCAL_V6_SVC}::1
+          ip_range: ${LOCAL_V6_SVC}::7a4f:c2d8:0/120
   kop_net:
