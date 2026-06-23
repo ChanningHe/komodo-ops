@@ -90,14 +90,16 @@ services:
   cloudflare_tunnel:
     image: cloudflare/cloudflared:2026.3.0@sha256:6b599ca3e974349ead3286d178da61d291961182ec3fe9c505e1dd02c8ac31b0
     restart: unless-stopped
-    command: tunnel run --token ${TRAEFIK_EX_CFTUNNEL_PUBLIC_TOKEN} --protocol http2 --edge-ip-version auto
+    command: tunnel run --token ${TRAEFIK_EX_CFTUNNEL_PUBLIC_TOKEN} --protocol http2
     #command: tunnel run
     # environment:
     #     TUNNEL_METRICS: 0.0.0.0:20241
     #     TUNNEL_TOKEN: ${TRAEFIK_EX_CFTUNNEL_PUBLIC_TOKEN}
     networks:
-      - public_web
-      - lan_v6
+      public_web:
+        priority: 100
+      lan_v6:
+        priority: 50
 
   socket-proxy:
     image: lscr.io/linuxserver/socket-proxy:3.2.17@sha256:a8f16b7a30a6863fe5caf4750ae86f53e59de6600069f21b6d7592fdec031683
