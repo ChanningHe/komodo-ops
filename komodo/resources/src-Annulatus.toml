@@ -18,6 +18,7 @@ auto_update = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/alist-mirrors"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -30,6 +31,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/annulatus-kop-poecilia"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -41,6 +43,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/aria2"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -55,6 +58,7 @@ auto_update_all_services = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/attic-nix"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -66,30 +70,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/cadvisor"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
-##
-
-[[stack]]
-name = "cc-svc"
-tags = ["Annulatus"]
-[stack.config]
-server = "Annulatus"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/Annulatus/cc-svc"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
-##
-
-[[stack]]
-name = "cinemore"
-tags = ["Annulatus"]
-[stack.config]
-server = "Annulatus"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/Annulatus/cinemore"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -102,6 +83,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/cloudreve"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -113,6 +95,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/cookiecloud-app"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -125,6 +108,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/crowdsec"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -146,6 +130,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/e5-renew"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -170,6 +155,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/fastapi-dls"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -182,6 +168,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/forgejo"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -193,6 +180,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/hlpj-alist"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -204,6 +192,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/iyuuplus"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -216,6 +205,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/jellyfin"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -227,6 +217,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/kms"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -238,6 +229,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/labelgate-agent-annulatus"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -249,6 +241,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/logger"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -261,6 +254,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/mirror-page"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -285,6 +279,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/music-tag"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -297,6 +292,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/navidrome"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -308,6 +304,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/nginxwebui"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -321,6 +318,7 @@ linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/nix-cache"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 ignore_services = ["migrate-database"]
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -333,6 +331,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/open-webui"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -345,6 +344,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/pocket-id"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -357,6 +357,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/public-svc-temp"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -380,6 +381,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/qb-media"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["config", "pull", "up"]
 
 ##
 
@@ -391,6 +393,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/registry-proxy"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -411,17 +414,6 @@ compose_cmd_wrapper_include = ["pull", "config", "up"]
 ##
 
 [[stack]]
-name = "safeline-waf"
-tags = ["Annulatus"]
-[stack.config]
-server = "Annulatus"
-linked_repo = "komodo-ops"
-run_directory = "stacks/Annulatus/safeline-waf"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
-##
-
-[[stack]]
 name = "stirling-pdf"
 tags = ["Annulatus"]
 [stack.config]
@@ -429,6 +421,7 @@ server = "Annulatus"
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/stirling-pdf"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -441,6 +434,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/subconverter"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -453,6 +447,7 @@ poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/tinyauth"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
@@ -471,6 +466,7 @@ destroy_before_deploy = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/traefik_external"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
