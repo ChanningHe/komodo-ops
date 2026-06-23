@@ -15,7 +15,7 @@ services:
         bind:
           create_host_path: false
       - $DOCKER_DATA/jellyfin/cache:/cache
-      - ${PATH_MEDIACENTRE}:${PATH_MEDIACENTRE}
+      - ${PATH_MEDIACENTRE}:${PATH_MEDIACENTRE}:ro
 
     ports:
       - 8096:8096
