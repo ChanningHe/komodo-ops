@@ -1,6 +1,6 @@
 services:
   mt-photos:
-    image: mtphotos/mt-photos:latest@sha256:6be4127465ce3492645ca1b4cbd630aa55dc5bb2a97c59e93372a621ce70ad73
+    image: mtphotos/mt-photos:latest@sha256:be6e4fd82fd8c93b066b63fb73c76a1760a60b15662c621a44ae401e7eae5a5d
     restart: unless-stopped
     ports:
       - 28063:8063
