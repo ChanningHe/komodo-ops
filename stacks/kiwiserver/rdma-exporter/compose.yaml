@@ -7,5 +7,5 @@ services:
       - /sys/class/infiniband:/sys/class/infiniband:ro
     environment:
       - RDMA_EXPORTER_LOG_LEVEL=info
-    image: ghcr.io/yuuki/rdma-exporter:0.4.1@sha256:3fdf050bc54ab64f2d683283edbaad8da2b07205f7ea4d223f32985f05527411
+    image: ghcr.io/yuuki/rdma-exporter:0.4.1
 networks: {}
