@@ -19,7 +19,19 @@ linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/alist-mirrors"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 
-#
+##
+
+[[stack]]
+name = "annulatus-kop-poecilia"
+tags = ["Annulatus"]
+[stack.config]
+server = "Annulatus"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/Annulatus/annulatus-kop-poecilia"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
 
 [[stack]]
 name = "aria2"
@@ -313,18 +325,6 @@ ignore_services = ["migrate-database"]
 ##
 
 [[stack]]
-name = "annulatus-kop-poecilia"
-tags = ["Annulatus"]
-[stack.config]
-server = "Annulatus"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/Annulatus/annulatus-kop-poecilia"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
-##
-
-[[stack]]
 name = "open-webui"
 tags = ["Annulatus"]
 [stack.config]
@@ -402,7 +402,11 @@ server = "Annulatus"
 poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/rybbit"
+additional_env_files = [
+  { path = "compose.env", track = true }
+]
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
 
 ##
 
