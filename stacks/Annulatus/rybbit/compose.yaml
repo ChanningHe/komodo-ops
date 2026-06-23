@@ -20,7 +20,7 @@ services:
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - BASE_URL=https://${BASE_URL}
       - DISABLE_SIGNUP=${DISABLE_SIGNUP}
-      - DISABLE_TELEMETRY=${DISABLE_TELEMETRY}
+      - DISABLE_TELEMETRY=false
     depends_on:
       rybbit-clickhouse:
         condition: service_healthy
