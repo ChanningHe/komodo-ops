@@ -3,8 +3,8 @@ services:
     image: ghcr.io/rybbit-io/rybbit-backend:v2.5.0@sha256:fd00f61abe592f872a0e4ac13f8c7b190ab2810e72f898faea4809d7ced46eef
     #image: ghcr.io/rybbit-io/rybbit-backend:v1.6.1
     container_name: rybbit_backend
-    env_file:
-      - ./compose.env
+    # env_file:
+    #   - ./compose.env
     ports:
       - "${HOST_BACKEND_PORT}"
     environment:
@@ -65,8 +65,8 @@ services:
     image: ghcr.io/rybbit-io/rybbit-client:v2.5.0@sha256:741908be311a23ee4e58c5f82c6740bf75bbe4f7430ff2aec420f6189b1378b8
     #image: ghcr.io/rybbit-io/rybbit-client:v1.6.1
     container_name: rybbit-client
-    env_file:
-      - ./compose.env
+    # env_file:
+    #   - ./compose.env
     ports:
       - "${HOST_CLIENT_PORT}"
       #- 23002:3002
