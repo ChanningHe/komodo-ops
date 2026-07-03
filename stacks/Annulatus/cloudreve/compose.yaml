@@ -39,7 +39,7 @@ services:
       traefik.http.routers.cloudreve.entrypoints: cf
       traefik.http.services.cloudreve.loadbalancer.server.port: 5212
       traefik.http.routers.cloudreve.service: cloudreve
-      traefik.http.routers.cloudreve.middlewares: rybbit-cloudreve
+      #traefik.http.routers.cloudreve.middlewares: rybbit-cloudreve
       # #---cloudflared---
       # dockflare.enable: "true"
       # dockflare.0.hostname: ${DOMAIN_CLOUDREVE}
