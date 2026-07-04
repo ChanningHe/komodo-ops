@@ -1,6 +1,6 @@
 services:
   cloudreve:
-    image: cloudreve/cloudreve:4.16.0@sha256:be8a6aa2a125a2de3288ba474b157192a8f1ab7699f80f4693e7288f70e8e4b0
+    image: cloudreve/cloudreve:4.17.0@sha256:5a73890b7fc35c5de76ed35a5901e9ae1d199e8a33a88eb9d31615505d93e3c4
     container_name: cloudreve-backend
     depends_on:
       - cloudreve-postgresql
