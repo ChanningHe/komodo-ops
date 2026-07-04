@@ -15,7 +15,7 @@ services:
         crowdsecurity/http-cve
       SCENARIOS: >-
         crowdsecurity/http-crawl-non_statics
-        crowdsecurity/http-generic-404-scan
+        crowdsecurity/http-dos-random-uri
       CUSTOM_HOSTNAME: crowdsec
       GID: ${GID_NIXOS_RL}
       LEVEL_INFO: "true"
