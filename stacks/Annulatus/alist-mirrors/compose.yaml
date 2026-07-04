@@ -1,6 +1,6 @@
 services:
   alist-aptmirrors:
-    image: xhofe/alist:v3.60.0@sha256:d39e4f918fa52a52122961bd397cbeb7c4335b0f70a7974089dae2d561349941
+    image: xhofe/alist:v3.61.0@sha256:29502955e86f39d4215f78d18d42d085a1b560180e7a8958041cfb83ee05e2c4
     container_name: alist-aptmirrors
     networks:
       - traefik_external_public_web
