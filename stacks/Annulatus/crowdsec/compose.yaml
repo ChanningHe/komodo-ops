@@ -5,11 +5,21 @@ services:
     networks:
       - traefik_external_crowdsec_net
     environment:
-      - "COLLECTIONS=crowdsecurity/linux crowdsecurity/traefik crowdsecurity/whitelist-good-actors crowdsecurity/appsec-crs crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
-      - "CUSTOM_HOSTNAME=crowdsec"
-      - "GID=${GID_NIXOS_RL}"
-      - "LEVEL_INFO=true"
-      - "TZ=${LOCAL_TZ}"
+      COLLECTIONS: >-
+        crowdsecurity/linux
+        crowdsecurity/traefik
+        crowdsecurity/whitelist-good-actors
+        crowdsecurity/appsec-crs
+        crowdsecurity/appsec-virtual-patching
+        crowdsecurity/appsec-generic-rules
+        crowdsecurity/http-cve
+      SCENARIOS: >-
+        crowdsecurity/http-crawl-non_statics
+        crowdsecurity/http-generic-404-scan
+      CUSTOM_HOSTNAME: crowdsec
+      GID: ${GID_NIXOS_RL}
+      LEVEL_INFO: "true"
+      TZ: ${LOCAL_TZ}
     ports:
       - "4242:4242/tcp"
       - "6060:6060/tcp"
