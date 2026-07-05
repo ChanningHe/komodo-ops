@@ -15,6 +15,8 @@ services:
       traefik.public: true
       traefik.http.routers.tinyauth.rule: Host(`${DOMAIN_TINYAUTH}`)
       traefik.http.middlewares.tinyauth.forwardauth.address: http://tinyauth:3000/api/auth/traefik
+      traefik.http.middlewares.tinyauth.forwardauth.trustForwardHeader: true
+      traefik.http.middlewares.tinyauth.forwardauth.maxResponseBodySize: 8192
       # #---cloudflared---
       # dockflare.enable: "true"
       # dockflare.0.hostname: ${DOMAIN_TINYAUTH}

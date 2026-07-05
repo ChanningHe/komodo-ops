@@ -1,15 +1,27 @@
 services:
   crowdsec:
-    image: "crowdsecurity/crowdsec:v1.7.7@sha256:6ca53ad26196ca59ddd4fa692a586b73d8fcde085046163b9ca2f04887dca563"
+    image: "crowdsecurity/crowdsec:v1.7.8@sha256:2f527c9bb8b367120eb08b82890aa912ce96bfa1ada93dda0721700e4b4e0dde"
     container_name: crowdsec
     networks:
       - traefik_external_crowdsec_net
     environment:
-      - "COLLECTIONS=crowdsecurity/linux crowdsecurity/traefik crowdsecurity/whitelist-good-actors crowdsecurity/appsec-crs crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
-      - "CUSTOM_HOSTNAME=crowdsec"
-      - "GID=${GID_NIXOS_RL}"
-      - "LEVEL_INFO=true"
-      - "TZ=${LOCAL_TZ}"
+      COLLECTIONS: >-
+        crowdsecurity/linux
+        crowdsecurity/traefik
+        crowdsecurity/whitelist-good-actors
+        crowdsecurity/appsec-crs
+        crowdsecurity/appsec-virtual-patching
+        crowdsecurity/appsec-generic-rules
+        crowdsecurity/http-cve
+      SCENARIOS: >-
+        crowdsecurity/http-crawl-non_statics
+        crowdsecurity/http-dos-random-uri
+      PARSERS: >-
+        crowdsecurity/geoip-enrich
+      CUSTOM_HOSTNAME: crowdsec
+      GID: ${GID_NIXOS_RL}
+      LEVEL_INFO: "true"
+      TZ: ${LOCAL_TZ}
     ports:
       - "4242:4242/tcp"
       - "6060:6060/tcp"

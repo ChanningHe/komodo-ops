@@ -3,14 +3,22 @@ services:
     image: "traefik:v3.7.6@sha256:21a3d83696379bac6434bb32e1dde0aff0e84ef2abd053ed3db87d3f45e749b2"
     restart: unless-stopped
     networks:
-      - public_web
-      - traefik_ex_admin
-      - crowdsec_net
+      public_web:
+      traefik_ex_admin:
+      crowdsec_net:
+        ipv4_address: 171.25.0.99
     depends_on:
       - traefik-external-redis
-    command: --api.insecure=true --providers.docker
+    command: 
+      - "--api.insecure=true"
+      - "--providers.docker"
+      - "--ping=true"
+      - "--ping.entrypoint=traefik"
     env_file: ./.env
     deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
       resources:
         limits:
           memory: 2G
@@ -44,9 +52,15 @@ services:
       homepage.href: "https://traefik-public.${DOMAIN_INT}"
       homepage.widget.type: traefik
       homepage.widget.url: https://traefik-public.${DOMAIN_INT}
-
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  
   logrotate:
-    image: vegardit/traefik-logrotate:latest@sha256:af67d83668d488163d33821f1df56a85464111e34a900e3d9f0fffd89477006d
+    image: vegardit/traefik-logrotate:latest@sha256:410006e29707d6a06e1c18341f0ef1c270dfc5f9b1993158aff014ede434039e
     network_mode: none
     restart: unless-stopped
     volumes:
@@ -56,18 +70,24 @@ services:
       TZ: "${LOCAL_TZ}"
       # all environment variables are optional and show the default values:
       LOGROTATE_LOGS: "/var/log/traefik/*.log" # log files to rotate, directory must match volume mount
-      LOGROTATE_TRIGGER_INTERVAL: monthly # rotate daily, must be one of: daily, weekly, monthly, yearly
-      LOGROTATE_TRIGGER_SIZE: 50M # rotate if log file size reaches 50MB
-      LOGROTATE_MAX_BACKUPS: 7 # keep 14 backup copies per rotated log file
+      LOGROTATE_TRIGGER_INTERVAL: daily # rotate daily, must be one of: daily, weekly, monthly, yearly
+      LOGROTATE_TRIGGER_SIZE: 200M # rotate if log file size reaches 50MB
+      LOGROTATE_MAX_BACKUPS: 14 # keep 14 backup copies per rotated log file
       LOGROTATE_START_INDEX: 1 # first rotated file is called access.1.log
       LOGROTATE_FILE_MODE: 0644 # file mode of the rotated file
       LOGROTATE_FILE_USER: root # owning user of the rotated file
+      LOGROTATE_USE_DATEEXT: "true"
+      LOGROTATE_DATEFORMAT: "-%Y%m%d-%H"
       LOGROTATE_FILE_GROUP: root # owning group of the rotated file
       CRON_SCHEDULE: "* * * * *"
       CRON_LOG_LEVEL: 8 # see https://unix.stackexchange.com/a/414010/378036
       # command to determine the id of the container running Traefik:
       TRAEFIK_CONTAINER_ID_COMMAND: docker ps --no-trunc --quiet --filter label=org.opencontainers.image.title=Traefik
-
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+  
   traefik-access-logs:
     image: alpine:3.23.4@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
     container_name: traefik-external-access-logs
