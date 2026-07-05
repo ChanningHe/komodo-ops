@@ -70,24 +70,29 @@ services:
       TZ: "${LOCAL_TZ}"
       # all environment variables are optional and show the default values:
       LOGROTATE_LOGS: "/var/log/traefik/*.log" # log files to rotate, directory must match volume mount
-      LOGROTATE_TRIGGER_INTERVAL: daily # rotate daily, must be one of: daily, weekly, monthly, yearly
+      LOGROTATE_TRIGGER_INTERVAL: weekly # rotate daily, must be one of: daily, weekly, monthly, yearly
       LOGROTATE_TRIGGER_SIZE: 200M # rotate if log file size reaches 50MB
       LOGROTATE_MAX_BACKUPS: 14 # keep 14 backup copies per rotated log file
       LOGROTATE_START_INDEX: 1 # first rotated file is called access.1.log
-      LOGROTATE_FILE_MODE: 0644 # file mode of the rotated file
-      LOGROTATE_FILE_USER: root # owning user of the rotated file
+      #LOGROTATE_FILE_MODE: 0644 # file mode of the rotated file
+      #LOGROTATE_FILE_USER: root # owning user of the rotated file
       LOGROTATE_USE_DATEEXT: "true"
       LOGROTATE_DATEFORMAT: "-%Y%m%d-%H"
-      LOGROTATE_FILE_GROUP: root # owning group of the rotated file
+      #LOGROTATE_FILE_GROUP: root # owning group of the rotated file
       CRON_SCHEDULE: "* * * * *"
       CRON_LOG_LEVEL: 8 # see https://unix.stackexchange.com/a/414010/378036
+      TRAEFIK_CONTAINER_ID_COMMAND: "true"
       # command to determine the id of the container running Traefik:
-      TRAEFIK_CONTAINER_ID_COMMAND: docker ps --no-trunc --quiet --filter label=org.opencontainers.image.title=Traefik
+      #TRAEFIK_CONTAINER_ID_COMMAND: docker ps --no-trunc --quiet --filter label=org.opencontainers.image.title=Traefik
     deploy:
       restart_policy:
         condition: on-failure
         delay: 5s
-  
+    configs:
+      - source: logrotate_template
+        target: /opt/logrotate.conf.template
+        mode: 0444
+
   traefik-access-logs:
     image: alpine:3.23.4@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
     container_name: traefik-external-access-logs
@@ -227,3 +232,23 @@ networks:
           gateway: ${LOCAL_V6_SVC}::1
           ip_range: ${LOCAL_V6_SVC}::7a4f:c2d8:0/120
   kop_net:
+
+configs:
+  logrotate_template:
+    content: |
+      /var/log/traefik/*.log {
+      $${LOGROTATE_LOGS} {
+        copytruncate
+        $${LOGROTATE_TRIGGER_INTERVAL}
+        maxsize $${LOGROTATE_TRIGGER_SIZE}
+        rotate $${LOGROTATE_MAX_BACKUPS}
+        $${LOGROTATE_NAMING_CONFIG}
+
+        missingok
+        notifempty
+
+        compress
+        delaycompress
+
+        su root root
+      }
