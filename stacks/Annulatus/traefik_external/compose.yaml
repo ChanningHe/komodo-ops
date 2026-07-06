@@ -236,7 +236,6 @@ networks:
 configs:
   logrotate_template:
     content: |
-      /var/log/traefik/*.log {
       $${LOGROTATE_LOGS} {
         copytruncate
         $${LOGROTATE_TRIGGER_INTERVAL}
