@@ -32,7 +32,7 @@ services:
       traefik.http.middlewares.rybbit-hlpj-alist.plugin.rewrite-body.rewrites[0].regex: </head>
       traefik.http.middlewares.rybbit-hlpj-alist.plugin.rewrite-body.rewrites[0].replacement: <script defer data-site-id="2" src="https://rybbit.homelabproject.cc/api/script.js"></script></head>
       # download/WebDAV paths: bypass rewrite-body, stream directly
-      traefik.http.routers.hlpj-alist-dl.rule: Host(`${DOMAIN_HLPJ_ALIST}`)||Host(`${DOMAIN_HLPJ_FILE}`) && (PathPrefix(`/d/`) || PathPrefix(`/p/`) || PathPrefix(`/dav`))
+      traefik.http.routers.hlpj-alist-dl.rule: (Host(`${DOMAIN_HLPJ_ALIST}`) || Host(`${DOMAIN_HLPJ_FILE}`)) && (PathPrefix(`/d/`) || PathPrefix(`/p/`) || PathPrefix(`/dav`))
       traefik.http.routers.hlpj-alist-dl.entrypoints: cf, https
       traefik.http.routers.hlpj-alist-dl.service: hlpj-alist
       traefik.http.routers.hlpj-alist-dl.priority: 100
