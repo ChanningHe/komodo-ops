@@ -2,6 +2,7 @@ services:
   rdma-exporter:
     container_name: rdma-exporter
     network_mode: host
+    restart: unless-stopped
     read_only: true
     volumes:
       - /sys/class/infiniband:/sys/class/infiniband:ro
