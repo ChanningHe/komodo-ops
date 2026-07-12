@@ -314,18 +314,18 @@ resource_path = [
 managed = true
 match_tags = ["KiwiServer"]
 
-##
+# ##
 
-[[resource_sync]]
-name = "src-nixos-rl"
-tags = ["SyncRsTag"]
-[resource_sync.config]
-linked_repo = "komodo-ops"
-resource_path = [
-  "komodo/resources/src-nixos-rl.toml"
-]
-managed = true
-match_tags = ["nixos-rl"]
+# [[resource_sync]]
+# name = "src-nixos-rl"
+# tags = ["SyncRsTag"]
+# [resource_sync.config]
+# linked_repo = "komodo-ops"
+# resource_path = [
+#   "komodo/resources/src-nixos-rl.toml"
+# ]
+# managed = true
+# match_tags = ["nixos-rl"]
 
 ##
 
