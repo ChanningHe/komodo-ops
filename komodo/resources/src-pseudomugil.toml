@@ -2,7 +2,7 @@
 name = "Pseudomugil"
 tags = ["Pseudomugil"]
 [server.config]
-address = "ws://10.177.177.200:58120"
+address = "ws://10.1.170.200:58120"
 enabled = true
 
 ##
@@ -24,11 +24,13 @@ pre_deploy.command = """
 echo "hello=changeme" >> /tmp/.sops-test.env
 #SOPS_AGE_KEY_FILE=/var/lib/komodo-periphery/keys.txt sops decrypt -i .pseudomugil.env
 """
+pre_deploy.shell_mode = false
 post_deploy.command = """
  #rm -f "$TMPENV"
 #SOPS_AGE_KEY_FILE=/var/lib/komodo-periphery/keys.txt sops encrypt -i .pseudomugil.env
 #SOPS_AGE_KEY_FILE=/var/lib/komodo-periphery/keys.txt sops exec-env ../.pseudomugil.encrypted.env '[[COMPOSE_COMMAND]]'
 """
+post_deploy.shell_mode = false
 
 ##
 
