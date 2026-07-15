@@ -10,19 +10,11 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
         --with github.com/caddy-dns/cloudflare \
         --with github.com/abiosoft/caddy-hmac \
         --with github.com/lolPants/caddy-requestid \
-        --with github.com/mholt/caddy-webdav \
-        --with github.com/abiosoft/caddy-json-parse \
         --with github.com/porech/caddy-maxmind-geolocation \
-        --with github.com/WeidiDeng/caddy-cloudflare-ip \
         --with github.com/fvbommel/caddy-combine-ip-ranges \
         --with github.com/mholt/caddy-l4 \
         --with github.com/caddyserver/transform-encoder \
         --with pkg.jsn.cam/caddy-defender \
-        --with github.com/darkweak/souin/plugins/caddy \
-        --with github.com/darkweak/storages/otter/caddy \
-        --with github.com/lucaslorentz/caddy-docker-proxy@v2.10.0 \
-        --with github.com/hslatman/caddy-crowdsec-bouncer/http@main \
-        --with github.com/hslatman/caddy-crowdsec-bouncer/layer4@main \
         --with github.com/ewen-lbh/caddy-i18n@v0.1.2
 
 RUN mkdir -p /data /config
@@ -33,9 +25,8 @@ ENV XDG_CONFIG_HOME=/config \
     XDG_DATA_HOME=/data
 
 COPY --from=builder /caddy-bin /app/caddy
-COPY --from=builder --chown=3000:3000 /data /data
-COPY --from=builder --chown=3000:3000 /config /config
-
+#COPY --from=builder --chown=3000:3000 /data /data
+#COPY --from=builder --chown=3000:3000 /config /config
 
 # COPY --chown=3000:3000 Caddyfile /etc/caddy/Caddyfile
 
