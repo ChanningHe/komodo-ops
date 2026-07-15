@@ -21,6 +21,8 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
         --with github.com/darkweak/souin/plugins/caddy \
         --with github.com/darkweak/storages/otter/caddy \
         --with github.com/lucaslorentz/caddy-docker-proxy@v2.10.0 \
+        --with github.com/hslatman/caddy-crowdsec-bouncer/http@main \
+        --with github.com/hslatman/caddy-crowdsec-bouncer/layer4@main \
         --with github.com/ewen-lbh/caddy-i18n@v0.1.2
 
 RUN mkdir -p /data /config
