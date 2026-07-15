@@ -35,7 +35,7 @@ USER 3000:3000
 COPY --from=builder /caddy-bin "/app/caddy"
 COPY . /
 
-EXPOSE 8080 8443
+EXPOSE 880 8443
 WORKDIR /config
 
 CMD ["/app/caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
