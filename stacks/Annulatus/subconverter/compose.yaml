@@ -1,6 +1,6 @@
 services:
   subweb-old:
-    image: careywong/subweb:latest@sha256:dd2d769ce44b44807e289bb624aa360dc146be67e4855128b4d3e02dc9c2e822
+    image: careywong/subweb:latest@sha256:a8da0f3d6c810a51bc1d58a52b5225687645e2c08bb7e620af9d33a8ba364441
     container_name: subweb-old
     ports:
       - "39430:80"
@@ -44,7 +44,8 @@ services:
 
   subconverter:
     #image: ghcr.io/metacubex/subconverter:latest
-    image: asdlokj1qpi23/subconverter:latest@sha256:3e4f48f6ac831cd9882a943eb31435d84499d87b991d7770939e26e6e5803719
+    #image: asdlokj1qpi233/subconverter:latest@sha256:8e078a1b156e554d2d6438e0b155a7624bb094d6c6e5eb5f756912893bf9e11f
+    image: tindy2013/subconverter:latest
     container_name: subconverter
     ports:
       - "15051:25500"
