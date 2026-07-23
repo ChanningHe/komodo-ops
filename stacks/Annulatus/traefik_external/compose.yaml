@@ -60,7 +60,7 @@ services:
       start_period: 10s
   
   logrotate:
-    image: vegardit/traefik-logrotate:latest@sha256:410006e29707d6a06e1c18341f0ef1c270dfc5f9b1993158aff014ede434039e
+    image: vegardit/traefik-logrotate:latest@sha256:2f39461d9ff4054fae1d4523aacf88efb9a9eafae3d8104fa62ec082c6ed1353
     network_mode: none
     restart: unless-stopped
     volumes:
