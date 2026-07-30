@@ -1,7 +1,7 @@
 ARG KOMODO_VERSION
 ARG TARGETPLATFORM
 ARG TARGETARCH
-ARG SOPS_VERSION=v3.11.0
+ARG SOPS_VERSION=v3.13.3
 
 FROM  --platform=$TARGETPLATFORM ghcr.io/moghtech/komodo-periphery:${KOMODO_VERSION} AS final
 FROM  --platform=$TARGETPLATFORM ghcr.io/getsops/sops:${SOPS_VERSION} AS sops
