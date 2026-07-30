@@ -2,10 +2,10 @@
 name = "caddy"
 tags = ["builder"]
 [build.config]
-builder = "builder-poecilia"
-version = "2.10.2"
+builder = "builder-kiwiserver"
+version = "2.11.4"
 auto_increment_version = false
-image_name = "komodo-caddy"
+image_name = "caddy"
 linked_repo = "komodo-ops"
 build_path = "build/caddy"
 image_registry = [
@@ -19,7 +19,7 @@ name = "komodo-periphery-sops"
 tags = ["builder"]
 [build.config]
 builder = "builder-poecilia"
-version = "2.2.0"
+version = "2.3.0"
 auto_increment_version = false
 image_name = "komodo-periphery"
 include_latest_tag = false
@@ -30,9 +30,18 @@ image_registry = [
 ]
 use_buildx = true
 extra_args = [
-  "--builder komodo-builder",
-  "--platform linux/amd64,linux/arm64"
+  "--platform linux/amd64,linux/arm64",
+  "--builder komodo-builder"
 ]
+pre_build.command = """
+docker buildx inspect komodo-builder >/dev/null 2>&1 \
+  || docker buildx create \
+    --name komodo-builder \
+    --driver docker-container
+
+docker buildx inspect --bootstrap komodo-builder
+"""
+pre_build.shell_mode = true
 build_args = """
 KOMODO_VERSION=[[$VERSION]]
 """
