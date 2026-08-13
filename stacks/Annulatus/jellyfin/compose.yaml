@@ -47,6 +47,7 @@ services:
       traefik.http.routers.jellyfin-local.service: jellyfin
       # --- dns ---
       labelgate.dns.jellyfin.hostname: jellyfin.${DOMAIN_CC}
+      labelgate.dns.jellyfin.credential: public
 networks:
   traefik_external_public_web:
     external: true
