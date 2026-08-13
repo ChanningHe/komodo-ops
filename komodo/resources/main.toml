@@ -12,7 +12,7 @@ repo = "channinghe/komodo-ops"
 [[procedure]]
 name = "Backup Core Database"
 tags = ["SyncRsTag"]
-config.schedule = "Every day at 01:00"
+config.schedule = "Every Sunday at midnight"
 
 [[procedure.config.stage]]
 name = "Stage 1"
@@ -28,12 +28,13 @@ name = "Global Auto Poll Daily"
 tags = ["SyncRsTag"]
 config.schedule_timezone = "Asia/Tokyo"
 config.schedule = "Every day at 09:30"
+config.schedule_enabled = false
 
 [[procedure.config.stage]]
 name = "Stage 1"
 enabled = false
 executions = [
-  { execution.type = "GlobalAutoUpdate", execution.params.skip_auto_update = false, enabled = true }
+  { execution.type = "GlobalAutoUpdate", execution.params.skip_auto_update = false, enabled = false }
 ]
 
 ##
@@ -47,7 +48,7 @@ config.schedule_timezone = "Asia/Tokyo"
 name = "Stage 1"
 enabled = true
 executions = [
-  { execution.type = "BatchCloneRepo", execution.params.pattern = "komodo-secrets*", enabled = true }
+  { execution.type = "BatchCloneRepo", execution.params.pattern = "komodo-secrets*", execution.params.tags = [], enabled = true }
 ]
 
 ##
@@ -291,6 +292,19 @@ include_user_groups = true
 ##
 
 [[resource_sync]]
+name = "src-Annulatus"
+tags = ["SyncRsTag"]
+[resource_sync.config]
+linked_repo = "komodo-ops"
+resource_path = [
+  "komodo/resources/src-Annulatus.toml"
+]
+managed = true
+match_tags = ["Annulatus"]
+
+##
+
+[[resource_sync]]
 name = "src-builder"
 tags = ["SyncRsTag"]
 [resource_sync.config]
@@ -313,32 +327,6 @@ resource_path = [
 ]
 managed = true
 match_tags = ["KiwiServer"]
-
-# ##
-
-# [[resource_sync]]
-# name = "src-nixos-rl"
-# tags = ["SyncRsTag"]
-# [resource_sync.config]
-# linked_repo = "komodo-ops"
-# resource_path = [
-#   "komodo/resources/src-nixos-rl.toml"
-# ]
-# managed = true
-# match_tags = ["nixos-rl"]
-
-##
-
-[[resource_sync]]
-name = "src-Annulatus"
-tags = ["SyncRsTag"]
-[resource_sync.config]
-linked_repo = "komodo-ops"
-resource_path = [
-  "komodo/resources/src-Annulatus.toml"
-]
-managed = true
-match_tags = ["Annulatus"]
 
 ##
 
