@@ -45,6 +45,8 @@ services:
       traefik.http.routers.jellyfin-local.rule: Host(`jf.${DOMAIN_HISC}`)||Host(`jellyfin.${DOMAIN_HISC}`)||Host(`jellyfin.${DOMAIN_CC}`)
       traefik.http.routers.jellyfin-local.entrypoints: https
       traefik.http.routers.jellyfin-local.service: jellyfin
+      # --- dns ---
+      labelgate.dns.jellyfin.hostname: jellyfin.${DOMAIN_CC}
 networks:
   traefik_external_public_web:
     external: true
