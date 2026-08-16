@@ -1,6 +1,6 @@
 services:
   syncthing:
-    image: syncthing/syncthing:2.1.0@sha256:7c60eb0ec887696c8684de88aea2dfe39a7391184b29d33c0aad778c99c7683e
+    image: syncthing/syncthing:2.1.3@sha256:8c8ff37ab6aa8be23b700648a90fa9412e214852e9fd6ea8477c8334792daec0
     container_name: kiwi-syncthing
     hostname: kiwi-syncthing
     user: ${SYNCTHING_UID}:${SYNCTHING_GID}
