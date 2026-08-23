@@ -33,7 +33,7 @@ services:
       kop.namespace: poecilia
       homepage.group: Home Service
       homepage.name: MoviePilot
-      homepage.icon: https://movie-pilot.org/assets/icon.png
+      homepage.icon: https://raw.githubusercontent.com/jxxghp/MoviePilot-Web/main/src/assets/icon.png
       homepage.href: "https://mp.${DOMAIN_INT}" 
 
     restart: always
