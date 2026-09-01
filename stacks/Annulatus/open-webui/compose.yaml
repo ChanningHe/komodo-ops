@@ -1,6 +1,6 @@
 services:
   open-webui:
-    image: ghcr.io/open-webui/open-webui:main@sha256:74093dadc9c6aabc23987a74fd8c2fb8d995b1a5b22e83b0036fb9d6af590e8c
+    image: ghcr.io/open-webui/open-webui:v0.11.3@sha256:3e52522170dea0b587a976a7429f8fa6edf7be7d32cc3a1404b9087abb131f69
     container_name: open-webui
     ports:
       - 35924:8080
@@ -9,15 +9,15 @@ services:
     restart: always
     networks:
       - traefik_external_public_web
-    labels:
-      traefik.enable: true
-      traefik.public: true
-      traefik.docker.network: traefik_external_public_web
-      #-----
-      traefik.http.routers.openwebui.rule: Host(`owb.${DOMAIN_CC}`) || Host(`owb.${DOMAIN_HISC}`)
-      traefik.http.routers.openwebui.entrypoints: https, http
-      traefik.http.services.openwebui.loadbalancer.server.port: 8080
-      traefik.http.routers.openwebui.service: openwebui
+    # labels:
+    #   traefik.enable: true
+    #   traefik.public: true
+    #   traefik.docker.network: traefik_external_public_web
+    #   #-----
+    #   traefik.http.routers.openwebui.rule: Host(`owb.${DOMAIN_CC}`) || Host(`owb.${DOMAIN_HISC}`)
+    #   traefik.http.routers.openwebui.entrypoints: https, http
+    #   traefik.http.services.openwebui.loadbalancer.server.port: 8080
+    #   traefik.http.routers.openwebui.service: openwebui
 
 networks:
   traefik_external_public_web:
