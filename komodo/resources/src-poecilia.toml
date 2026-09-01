@@ -48,21 +48,6 @@ compose_cmd_wrapper_include = ["config", "pull", "up"]
 ##
 
 [[stack]]
-name = "env-tester"
-tags = ["Poecilia"]
-[stack.config]
-server = "poecilia"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/poecilia/env-tester"
-additional_env_files = [
-  { path = "compose.env", track = true }
-]
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
-##
-
-[[stack]]
 name = "forgejo-int"
 tags = ["Poecilia", "critical-infra"]
 [stack.config]
@@ -175,18 +160,6 @@ server = "poecilia"
 poll_for_updates = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/poecilia/traefik-poecilia"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
-##
-
-[[stack]]
-name = "unifi-controller"
-tags = ["Poecilia"]
-[stack.config]
-server = "poecilia"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/poecilia/unifi-controller"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 
 ##
