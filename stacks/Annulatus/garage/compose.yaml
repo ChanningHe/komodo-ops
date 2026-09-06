@@ -1,0 +1,43 @@
+services:
+  garage:
+    image: dxflrs/garage:v2.3.0
+    container_name: garage
+    restart: unless-stopped
+
+    user: "5000:5000"
+
+    command: ["/garage", "server", "--single-node"]
+
+    environment:
+      RUST_LOG: "garage=info"
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET}
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN}
+      GARAGE_METRICS_TOKEN: ${GARAGE_METRICS_TOKEN}
+
+    ports:
+      - "33900:33900"
+      - "33903:33903"
+
+    volumes:
+      # config file
+      - ${DOCKER_DATA}/garage/config/garage.toml:/etc/garage.toml:ro
+      # metadata
+      - ${DOCKER_DATA}/garage/meta:${DOCKER_DATA}/garage/meta
+      # data
+      - ${PATH_S3}/Annulatus/garage:${PATH_S3}/Annulatus/garage
+
+    healthcheck:
+      test: ["CMD", "/garage", "status"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+    stop_grace_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp

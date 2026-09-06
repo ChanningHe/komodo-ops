@@ -440,6 +440,19 @@ compose_cmd_wrapper_include = ["pull", "config", "up"]
 ##
 
 [[stack]]
+name = "garage"
+tags = ["Annulatus", "public-svc"]
+[stack.config]
+server = "Annulatus"
+poll_for_updates = true
+linked_repo = "komodo-ops"
+run_directory = "stacks/Annulatus/garage"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
+
+##
+
+[[stack]]
 name = "traefik_external"
 tags = [
   "Annulatus",
