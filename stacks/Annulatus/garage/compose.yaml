@@ -3,9 +3,7 @@ services:
     image: dxflrs/garage:v2.3.0
     container_name: garage
     restart: unless-stopped
-
     user: "5000:5000"
-
     command: ["/garage", "server", "--single-node"]
 
     environment:
@@ -13,11 +11,9 @@ services:
       GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET}
       GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN}
       GARAGE_METRICS_TOKEN: ${GARAGE_METRICS_TOKEN}
-
     ports:
       - "33900:33900"
       - "33903:33903"
-
     volumes:
       # config file
       - ${DOCKER_DATA}/garage/config/garage.toml:/etc/garage.toml:ro
@@ -25,6 +21,19 @@ services:
       - ${DOCKER_DATA}/garage/meta:${DOCKER_DATA}/garage/meta
       # data
       - ${PATH_S3}/Annulatus/garage:${PATH_S3}/Annulatus/garage
+    networks:
+      - traefik_external_public_web
+      - default
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.http.routers.garage.rule: Host(`garage.${DOMAIN_CC}`)
+      traefik.http.services.garage.loadbalancer.server.port: 33900
+      traefik.http.routers.garage.service: garage
+      traefik.docker.network: traefik_external_public_web
+      traefik.http.routers.garage.entrypoints: https
+      # labelgate
+      labelgate.dns.garage.hostname: garage.${DOMAIN_CC}
 
     healthcheck:
       test: ["CMD", "/garage", "status"]
@@ -41,3 +50,8 @@ services:
     read_only: true
     tmpfs:
       - /tmp
+
+networks:
+  traefik_external_public_web:
+    external: true
+  default:
