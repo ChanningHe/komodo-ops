@@ -35,7 +35,7 @@ services:
       # labelgate
       labelgate.dns.garage.hostname: garage.${DOMAIN_CC}
       labelgate.dns.garage.credential: public
-      labelgate.dns.garage.proxied: no
+      labelgate.dns.garage.proxied: false
 
     healthcheck:
       test: ["CMD", "/garage", "status"]
