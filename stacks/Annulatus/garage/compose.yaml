@@ -34,6 +34,7 @@ services:
       traefik.http.routers.garage.entrypoints: https
       # labelgate
       labelgate.dns.garage.hostname: garage.${DOMAIN_CC}
+      labelgate.dns.garage.credential: public
 
     healthcheck:
       test: ["CMD", "/garage", "status"]
