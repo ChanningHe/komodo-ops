@@ -19,7 +19,7 @@
     "stacks/**"
   ],
   "prConcurrentLimit": 0,
-  "minimumReleaseAge": "4 day",
+  "minimumReleaseAge": "2 day",
   "commitMessagePrefix": "[Renovate] chore(deps):",
   "docker-compose": {
     "major": {
