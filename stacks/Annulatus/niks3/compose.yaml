@@ -1,0 +1,50 @@
+services:
+  niks3:
+    image: ghcr.io/mic92/niks3:main
+    container_name: niks3
+    ports:
+      - "35751:5751"
+    environment:
+      NIKS3_DB: postgres://niks3:password@db:5432/niks3?sslmode=disable
+      NIKS3_S3_ENDPOINT: garage.${DOMAIN_CC}
+      NIKS3_S3_BUCKET: nix-niks3
+      NIKS3_S3_ACCESS_KEY: ${NIKS3_S3_ACCESS_KEY}
+      NIKS3_S3_SECRET_KEY: ${NIKS3_S3_SECRET_KEY}
+      NIKS3_API_TOKEN: ${NIKS3_API_TOKEN}
+      NIKS3_SIGN_KEY_PATHS: /secrets/signing-key
+    volumes:
+      - ${DOCKER_DATA}/niks3/secrets:/secrets:ro
+    depends_on:
+      - db
+    networks:
+      - default
+      - traefik_external_public_web
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.http.routers.niks3.rule: Host(`niks3.${DOMAIN_CC}`)
+      traefik.http.services.niks3.loadbalancer.server.port: 33900
+      traefik.http.routers.niks3.service: niks3
+      traefik.docker.network: traefik_external_public_web
+      traefik.http.routers.niks3.entrypoints: https
+      # labelgate
+      labelgate.dns.niks3.hostname: niks3.${DOMAIN_CC}
+      labelgate.dns.niks3.credential: public
+      labelgate.dns.niks3.proxied: false
+
+  niks3-db:
+    image: postgres:16
+    container_name: niks3-db
+    networks:
+      - default
+    environment:
+      POSTGRES_USER: niks3
+      POSTGRES_PASSWORD: ${NIKS3_POSTGRES_PASSWORD}
+      POSTGRES_DB: niks3
+    volumes:
+      - ${DOCKER_DATA}/niks3/postgres_data:/var/lib/postgresql/data
+
+networks:
+  default:
+  traefik_external_public_web:
+    external: true
