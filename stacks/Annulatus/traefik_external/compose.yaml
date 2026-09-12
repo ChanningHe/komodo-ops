@@ -119,7 +119,7 @@ services:
       - $DOCKER_DATA/traefik_external/redis:/data
 
   cloudflare_tunnel:
-    image: cloudflare/cloudflared:2026.3.0@sha256:6b599ca3e974349ead3286d178da61d291961182ec3fe9c505e1dd02c8ac31b0
+    image: cloudflare/cloudflared:2026.9.1@sha256:b269e8abd07a5bf6f3f4be65d5050b2174eca89c56a0241a8ff32a16aec454e4
     restart: unless-stopped
     command: tunnel run --token ${TRAEFIK_EX_CFTUNNEL_PUBLIC_TOKEN}
     #command: tunnel run --token ${TRAEFIK_EX_CFTUNNEL_PUBLIC_TOKEN} --protocol http2
