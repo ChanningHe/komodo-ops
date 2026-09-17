@@ -34,4 +34,8 @@ services:
       - $DOCKER_DATA/crowdsec/logs:/var/log/crowdsec
 networks:
   traefik_external_crowdsec_net:
-    external: true
+    name: traefik_external_crowdsec_net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.97.100.0/24
