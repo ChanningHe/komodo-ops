@@ -9,6 +9,7 @@ services:
         ipv4_address: 171.25.0.99
     depends_on:
       - traefik-external-redis
+      - crowdsec
     command: 
       - "--api.insecure=true"
       - "--providers.docker"
