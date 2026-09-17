@@ -109,8 +109,8 @@ services:
     restart: always
     image: redis:7.4.9-alpine@sha256:6ab0b6e7381779332f97b8ca76193e45b0756f38d4c0dcda72dbb3c32061ab99
     container_name: traefik-external-redis
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
     networks:
       - traefik_ex_admin
     healthcheck:
@@ -139,6 +139,7 @@ services:
     networks:
       - crowdsec_net
       - kop_net
+      - traefik_ex_admin
     environment:
       - CONTAINERS=1
       - POST=0
@@ -222,7 +223,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 171.25.0.0/24
+        - subnet: 10.97.100.0/24
   lan_v6:
     driver: macvlan
     enable_ipv6: true
