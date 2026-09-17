@@ -9,20 +9,6 @@ send_mem_alerts = false
 ##
 
 [[stack]]
-name = "alist-mirrors"
-tags = ["Annulatus", "public-svc"]
-[stack.config]
-server = "Annulatus"
-poll_for_updates = true
-auto_update = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/Annulatus/alist-mirrors"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-compose_cmd_wrapper_include = ["pull", "config", "up"]
-
-##
-
-[[stack]]
 name = "annulatus-kop-poecilia"
 tags = ["Annulatus"]
 [stack.config]
