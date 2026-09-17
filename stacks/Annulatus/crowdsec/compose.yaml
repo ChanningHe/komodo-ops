@@ -13,6 +13,7 @@ services:
         crowdsecurity/appsec-virtual-patching
         crowdsecurity/appsec-generic-rules
         crowdsecurity/http-cve
+        crowdsecurity/appsec-bot-challenge
       SCENARIOS: >-
         crowdsecurity/http-crawl-non_statics
         crowdsecurity/http-dos-random-uri
