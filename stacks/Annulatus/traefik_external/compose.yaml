@@ -38,7 +38,7 @@ services:
       - $DOCKER_DATA/traefik_external/traefik/static_config:/etc/traefik:rw
       - $DOCKER_DATA/traefik_external/traefik/dynamic_config:/config/dynamic:rw
       - $DOCKER_DATA/traefik_external/traefik/ban.html:/config/ban.html:ro
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      #- "/var/run/docker.sock:/var/run/docker.sock:ro"
     labels:
       kop.poecilia.traefik.enable: true
       kop.poecilia.traefik.http.routers.traefik-dashboard-external.rule: Host(`traefik-public.${DOMAIN_INT}`)
