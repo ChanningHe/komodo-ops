@@ -1,6 +1,6 @@
 services:
   forgejo:
-    image: codeberg.org/forgejo/forgejo:15.0.8@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f
+    image: codeberg.org/forgejo/forgejo:15.0.9@sha256:91a5310c86934339e16bd06b6078aada836e3d8935b2d70f6598108cbfaed5d1
     container_name: forgejo
     environment:
       - USER_UID=${UID_NIXOS_RL}
