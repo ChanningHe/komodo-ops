@@ -233,7 +233,7 @@ services:
   ## UI
   registry-ui:
     container_name: registry-ui
-    image: dqzboy/docker-registry-ui:latest@sha256:17289ed43e4c140dd4f2b637947785f90370cac1c8e805007a1cf213d031f767
+    image: dqzboy/docker-registry-ui:latest@sha256:7d1226cfe337a1b0e0fb07913ca33e53d66fcab9195dcf2b72de393a02064c8b
     environment:
       - DOCKER_REGISTRY_URL=http://reg-docker-hub:5000
       # [必须]使用 openssl rand -hex 16 生成唯一值
