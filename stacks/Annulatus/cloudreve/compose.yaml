@@ -56,7 +56,7 @@ services:
       labelgate.access.jp-only.policy.decision: "bypass"
 
   cloudreve-postgresql:
-    image: postgres:17.9@sha256:2a0d0fe14825b0939f78a8cad5cd4e6aa68bf94d0e5dd96e24b6d23af4315545
+    image: postgres:17.11@sha256:d74eeac9a635390a49bc21bd49fccd973de707e2a53a76ac49b552b8712ec46f
     container_name: cloudreve-postgresql
     restart: always
     networks:
