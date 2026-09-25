@@ -34,7 +34,7 @@ services:
       traefik.http.routers.forgejo.service: forgejo
 
   db:
-    image: postgres:14.22@sha256:eba8ddbdd837ecfbb6ca8a26d8deec68a2f9b076660102ae641dba0f371c099b
+    image: postgres:14.24@sha256:c2427de38f998489d36de7ca3553db2134872c400f2b08be4b824e5c50e4d619
     restart: always
     command:
       - "postgres"
