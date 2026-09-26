@@ -2,7 +2,7 @@ services:
   technitium-primary:
     container_name: technitium-primary
     hostname: technitium-dns
-    image: technitium/dns-server:15.2.0@sha256:23d3b63d959e997800b095fe93009b3fae271b5258234ff2ade8535cb33682c8
+    image: technitium/dns-server:15.5.1@sha256:b8efe03a5e3bdc6e9d2baff3f6e70c382c7f98afa2a7ca66f318d4b58a8d5944
     network_mode: host
     # just useless config
     ports:
