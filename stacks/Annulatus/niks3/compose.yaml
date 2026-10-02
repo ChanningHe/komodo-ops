@@ -1,6 +1,6 @@
 services:
   niks3:
-    image: ghcr.io/mic92/niks3:main
+    image: ghcr.io/mic92/niks3:main@sha256:fdd0cf3c2f014e102f84fd170a2e5eb2a8837b4b5d1966cf7bff9102c2ee0170
     container_name: niks3
     ports:
       - "35751:5751"
@@ -33,7 +33,7 @@ services:
       labelgate.dns.niks3.proxied: false
 
   niks3-db:
-    image: postgres:16
+    image: postgres:16@sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54
     container_name: niks3-db
     networks:
       - default
