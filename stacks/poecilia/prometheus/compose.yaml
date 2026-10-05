@@ -9,6 +9,7 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/etc/prometheus/data'
+      - '--storage.tsdb.retention.time=1y'
     restart: always
     networks:
       - traefik-poecilia_local_web
