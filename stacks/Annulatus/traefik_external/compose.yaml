@@ -8,8 +8,11 @@ services:
       traefik_external_crowdsec_net:
         ipv4_address: 10.97.100.99
     depends_on:
-      - traefik-external-redis
-      #- crowdsec
+      socket-proxy:
+        condition: service_healthy
+        restart: true
+      traefik-external-redis:
+        condition: service_healthy
     command: 
       - "--api.insecure=true"
       - "--providers.docker"
@@ -146,7 +149,7 @@ services:
       - POST=0
       - NODE=1
       - INFO=1
-      #- PING=1
+      - PING=1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     # access in bridge
@@ -156,7 +159,12 @@ services:
     read_only: true
     tmpfs:
       - /run
-
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:2375/_ping | grep -q OK || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
   # newt:
   #   image: fosrl/newt:latest
   #   container_name: newt
