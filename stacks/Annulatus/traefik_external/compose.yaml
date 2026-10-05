@@ -138,7 +138,7 @@ services:
         priority: 50
 
   socket-proxy:
-    image: wollomatic/socket-proxy:1.13.1
+    image: wollomatic/socket-proxy:1.13.1@sha256:3935b709275e4ec35d6ed5a5c4a1f0d01ed31eec5e7234efc3357ecd47689002
     container_name: traefik-ext-socket-proxy
     restart: unless-stopped
     user: "65534:131"        # DOCKER_GID = `stat -c %g /var/run/docker.sock`
