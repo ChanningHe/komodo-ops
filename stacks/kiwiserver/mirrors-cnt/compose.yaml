@@ -20,5 +20,5 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ${PATH_MIRROR}/mirrors-data/debian:/data
-      - ${PATH_MIRROR}/mirrors-logs/debian:/config/log
+      - ${PATH_CP}/Mirrors/mirrors-data/debian:/data
+      - ${PATH_CP}/Mirrors/mirrors-logs/debian:/config/log
