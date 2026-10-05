@@ -138,44 +138,37 @@ services:
         priority: 50
 
   socket-proxy:
-    image: lscr.io/linuxserver/socket-proxy:3.2.17@sha256:a8f16b7a30a6863fe5caf4750ae86f53e59de6600069f21b6d7592fdec031683
+    image: wollomatic/socket-proxy:1.13.1
     container_name: traefik-ext-socket-proxy
+    restart: unless-stopped
+    user: "65534:131"        # DOCKER_GID = `stat -c %g /var/run/docker.sock`
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 64M
+    command:
+      - '-loglevel=debug'
+      - '-listenip=0.0.0.0'
+      - '-allowfrom=traefik,10.1.10.0/24' 
+      - '-allowGET=(/v1\.[0-9]+)?/(_ping|version|info|containers/.*|events.*)'
+      - '-allowhealthcheck'
+      - '-watchdoginterval=300'
+      - '-stoponwatchdog'
+      - '-shutdowngracetime=5'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - traefik_external_crowdsec_net
       - kop_net
       - traefik_ex_admin
-    environment:
-      - CONTAINERS=1
-      - POST=0
-      - NODE=1
-      - INFO=1
-      - PING=1
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    # access in bridge
     ports:
-      - 2375:2375
-    restart: always
-    read_only: true
-    tmpfs:
-      - /run
+      - "0.0.0.0:2375:2375"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:2375/_ping | grep -q OK || exit 1"]
+      test: ["CMD", "./healthcheck"]
       interval: 10s
       timeout: 3s
-      retries: 5
-      start_period: 5s
-  # newt:
-  #   image: fosrl/newt:latest
-  #   container_name: newt
-  #   restart: unless-stopped
-  #   env_file: ./.env
-  #   environment:
-  #     - DOCKER_SOCKET=unix:///var/run/docker.sock
-  #   networks:
-  #     - public_web
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+      retries: 3
+
 
   # traefik-kop-local:
   #   #image: "ghcr.io/jittering/traefik-kop:latest"
