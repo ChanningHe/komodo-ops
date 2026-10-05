@@ -147,7 +147,7 @@ services:
     security_opt: ["no-new-privileges:true"]
     mem_limit: 64M
     command:
-      - '-loglevel=debug'
+      - '-loglevel=info'
       - '-listenip=0.0.0.0'
       - '-allowfrom=traefik,crowdsec,10.1.10.0/24' 
       - '-allowGET=(/v1\.[0-9]+)?/(_ping|version|info|containers/.*|events.*)'
