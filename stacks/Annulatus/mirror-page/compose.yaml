@@ -1,24 +1,4 @@
 services:
-  # Next.js application
-  # nextjs:
-  #   container_name: nextjs
-  #   restart: unless-stopped
-  #   image: channinghe/mirror-page:myhomelab
-  #   environment:
-  #     # Site configuration
-  #     - NEXT_PUBLIC_SITE_TITLE=HomeLab Project's Mirrors
-  #     - NEXT_PUBLIC_SITE_SUBTITLE=Self-hosted unreliable apt mirrors
-  #     # Path to mirrors directory inside container
-  #     - MIRRORS_PATH=/data/mirrors
-  #     # README update interval (30 seconds)
-  #     - NEXT_PUBLIC_README_UPDATE_INTERVAL=30000
-  #   volumes:
-  #     # Mount mirrors directory (read-only)
-  #     - /mnt/Kiwi/Mirror/mirrors-data:/data/mirrors:ro
-  #   networks:
-  #     - mirror-network
-
-  # Caddy reverse proxy and static file server
   caddy:
     image: caddy:2.11.4-alpine@sha256:6aeddd44c3078b0f9a35206472a11420648a79c184603ef95957d0a20044cb2b
     container_name: mirror-page-caddy
@@ -27,7 +7,7 @@ services:
       - "35881:80"
     volumes:
       # Mount mirrors directory (read-only)
-      - /mnt/Kiwi/Mirror/mirrors-data:/data/mirrors:ro
+      - ${PATH_CP}/Mirrors/mirrors-data:/data/mirrors:ro
     configs:
       - source: caddy_config
         target: /etc/caddy/Caddyfile
@@ -39,17 +19,17 @@ services:
       traefik.public: true
       traefik.docker.network: traefik_external_public_web
       #-----
-      traefik.http.routers.mirrors-nginx.rule: Host(`${DOMAIN_MIRRORS}`)
-      traefik.http.routers.mirrors-nginx.entrypoints: cf
-      traefik.http.services.mirrors-nginx.loadbalancer.server.port: 80
-      traefik.http.routers.mirrors-nginx.service: mirrors-nginx
+      traefik.http.routers.mirrors-page.rule: Host(`${DOMAIN_MIRRORS}`)
+      traefik.http.routers.mirrors-page.entrypoints: cf
+      traefik.http.services.mirrors-page.loadbalancer.server.port: 80
+      traefik.http.routers.mirrors-page.service: mirrors-page
       # --- labelgate --- #
       labelgate.tunnel.mirrors-page.hostname: ${DOMAIN_MIRRORS}
       labelgate.tunnel.mirrors-page.service: http://traefik:808
       #-----
-      traefik.http.routers.mirrors-nginx-local.rule: Host(`mirrors.${DOMAIN_INT}`)
-      traefik.http.routers.mirrors-nginx-local.entrypoints: https
-      traefik.http.routers.mirrors-nginx-local.service: mirrors-nginx
+      traefik.http.routers.mirrors-page-local.rule: Host(`mirrors.${DOMAIN_INT}`)
+      traefik.http.routers.mirrors-page-local.entrypoints: https
+      traefik.http.routers.mirrors-page-local.service: mirrors-page
 
 
 networks:
