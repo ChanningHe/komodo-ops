@@ -58,6 +58,7 @@ services:
     environment:
       - TZ=${LOCAL_TZ}
       - IMMICH_VERSION=${IMMICH_VERSION:-release}
+      - MACHINE_LEARNING_MODEL_REVISION=v2
     restart: always
     healthcheck:
       disable: false
