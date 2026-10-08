@@ -16,4 +16,4 @@ services:
     restart: unless-stopped
     # labels:
     #   - diun.enable=true
-networks: {}
+    network_mode: bridge
