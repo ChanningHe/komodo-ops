@@ -1,6 +1,6 @@
 services:
   traefik-dashboard:
-    image: hhftechnology/traefik-log-dashboard:2.5@sha256:9500bb7dd01086681674725e84bfccff93d55fa7013ea9fadd6b51c506f22345
+    image: hhftechnology/traefik-log-dashboard:3.1@sha256:f982908e6d0665fd361eeef893d50d7743be09e1c95d3a087d4f7d47a651bead
     container_name: traefik-dashboard
     # ports:
     #   - "3000:3000"
