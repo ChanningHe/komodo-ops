@@ -4,7 +4,7 @@ services:
     # until >= distribution:3.1.1 is released due to needing these PRs
     # https://github.com/distribution/distribution/pull/4846
     # https://github.com/distribution/distribution/pull/4856
-    image: distribution/distribution:3.1.1@sha256:bca24727f4002e51f959c18c42e816e4d1078198081a9837e16b8b7d7e43ebf8
+    image: distribution/distribution:3.1.2@sha256:d106962e6fe3fa69c178cec77eeeee5edb626b8df6535b7bd6b95e658a0a5ca9
     networks:
       - traefik-poecilia_local_web
       - default
