@@ -5,7 +5,7 @@ services:
     networks:
       public_web:
       traefik_ex_admin:
-      traefik_external_crowdsec_net:
+      crowdsec_net:
         ipv4_address: 10.97.100.99
     depends_on:
       socket-proxy:
@@ -62,7 +62,41 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
-  
+
+  crowdsec:
+    image: "crowdsecurity/crowdsec:v1.8.1@sha256:0f2523fa61ef507f15d953045cface490cc880670c62f2755ced17524107f71a"
+    container_name: crowdsec
+    networks:
+      - crowdsec_net
+    environment:
+      COLLECTIONS: >-
+        crowdsecurity/linux
+        crowdsecurity/traefik
+        crowdsecurity/whitelist-good-actors
+        crowdsecurity/appsec-crs
+        crowdsecurity/appsec-virtual-patching
+        crowdsecurity/appsec-generic-rules
+        crowdsecurity/http-cve
+        crowdsecurity/appsec-bot-challenge
+      SCENARIOS: >-
+        crowdsecurity/http-crawl-non_statics
+        crowdsecurity/http-dos-random-uri
+      PARSERS: >-
+        crowdsecurity/geoip-enrich
+      CUSTOM_HOSTNAME: crowdsec
+      GID: ${GID_NIXOS_RL}
+      LEVEL_INFO: "true"
+      TZ: ${LOCAL_TZ}
+    ports:
+      - "4242:4242/tcp"
+      - "6060:6060/tcp"
+      - "48387:8080/tcp"
+    restart: "always"
+    volumes:
+      - $DOCKER_DATA/crowdsec/config:/etc/crowdsec
+      - $DOCKER_DATA/crowdsec/data:/var/lib/crowdsec/data
+      - $DOCKER_DATA/crowdsec/logs:/var/log/crowdsec
+
   logrotate:
     image: vegardit/traefik-logrotate:latest@sha256:410006e29707d6a06e1c18341f0ef1c270dfc5f9b1993158aff014ede434039e
     network_mode: none
@@ -158,7 +192,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      - traefik_external_crowdsec_net
+      - crowdsec_net
       # - kop_net
       # - traefik_ex_admin
     ports:
@@ -170,45 +204,6 @@ services:
       retries: 3
 
 
-  # traefik-kop-local:
-  #   #image: "ghcr.io/jittering/traefik-kop:latest"
-  #   image: channinghe/traefik-kop:test
-  #   restart: unless-stopped
-  #   env_file: ./.env
-  #   environment:
-  #     - "REDIS_ADDR=${IP_POECILIA}:6379"
-  #     - "DOCKER_HOST=tcp://socket-proxy:2375"
-  #     - "KOP_HOSTNAME=${HOSTNAME:-generic}-local"
-  #     - "BIND_IP=${IP_NIXOS_RL}"
-  #     - "NAMESPACE=poecilia"
-  #   depends_on:
-  #     - socket-proxy
-  #   networks:
-  #     - kop_net
-
-  # traefik-log-dashboard-agent-external:
-  #   image: hhftechnology/traefik-log-dashboard-agent:3.1.1@sha256:4c9853d486a0e3108678fd00aeda86ce1b269c0ae1b1c2ab9e5c81760e12d53a
-  #   container_name: traefik-log-dashboard-agent-external
-  #   restart: always
-  #   ports:
-  #     - "53948:5000"
-  #   volumes:
-  #     # traefik log
-  #     - $DOCKER_DATA/traefik_external/traefik/log:/var/log:ro
-  #     # agent data
-  #     - $DOCKER_DATA/traefik_external/traefik-log-agent-external/data/geoip:/geoip:ro
-  #     - $DOCKER_DATA/traefik_external/traefik-log-agent-external/data/positions-prod:/data
-  #   environment:
-  #     - TRAEFIK_LOG_DASHBOARD_ACCESS_PATH=/var/log/access.log
-  #     - TRAEFIK_LOG_DASHBOARD_GEOIP_ENABLED=true
-  #     - TRAEFIK_LOG_DASHBOARD_GEOIP_CITY_DB=/geoip/GeoLite2-City.mmdb
-  #     - TRAEFIK_LOG_DASHBOARD_GEOIP_COUNTRY_DB=/geoip/GeoLite2-Country.mmdb
-  #   labels:
-  #     kop.namespace: poecilia
-  #     kop.poecilia.traefik.enable: true
-  #     kop.poecilia.traefik.http.routers.traefik-log-agent.rule: Host(`traefik-log-agent.${DOMAIN_INT}`)
-  #     kop.poecilia.traefik.http.routers.traefik-log-agent.entrypoints: websecure
-  #     kop.poecilia.traefik.http.services.traefik-log-agent.loadbalancer.server.port: 53948
 
 networks:
   traefik_ex_admin:
@@ -221,13 +216,13 @@ networks:
     ipam:
       config:
         - subnet: 10.99.0.0/16
-  traefik_external_crowdsec_net:
-    external: true
-  # crowdsec_net:
-  #   driver: bridge
-  #   ipam:
-  #     config:
-  #       - subnet: 10.97.100.0/24
+  # traefik_external_crowdsec_net:
+  #   external: true
+  crowdsec_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.97.100.0/24
   lan_v6:
     driver: macvlan
     enable_ipv6: true
