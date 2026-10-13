@@ -1,0 +1,25 @@
+services:
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:v1.154.0@sha256:4bd592341587d669b7f57d54bbb82bd21ac8675f4e24234b7703a7c0f85197d8
+    container_name: victoriametrics
+    restart: always
+    user: 5000:5000
+    volumes:
+      - $DOCKER_DATA/victoria/victoriametrics/data:/storage
+      - $DOCKER_DATA/victoria/victoriametrics/config:/etc/victoriametrics:ro
+    command:
+      - -storageDataPath=/storage
+      - -retentionPeriod=2y
+      - -promscrape.config=/etc/victoriametrics/scrape.yml
+      - -dedup.minScrapeInterval=15s
+      - -selfScrapeInterval=15s
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.victoriametrics.rule: Host(`victoriametrics.${DOMAIN_INT}`)
+      traefik.http.services.victoriametrics.loadbalancer.server.port: 8428
+      traefik.docker.network: traefik-poecilia_local_web
+networks:
+  traefik-poecilia_local_web:
+    external: true

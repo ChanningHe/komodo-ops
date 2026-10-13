@@ -141,6 +141,17 @@ compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 ##
 
 [[stack]]
+name = "victoria"
+tags = ["Poecilia", "admin_monitor"]
+[stack.config]
+server = "poecilia"
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/victoria"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
 name = "traefik-dashboard"
 tags = ["Poecilia"]
 [stack.config]
