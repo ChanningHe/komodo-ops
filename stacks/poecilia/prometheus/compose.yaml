@@ -10,6 +10,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/etc/prometheus/data'
       - '--storage.tsdb.retention.time=1y'
+      - '--web.enable-admin-api'
     restart: always
     networks:
       - traefik-poecilia_local_web
