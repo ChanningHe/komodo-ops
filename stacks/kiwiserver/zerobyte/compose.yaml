@@ -4,6 +4,8 @@ services:
     container_name: zerobyte
     restart: unless-stopped
     network_mode: bridge
+    cap_add: 
+      - SYS_ADMIN
     ports:
       - "34096:4096"
     environment:
