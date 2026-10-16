@@ -12,5 +12,5 @@ services:
       - 38780:8780
     container_name: IYUUPlus
     restart: always
-    image: iyuucn/iyuuplus-dev:latest@sha256:011bd64c346150f1a6ff9f3680680cc20b815dad06df709a5f472b51fd82b9dc
+    image: iyuucn/iyuuplus-dev:latest@sha256:356d3aa4eaa2f2e80b67218a16a7d10ede21b3e2285133632f3f7b376dc514a2
     network_mode: bridge
