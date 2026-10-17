@@ -1,0 +1,44 @@
+
+services:
+  victorialogs:
+    container_name: victorialogs
+    image: victoriametrics/victoria-logs:v1.53.0@sha256:251121fa882af99b95ba0c230a4a2f412ea602d2698c64a96c58dc9842bb755d
+    restart: unless-stopped
+    networks:
+      - annulatus-logger-net
+    ports:
+      - ${IP_ANNULATUS}:39428:9428
+    volumes:
+      - ${DOCKER_DATA}/annulatus-logger/victorialogs:/vlogs
+    command:
+      - -storageDataPath=/vlogs
+      - -retentionPeriod=365d
+      - -retention.maxDiskSpaceUsageBytes=20GiB
+
+  vlagent:
+    container_name: vlagent
+    image: victoriametrics/vlagent:v1.53.0@sha256:a82f93ffecc153fb068606903e512368b070272739d823abe99fad0eff6e1849
+    restart: unless-stopped
+    hostname: annulatus
+    networks:
+      - annulatus-logger-net
+    depends_on:
+      - victorialogs
+    volumes:
+      - ${DOCKER_DATA}/traefik_external/traefik/log:/var/log/traefik:ro
+      - ${DOCKER_DATA}/annulatus-logger/vlagent:/vlagent
+    command:
+      - -tmpDataPath=/vlagent
+      # live file only: logrotate uses copytruncate, rotated copies would duplicate
+      - -fileCollector.glob=/var/log/traefik/access.log
+      - -fileCollector.msgField=RequestPath
+      - -fileCollector.timeField=StartUTC
+      - -fileCollector.streamFields=app,hostname
+      # array flag split on commas: keep this JSON comma-free
+      - '-fileCollector.extraFields={"app":"traefik"}'
+      - -remoteWrite.url=http://victorialogs:9428/insert/native
+      - -remoteWrite.maxDiskUsagePerURL=1GB
+
+networks:
+  annulatus-logger-net:
+    name: annulatus-logger-net

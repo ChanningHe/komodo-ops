@@ -220,12 +220,12 @@ compose_cmd_wrapper_include = ["pull", "config", "up"]
 ##
 
 [[stack]]
-name = "logger"
+name = "annulatus-logger"
 tags = ["Annulatus", "admin_monitor"]
 [stack.config]
 server = "Annulatus"
 linked_repo = "komodo-ops"
-run_directory = "stacks/Annulatus/logger"
+run_directory = "stacks/Annulatus/annulatus-logger"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 compose_cmd_wrapper_include = ["pull", "config", "up"]
 
