@@ -14,11 +14,11 @@ services:
         restart: true
       traefik-external-redis:
         condition: service_healthy
-    command: 
-      - "--api.insecure=true"
-      - "--providers.docker"
-      - "--ping=true"
-      - "--ping.entrypoint=traefik"
+    # command: 
+    #   - "--api.insecure=true"
+    #   - "--providers.docker"
+    #   - "--ping=true"
+    #   - "--ping.entrypoint=traefik"
     env_file: ./.env
     deploy:
       resources:
@@ -29,7 +29,7 @@ services:
       #- "[::]:80:80"
       - "0.0.0.0:443:443"
       - "[::]:443:443"
-      - "31080:8080"
+      - "${IP_ANNULATUS}:31080:8080"
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
