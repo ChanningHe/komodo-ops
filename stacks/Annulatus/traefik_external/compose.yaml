@@ -2,6 +2,7 @@ services:
   traefik:
     image: "traefik:v3.7.15@sha256:de7431ff85f306b709256819aaacd153e189ee25f8e86bb895aef1becbacf628"
     restart: unless-stopped
+    container_name: traefik-external
     networks:
       public_web:
       traefik_ex_admin:
@@ -96,6 +97,7 @@ services:
 
   logrotate:
     image: vegardit/traefik-logrotate:latest@sha256:410006e29707d6a06e1c18341f0ef1c270dfc5f9b1993158aff014ede434039e
+    container_name: traefik-logrotate
     network_mode: none
     restart: unless-stopped
     volumes:
