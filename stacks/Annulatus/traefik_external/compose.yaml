@@ -20,9 +20,6 @@ services:
       - "--ping.entrypoint=traefik"
     env_file: ./.env
     deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
       resources:
         limits:
           memory: 4G
