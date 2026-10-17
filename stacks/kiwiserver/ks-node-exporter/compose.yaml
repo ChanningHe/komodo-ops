@@ -15,4 +15,19 @@ services:
       - --web.listen-address=:29100
       # defaults + TrueNAS apps internals (docker overlay/volumes under /mnt/.ix-apps)
       - --collector.filesystem.mount-points-exclude=^/(dev|proc|run/credentials/.+|sys|var/lib/docker/.+|var/lib/containers/storage/.+|mnt/\.ix-apps/.+)($|/)
+
+  smartctl-exporter:
+    container_name: smartctl-exporter
+    image: quay.io/prometheuscommunity/smartctl-exporter:v0.15.0@sha256:a76e08dbf5db4781fefd1ed81c65ad46ae8d2849dae6b6d3acebcde2fc4e59d6
+    restart: unless-stopped
+    # raw SMART/NVMe ioctls on host block devices need root + privileged (per upstream README)
+    privileged: true
+    user: root
+    ports:
+      - 29633:9633
+    command:
+      # skip disks in standby so polling never spins them up (upstream default, pinned explicitly)
+      - --smartctl.powermode-check=standby
+      - --smartctl.interval=60s
+
 networks: {}
