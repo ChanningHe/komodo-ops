@@ -161,6 +161,16 @@ run_directory = "stacks/kiwiserver/rdma-exporter"
 
 ##
 
+[[stack]]
+name = "ks-node-exporter"
+tags = ["KiwiServer"]
+[stack.config]
+server = "kiwiserver"
+linked_repo = "komodo-ops"
+run_directory = "stacks/kiwiserver/ks-node-exporter"
+
+##
+
 [[repo]]
 name = "komodo-secrets-KiwiServer"
 tags = ["KiwiServer"]
