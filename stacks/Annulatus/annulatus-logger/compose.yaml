@@ -15,29 +15,89 @@ services:
       - -retentionPeriod=365d
       - -retention.maxDiskSpaceUsageBytes=20GiB
 
-  vlagent:
-    container_name: vlagent
-    image: victoriametrics/vlagent:v1.53.0@sha256:a82f93ffecc153fb068606903e512368b070272739d823abe99fad0eff6e1849
+  geoipupdate:
+    container_name: geoipupdate
+    image: maxmindinc/geoipupdate:v8.0.0@sha256:51e70dd6f16cd3e4d845ac02d09940b10772a75b9d741427d235a78570923c1d
     restart: unless-stopped
-    hostname: annulatus
+    networks:
+      - annulatus-logger-net
+    environment:
+      GEOIPUPDATE_ACCOUNT_ID: ${GEOIPUPDATE_ACCOUNT_ID}
+      GEOIPUPDATE_LICENSE_KEY: ${GEOIPUPDATE_LICENSE_KEY}
+      GEOIPUPDATE_EDITION_IDS: GeoLite2-City GeoLite2-ASN
+      GEOIPUPDATE_FREQUENCY: 72
+    volumes:
+      - ${DOCKER_DATA}/annulatus-logger/geoip:/usr/share/GeoIP
+
+  vector:
+    container_name: vector
+    image: timberio/vector:0.59.0-alpine@sha256:0e36bc2a290039e9b6a5e92f04bd2f133223506f72d09682c1df16c015172b7a
+    restart: unless-stopped
     networks:
       - annulatus-logger-net
     depends_on:
       - victorialogs
     volumes:
       - ${DOCKER_DATA}/traefik_external/traefik/log:/var/log/traefik:ro
-      - ${DOCKER_DATA}/annulatus-logger/vlagent:/vlagent
-    command:
-      - -tmpDataPath=/vlagent
-      # live file only: logrotate uses copytruncate, rotated copies would duplicate
-      - -fileCollector.glob=/var/log/traefik/access.log
-      - -fileCollector.msgField=RequestPath
-      - -fileCollector.timeField=StartUTC
-      - -fileCollector.streamFields=app,hostname
-      # array flag split on commas: keep this JSON comma-free
-      - '-fileCollector.extraFields={"app":"traefik"}'
-      - -remoteWrite.url=http://victorialogs:9428/insert/native
-      - -remoteWrite.maxDiskUsagePerURL=1GB
+      - ${DOCKER_DATA}/annulatus-logger/geoip:/geoip:ro
+      - ${DOCKER_DATA}/annulatus-logger/vector:/var/lib/vector
+    configs:
+      - source: vector_config
+        target: /etc/vector/vector.yaml
+
+configs:
+  vector_config:
+    content: |
+      data_dir: /var/lib/vector
+      enrichment_tables:
+        geoip_city:
+          type: geoip
+          path: /geoip/GeoLite2-City.mmdb
+        geoip_asn:
+          type: mmdb
+          path: /geoip/GeoLite2-ASN.mmdb
+      sources:
+        traefik:
+          type: file
+          include:
+            - /var/log/traefik/access.log
+          read_from: beginning
+      transforms:
+        enrich:
+          type: remap
+          inputs: [traefik]
+          drop_on_abort: true
+          source: |
+            . = parse_json!(string!(.message))
+            .app = "traefik"
+            .hostname = "annulatus"
+            ip = to_string(.ClientHost) ?? ""
+            city, err = get_enrichment_table_record("geoip_city", {"ip": ip})
+            if err == null {
+              .geo_country = city.country_code
+              .geo_city = city.city_name
+            }
+            asn, err = get_enrichment_table_record("geoip_asn", {"ip": ip})
+            if err == null {
+              .geo_asn = asn.autonomous_system_number
+              .geo_as_org = asn.autonomous_system_organization
+            }
+      sinks:
+        vlogs:
+          type: http
+          inputs: [enrich]
+          uri: http://victorialogs:9428/insert/jsonline?_stream_fields=app,hostname&_msg_field=RequestPath&_time_field=StartUTC
+          encoding:
+            codec: json
+          framing:
+            method: newline_delimited
+          compression: gzip
+          healthcheck:
+            enabled: false
+          buffer:
+            type: disk
+            max_size: 1073741824
+            when_full: block
 
 networks:
   annulatus-logger-net:
