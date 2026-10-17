@@ -12,8 +12,8 @@ services:
       - ${DOCKER_DATA}/annulatus-logger/victorialogs:/vlogs
     command:
       - -storageDataPath=/vlogs
-      - -retentionPeriod=365d
-      - -retention.maxDiskSpaceUsageBytes=20GiB
+      - -retentionPeriod=720d
+      - -retention.maxDiskSpaceUsageBytes=50GiB
 
   geoipupdate:
     container_name: geoipupdate
