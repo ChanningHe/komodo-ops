@@ -2,7 +2,7 @@
 name = "Pseudomugil"
 tags = ["Pseudomugil"]
 [server.config]
-address = "ws://10.1.170.200:58120"
+address = "ws://10.40.90.200:58120"
 enabled = true
 
 ##
