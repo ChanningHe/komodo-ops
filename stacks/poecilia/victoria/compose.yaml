@@ -40,7 +40,7 @@ services:
       - -remoteWrite.url=http://victoriametrics:8428
       - -remoteRead.url=http://victoriametrics:8428
       - -notifier.url=http://alertmanager:9093
-      - -external.url=https://victoriametrics.${DOMAIN_INT}/vmalert
+      - -external.url=https://victoriametrics.${DOMAIN_INT}
       - -external.label=evaluator=vmalert-metrics
       # pick up rule edits on the host without a restart
       - -configCheckInterval=1m
@@ -66,7 +66,7 @@ services:
       - -remoteWrite.url=http://victoriametrics:8428
       - -remoteRead.url=http://victoriametrics:8428
       - -notifier.url=http://alertmanager:9093
-      - -external.url=https://victoriametrics.${DOMAIN_INT}/vmalert
+      - -external.url=https://victoriametrics.${DOMAIN_INT}
       - -external.label=evaluator=vmalert-logs
       - -configCheckInterval=1m
     networks:
