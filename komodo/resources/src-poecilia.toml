@@ -214,6 +214,17 @@ compose_cmd_wrapper_include = ["config", "pull", "up"]
 ##
 
 [[stack]]
+name = "apc-snmp-exporter"
+tags = ["Poecilia", "admin_monitor"]
+[stack.config]
+server = "poecilia"
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/apc-snmp-exporter"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
 name = "beszel"
 tags = ["Poecilia"]
 [stack.config]
