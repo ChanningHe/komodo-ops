@@ -13,6 +13,8 @@ services:
       - -promscrape.config=/etc/victoriametrics/scrape.yml
       - -dedup.minScrapeInterval=15s
       - -selfScrapeInterval=15s
+      # exposes vmalert rules/alerts in VMUI and to Grafana's Prometheus datasource
+      - -vmalert.proxyURL=http://vmalert-metrics:8880
     networks:
       - traefik-poecilia_local_web
     labels:
@@ -20,6 +22,83 @@ services:
       traefik.http.routers.victoriametrics.rule: Host(`victoriametrics.${DOMAIN_INT}`)
       traefik.http.services.victoriametrics.loadbalancer.server.port: 8428
       traefik.docker.network: traefik-poecilia_local_web
+
+  vmalert-metrics:
+    image: victoriametrics/vmalert:v1.154.0@sha256:f11d77f9ff68dfd63c871d0e59ae7b479f9c3fd0e8a685fef690fb88b794d938
+    container_name: vmalert-metrics
+    restart: always
+    user: 5000:5000
+    depends_on:
+      - victoriametrics
+      - alertmanager
+    volumes:
+      - $DOCKER_DATA/victoria/vmalert/rules:/etc/vmalert/rules:ro
+    command:
+      - -rule=/etc/vmalert/rules/metrics/*.yml
+      - -datasource.url=http://victoriametrics:8428
+      # alert state (ALERTS / ALERTS_FOR_STATE) is written to VM and restored on restart
+      - -remoteWrite.url=http://victoriametrics:8428
+      - -remoteRead.url=http://victoriametrics:8428
+      - -notifier.url=http://alertmanager:9093
+      - -external.url=https://victoriametrics.${DOMAIN_INT}/vmalert
+      - -external.label=evaluator=vmalert-metrics
+      # pick up rule edits on the host without a restart
+      - -configCheckInterval=1m
+    networks:
+      - traefik-poecilia_local_web
+
+  # one vmalert per datasource (upstream recommendation): this one evaluates LogsQL against VictoriaLogs
+  vmalert-logs:
+    image: victoriametrics/vmalert:v1.154.0@sha256:f11d77f9ff68dfd63c871d0e59ae7b479f9c3fd0e8a685fef690fb88b794d938
+    container_name: vmalert-logs
+    restart: always
+    user: 5000:5000
+    depends_on:
+      - victoriametrics
+      - alertmanager
+    volumes:
+      - $DOCKER_DATA/victoria/vmalert/rules:/etc/vmalert/rules:ro
+    command:
+      - -rule=/etc/vmalert/rules/logs/*.yml
+      - -rule.defaultRuleType=vlogs
+      # VictoriaLogs lives on Annulatus (DMZ); LAN -> DMZ is the allowed direction
+      - -datasource.url=http://${IP_ANNULATUS}:39428
+      - -remoteWrite.url=http://victoriametrics:8428
+      - -remoteRead.url=http://victoriametrics:8428
+      - -notifier.url=http://alertmanager:9093
+      - -external.url=https://victoriametrics.${DOMAIN_INT}/vmalert
+      - -external.label=evaluator=vmalert-logs
+      - -configCheckInterval=1m
+    networks:
+      - traefik-poecilia_local_web
+
+  alertmanager:
+    image: quay.io/prometheus/alertmanager:v0.34.1@sha256:e9733bafb1bdef9b00e25a21f8f99dc26a22224bf16641ad754d1649f4c3357a
+    container_name: alertmanager
+    restart: always
+    user: 5000:5000
+    volumes:
+      - $DOCKER_DATA/victoria/alertmanager/config:/etc/alertmanager:ro
+      # silences and notification log survive restarts
+      - $DOCKER_DATA/victoria/alertmanager/data:/alertmanager
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+      - --web.external-url=https://alertmanager.${DOMAIN_INT}
+    secrets:
+      - telegram_bot_token
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.alertmanager.rule: Host(`alertmanager.${DOMAIN_INT}`)
+      traefik.http.services.alertmanager.loadbalancer.server.port: 9093
+      traefik.docker.network: traefik-poecilia_local_web
+
+secrets:
+  telegram_bot_token:
+    environment: TG_BOT_TOKEN_ALERT
+
 networks:
   traefik-poecilia_local_web:
     external: true
