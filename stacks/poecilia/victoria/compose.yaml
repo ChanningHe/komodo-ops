@@ -66,7 +66,8 @@ services:
       - -remoteWrite.url=http://victoriametrics:8428
       - -remoteRead.url=http://victoriametrics:8428
       - -notifier.url=http://alertmanager:9093
-      - -external.url=https://victoriametrics.${DOMAIN_INT}
+      - -external.url=http://${IP_ANNULATUS}:39428
+      - '-external.alert.source=select/vmui/#/?query={{.Expr|queryEscape}}&g0.relative_time=last_1_hour'
       - -external.label=evaluator=vmalert-logs
       - -configCheckInterval=1m
     networks:
