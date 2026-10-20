@@ -8,16 +8,14 @@ enabled = true
 
 ##
 
-[[repo]]
-name = "komodo-secrets-Poecilia"
-tags = ["Poecilia"]
-[repo.config]
+[[stack]]
+name = "apc-snmp-exporter"
+tags = ["Poecilia", "admin_monitor"]
+[stack.config]
 server = "poecilia"
-git_provider = "10.1.10.8:53110"
-git_https = false
-git_account = "ChanningHe"
-repo = "channinghe/komodo-secrets"
-path = "../komodo-secrets"
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/apc-snmp-exporter"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 
 ##
 
@@ -131,13 +129,15 @@ compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 ##
 
 [[stack]]
-name = "victoria"
-tags = ["Poecilia", "admin_monitor"]
+name = "technitium-primary"
+tags = ["Poecilia", "critical-infra"]
 [stack.config]
 server = "poecilia"
+poll_for_updates = true
 linked_repo = "komodo-ops"
-run_directory = "stacks/poecilia/victoria"
+run_directory = "stacks/poecilia/technitium-primary"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["config", "pull", "up"]
 
 ##
 
@@ -166,6 +166,17 @@ compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
 ##
 
 [[stack]]
+name = "victoria"
+tags = ["Poecilia", "admin_monitor"]
+[stack.config]
+server = "poecilia"
+linked_repo = "komodo-ops"
+run_directory = "stacks/poecilia/victoria"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+
+##
+
+[[stack]]
 name = "waken"
 tags = ["Poecilia"]
 [stack.config]
@@ -178,37 +189,13 @@ compose_cmd_wrapper_include = ["config", "pull", "up"]
 
 ##
 
-[[stack]]
-name = "technitium-primary"
-tags = ["Poecilia", "critical-infra"]
-[stack.config]
-server = "poecilia"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/poecilia/technitium-primary"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-compose_cmd_wrapper_include = ["config", "pull", "up"]
-
-##
-
-[[stack]]
-name = "apc-snmp-exporter"
-tags = ["Poecilia", "admin_monitor"]
-[stack.config]
-server = "poecilia"
-linked_repo = "komodo-ops"
-run_directory = "stacks/poecilia/apc-snmp-exporter"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-
-##
-
-[[stack]]
-name = "beszel"
+[[repo]]
+name = "komodo-secrets-Poecilia"
 tags = ["Poecilia"]
-[stack.config]
+[repo.config]
 server = "poecilia"
-poll_for_updates = true
-linked_repo = "komodo-ops"
-run_directory = "stacks/poecilia/beszel"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-compose_cmd_wrapper_include = ["config", "pull", "up"]
+git_provider = "10.1.10.8:53110"
+git_https = false
+git_account = "ChanningHe"
+repo = "channinghe/komodo-secrets"
+path = "../komodo-secrets"
