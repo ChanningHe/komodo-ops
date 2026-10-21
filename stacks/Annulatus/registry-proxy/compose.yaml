@@ -2,7 +2,7 @@ services:
   ## docker hub
   dockerhub:
     container_name: reg-docker-hub
-    image: dqzboy/registry:latest@sha256:4eb91bf13b021c7509523105633ba6403e638c758465eb6fed4755fb1beb94a4
+    image: dqzboy/registry:latest@sha256:c4da7cd855d3b6a1709deb06adf3134e8e223e4a0f43cf6b94a603b788147efb
     restart: always
     environment:
       - OTEL_TRACES_EXPORTER=none
@@ -39,7 +39,7 @@ services:
   ## ghcr.io
   ghcr:
     container_name: reg-ghcr
-    image: dqzboy/registry:latest@sha256:4eb91bf13b021c7509523105633ba6403e638c758465eb6fed4755fb1beb94a4
+    image: dqzboy/registry:latest@sha256:c4da7cd855d3b6a1709deb06adf3134e8e223e4a0f43cf6b94a603b788147efb
     restart: always
     environment:
       - OTEL_TRACES_EXPORTER=none
