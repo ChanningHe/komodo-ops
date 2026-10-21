@@ -44,7 +44,7 @@ services:
 
   subconverter:
     #image: ghcr.io/metacubex/subconverter:latest
-    image: asdlokj1qpi23/subconverter:latest@sha256:8e078a1b156e554d2d6438e0b155a7624bb094d6c6e5eb5f756912893bf9e11f
+    image: asdlokj1qpi23/subconverter:latest@sha256:eb9a60aa2e44366eee513f6070ea09bd41e331ee96d1bc315c1f55f96b115c03
     #image: tindy2013/subconverter:latest
     container_name: subconverter
     ports:
