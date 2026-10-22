@@ -22,6 +22,18 @@ compose_cmd_wrapper_include = ["pull", "config", "up"]
 ##
 
 [[stack]]
+name = "annulatus-logger"
+tags = ["Annulatus", "admin_monitor"]
+[stack.config]
+server = "Annulatus"
+linked_repo = "komodo-ops"
+run_directory = "stacks/Annulatus/annulatus-logger"
+compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
+compose_cmd_wrapper_include = ["pull", "config", "up"]
+
+##
+
+[[stack]]
 name = "aria2"
 tags = ["Annulatus"]
 [stack.config]
@@ -220,18 +232,6 @@ compose_cmd_wrapper_include = ["pull", "config", "up"]
 ##
 
 [[stack]]
-name = "annulatus-logger"
-tags = ["Annulatus", "admin_monitor"]
-[stack.config]
-server = "Annulatus"
-linked_repo = "komodo-ops"
-run_directory = "stacks/Annulatus/annulatus-logger"
-compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
-compose_cmd_wrapper_include = ["pull", "config", "up"]
-
-##
-
-[[stack]]
 name = "mirror-page"
 tags = ["Annulatus", "public-svc"]
 [stack.config]
@@ -423,7 +423,6 @@ tags = [
 [stack.config]
 server = "Annulatus"
 poll_for_updates = true
-destroy_before_deploy = true
 linked_repo = "komodo-ops"
 run_directory = "stacks/Annulatus/traefik_external"
 compose_cmd_wrapper = "sops exec-env [[SECRET_ENV_PATH]] '[[COMPOSE_COMMAND]]'"
