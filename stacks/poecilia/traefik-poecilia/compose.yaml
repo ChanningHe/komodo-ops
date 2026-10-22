@@ -39,7 +39,7 @@ services:
       homepage.widget.url: https://traefik-poecilia.${DOMAIN_INT}
 
   logrotate:
-    image: vegardit/traefik-logrotate:latest@sha256:410006e29707d6a06e1c18341f0ef1c270dfc5f9b1993158aff014ede434039e
+    image: vegardit/traefik-logrotate:latest@sha256:82624de48d6cb2a336b172115aad882ec7ed1f20b84d26275043649fe06eae24
     network_mode: none
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw # required to send USR1 signal to Traefik after log rotation

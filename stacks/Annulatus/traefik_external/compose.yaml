@@ -96,7 +96,7 @@ services:
       - $DOCKER_DATA/crowdsec/logs:/var/log/crowdsec
 
   logrotate:
-    image: vegardit/traefik-logrotate:latest@sha256:410006e29707d6a06e1c18341f0ef1c270dfc5f9b1993158aff014ede434039e
+    image: vegardit/traefik-logrotate:latest@sha256:82624de48d6cb2a336b172115aad882ec7ed1f20b84d26275043649fe06eae24
     container_name: traefik-logrotate
     network_mode: none
     restart: unless-stopped
