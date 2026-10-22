@@ -23,7 +23,7 @@ services:
     #   timeout: 5s
 
   beszel-agent:
-    image: henrygd/beszel-agent:alpine@sha256:3781ce55ab65f605769f12aafaf9fb518f6c414ab9170e474ab14be32c264df1
+    image: henrygd/beszel-agent:alpine@sha256:4100e26f7b5e6ab89e73699b2366417795f5046ab36bc452daf1f105766b40a0
     container_name: beszel-agent
     restart: unless-stopped
     network_mode: host
