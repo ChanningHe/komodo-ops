@@ -1,0 +1,16 @@
+# Every JSON file under ../../dashboards is loaded; its directory becomes the folder
+# (Overview / Hosts / Services / Infra / Monitoring).
+# git is the source of truth: UI edits cannot be saved, and removing a file removes the dashboard.
+# To change a dashboard: edit in the UI, "Export as JSON", replace the file, commit.
+apiVersion: 1
+
+providers:
+  - name: komodo-ops
+    type: file
+    orgId: 1
+    disableDeletion: false
+    allowUiUpdates: false
+    updateIntervalSeconds: 60
+    options:
+      path: /etc/grafana/dashboards
+      foldersFromFilesStructure: true

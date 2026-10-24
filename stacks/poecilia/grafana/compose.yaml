@@ -17,8 +17,17 @@ services:
       homepage.name: Grafana
       homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/grafana.png
       homepage.href: "https://grafana.${DOMAIN_INT}"
+    environment:
+      # referenced as $IP_ANNULATUS in provisioning/datasources (keeps addresses out of the public repo)
+      IP_ANNULATUS: ${IP_ANNULATUS}
+      # pinned and installed before startup, so the vlogs datasource never comes up without its plugin
+      GF_PLUGINS_PREINSTALL_SYNC: victoriametrics-logs-datasource@0.33.1
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /etc/grafana/dashboards/Overview/fleet-overview.json
     volumes:
       - $DOCKER_DATA/grafana/config:/var/lib/grafana
+      # datasources and dashboards are managed in git; UI edits are not persisted
+      - ./provisioning:/etc/grafana/provisioning:ro
+      - ./dashboards:/etc/grafana/dashboards:ro
     image: grafana/grafana-oss:13.0.2@sha256:5dad0df181cb644a14e13617b913b261a54f7d4fd4510721dba420929f35bea2
 networks:
   traefik-poecilia_local_web:

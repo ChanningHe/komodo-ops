@@ -1,0 +1,35 @@
+# Datasources are provisioned with fixed uids so dashboards can reference them
+# (`vm`, `vlogs`, `alertmanager`) without embedding hostnames or addresses.
+# Values like $IP_ANNULATUS are expanded by Grafana from the container environment.
+apiVersion: 1
+
+datasources:
+  - name: VictoriaMetrics
+    uid: vm
+    type: prometheus
+    access: proxy
+    url: http://victoriametrics:8428
+    isDefault: true
+    editable: false
+    jsonData:
+      httpMethod: POST
+      # matches the shortest scrape interval, so $__rate_interval never drops below it
+      timeInterval: 15s
+
+  - name: VictoriaLogs
+    uid: vlogs
+    type: victoriametrics-logs-datasource
+    access: proxy
+    # VictoriaLogs lives on Annulatus (pubsvc network)
+    url: http://$IP_ANNULATUS:39428
+    editable: false
+
+  - name: Alertmanager
+    uid: alertmanager
+    type: alertmanager
+    access: proxy
+    url: http://alertmanager:9093
+    editable: false
+    jsonData:
+      implementation: prometheus
+      handleGrafanaManagedAlerts: false
