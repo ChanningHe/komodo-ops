@@ -156,7 +156,7 @@
   "panels": [
     {
       "type": "row",
-      "title": "Health",
+      "title": "Quick CPU / Mem / Disk",
       "collapsed": false,
       "gridPos": {
         "x": 0,
@@ -168,327 +168,12 @@
       "id": 1
     },
     {
-      "type": "table",
-      "title": "Firing alerts",
-      "description": "Alerts from vmalert for this host (rules keep instance = host name).",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "vm"
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "vm"
-          },
-          "expr": "ALERTS{alertstate=\"firing\",instance=\"$host\"}",
-          "legendFormat": "",
-          "refId": "A",
-          "range": false,
-          "instant": true,
-          "format": "table"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            }
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "showHeader": true,
-        "cellHeight": "sm",
-        "footer": {
-          "show": false
-        }
-      },
-      "transformations": [
-        {
-          "id": "merge",
-          "options": {}
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "Value": true,
-              "__name__": true,
-              "host": true,
-              "instance": true,
-              "job": true,
-              "monitor": true,
-              "network": true,
-              "role": true,
-              "zone": true,
-              "alertstate": true,
-              "evaluator": true
-            },
-            "indexByName": {
-              "alertname": 0,
-              "severity": 1
-            },
-            "renameByName": {}
-          }
-        }
-      ],
-      "gridPos": {
-        "x": 0,
-        "y": 1,
-        "w": 12,
-        "h": 6
-      },
-      "id": 2
-    },
-    {
-      "type": "table",
-      "title": "Failed systemd units",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "vm"
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "vm"
-          },
-          "expr": "node_systemd_unit_state{host=~\"$host\",state=\"failed\"} == 1",
-          "legendFormat": "",
-          "refId": "A",
-          "range": false,
-          "instant": true,
-          "format": "table"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            }
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "showHeader": true,
-        "cellHeight": "sm",
-        "footer": {
-          "show": false
-        }
-      },
-      "transformations": [
-        {
-          "id": "merge",
-          "options": {}
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "Value": true,
-              "__name__": true,
-              "host": true,
-              "instance": true,
-              "job": true,
-              "monitor": true,
-              "network": true,
-              "role": true,
-              "zone": true,
-              "state": true,
-              "type": true
-            },
-            "indexByName": {
-              "name": 0
-            },
-            "renameByName": {
-              "name": "unit"
-            }
-          }
-        }
-      ],
-      "gridPos": {
-        "x": 12,
-        "y": 1,
-        "w": 6,
-        "h": 6
-      },
-      "id": 3
-    },
-    {
-      "type": "table",
-      "title": "ZFS pools",
-      "description": "",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "vm"
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "vm"
-          },
-          "expr": "node_zfs_zpool_state{host=~\"$host\"} == 1",
-          "legendFormat": "",
-          "refId": "A",
-          "range": false,
-          "instant": true,
-          "format": "table"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            }
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "state"
-            },
-            "properties": [
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              },
-              {
-                "id": "mappings",
-                "value": [
-                  {
-                    "type": "value",
-                    "options": {
-                      "online": {
-                        "color": "green",
-                        "index": 0
-                      }
-                    }
-                  },
-                  {
-                    "type": "regex",
-                    "options": {
-                      "pattern": ".*",
-                      "result": {
-                        "color": "red",
-                        "index": 1
-                      }
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "options": {
-        "showHeader": true,
-        "cellHeight": "sm",
-        "footer": {
-          "show": false
-        }
-      },
-      "transformations": [
-        {
-          "id": "merge",
-          "options": {}
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "Value": true,
-              "__name__": true,
-              "host": true,
-              "instance": true,
-              "job": true,
-              "monitor": true,
-              "network": true,
-              "role": true,
-              "zone": true
-            },
-            "indexByName": {
-              "zpool": 0,
-              "state": 1
-            },
-            "renameByName": {}
-          }
-        }
-      ],
-      "gridPos": {
-        "x": 18,
-        "y": 1,
-        "w": 6,
-        "h": 6
-      },
-      "id": 4
-    },
-    {
-      "type": "row",
-      "title": "Quick CPU / Mem / Disk",
-      "collapsed": false,
-      "gridPos": {
-        "x": 0,
-        "y": 7,
-        "w": 24,
-        "h": 1
-      },
-      "panels": [],
-      "id": 5
-    },
-    {
       "type": "bargauge",
       "title": "Pressure",
       "description": "Resource pressure via PSI",
       "gridPos": {
         "x": 0,
-        "y": 8,
+        "y": 1,
         "w": 3,
         "h": 4
       },
@@ -613,7 +298,7 @@
         "overrides": []
       },
       "transformations": [],
-      "id": 6
+      "id": 2
     },
     {
       "type": "gauge",
@@ -621,7 +306,7 @@
       "description": "Overall CPU busy percentage (averaged across all cores)",
       "gridPos": {
         "x": 3,
-        "y": 8,
+        "y": 1,
         "w": 3,
         "h": 4
       },
@@ -701,7 +386,7 @@
         "overrides": []
       },
       "transformations": [],
-      "id": 7
+      "id": 3
     },
     {
       "type": "gauge",
@@ -709,7 +394,7 @@
       "description": "System load over all CPU cores together",
       "gridPos": {
         "x": 6,
-        "y": 8,
+        "y": 1,
         "w": 3,
         "h": 4
       },
@@ -789,7 +474,7 @@
         "overrides": []
       },
       "transformations": [],
-      "id": 8
+      "id": 4
     },
     {
       "type": "gauge",
@@ -797,7 +482,7 @@
       "description": "Real RAM usage excluding cache and reclaimable memory",
       "gridPos": {
         "x": 9,
-        "y": 8,
+        "y": 1,
         "w": 3,
         "h": 4
       },
@@ -866,7 +551,7 @@
         "overrides": []
       },
       "transformations": [],
-      "id": 9
+      "id": 5
     },
     {
       "type": "gauge",
@@ -874,7 +559,7 @@
       "description": "Percentage of swap space currently used by the system",
       "gridPos": {
         "x": 12,
-        "y": 8,
+        "y": 1,
         "w": 3,
         "h": 4
       },
@@ -953,7 +638,7 @@
         "overrides": []
       },
       "transformations": [],
-      "id": 10
+      "id": 6
     },
     {
       "type": "gauge",
@@ -961,7 +646,7 @@
       "description": "Used Root FS",
       "gridPos": {
         "x": 15,
-        "y": 8,
+        "y": 1,
         "w": 3,
         "h": 4
       },
@@ -1041,7 +726,7 @@
         "overrides": []
       },
       "transformations": [],
-      "id": 11
+      "id": 7
     },
     {
       "type": "stat",
@@ -1049,7 +734,7 @@
       "description": "",
       "gridPos": {
         "x": 18,
-        "y": 8,
+        "y": 1,
         "w": 2,
         "h": 2
       },
@@ -1120,7 +805,7 @@
       },
       "transformations": [],
       "maxDataPoints": 100,
-      "id": 12
+      "id": 8
     },
     {
       "type": "stat",
@@ -1128,7 +813,7 @@
       "description": "",
       "gridPos": {
         "x": 20,
-        "y": 8,
+        "y": 1,
         "w": 2,
         "h": 2
       },
@@ -1204,7 +889,7 @@
       },
       "transformations": [],
       "maxDataPoints": 100,
-      "id": 13
+      "id": 9
     },
     {
       "type": "stat",
@@ -1212,7 +897,7 @@
       "description": "",
       "gridPos": {
         "x": 22,
-        "y": 8,
+        "y": 1,
         "w": 2,
         "h": 2
       },
@@ -1288,7 +973,7 @@
       },
       "transformations": [],
       "maxDataPoints": 100,
-      "id": 14
+      "id": 10
     },
     {
       "type": "stat",
@@ -1296,7 +981,7 @@
       "description": "",
       "gridPos": {
         "x": 18,
-        "y": 10,
+        "y": 3,
         "w": 2,
         "h": 2
       },
@@ -1377,7 +1062,7 @@
       },
       "transformations": [],
       "maxDataPoints": 100,
-      "id": 15
+      "id": 11
     },
     {
       "type": "stat",
@@ -1385,7 +1070,7 @@
       "description": "",
       "gridPos": {
         "x": 20,
-        "y": 10,
+        "y": 3,
         "w": 4,
         "h": 2
       },
@@ -1461,7 +1146,7 @@
       },
       "transformations": [],
       "maxDataPoints": 100,
-      "id": 16
+      "id": 12
     },
     {
       "type": "row",
@@ -1469,12 +1154,12 @@
       "collapsed": false,
       "gridPos": {
         "x": 0,
-        "y": 12,
+        "y": 5,
         "w": 24,
         "h": 1
       },
       "panels": [],
-      "id": 17
+      "id": 13
     },
     {
       "type": "timeseries",
@@ -1482,7 +1167,7 @@
       "description": "CPU time spent busy vs idle, split by activity type",
       "gridPos": {
         "x": 0,
-        "y": 13,
+        "y": 6,
         "w": 12,
         "h": 7
       },
@@ -1715,7 +1400,7 @@
         ]
       },
       "transformations": [],
-      "id": 18
+      "id": 14
     },
     {
       "type": "timeseries",
@@ -1723,7 +1408,7 @@
       "description": "RAM and swap usage overview, including caches",
       "gridPos": {
         "x": 12,
-        "y": 13,
+        "y": 6,
         "w": 12,
         "h": 7
       },
@@ -1937,7 +1622,7 @@
         ]
       },
       "transformations": [],
-      "id": 19
+      "id": 15
     },
     {
       "type": "timeseries",
@@ -1945,7 +1630,7 @@
       "description": "Per-interface network traffic (receive and transmit) in bits per second",
       "gridPos": {
         "x": 0,
-        "y": 20,
+        "y": 13,
         "w": 12,
         "h": 7
       },
@@ -2059,7 +1744,7 @@
         ]
       },
       "transformations": [],
-      "id": 20
+      "id": 16
     },
     {
       "type": "timeseries",
@@ -2067,7 +1752,7 @@
       "description": "Percentage of filesystem space used for each mounted device",
       "gridPos": {
         "x": 12,
-        "y": 20,
+        "y": 13,
         "w": 12,
         "h": 7
       },
@@ -2157,7 +1842,7 @@
         "overrides": []
       },
       "transformations": [],
-      "id": 21
+      "id": 17
     },
     {
       "type": "row",
@@ -2165,7 +1850,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 27,
+        "y": 20,
         "w": 24,
         "h": 1
       },
@@ -2176,7 +1861,7 @@
           "description": "CPU time usage split by state, normalized across all CPU cores",
           "gridPos": {
             "x": 0,
-            "y": 28,
+            "y": 21,
             "w": 12,
             "h": 12
           },
@@ -2525,7 +2210,7 @@
             ]
           },
           "transformations": [],
-          "id": 23
+          "id": 19
         },
         {
           "type": "timeseries",
@@ -2533,7 +2218,7 @@
           "description": "Breakdown of physical memory and swap usage. Hardware-detected memory errors are also displayed",
           "gridPos": {
             "x": 12,
-            "y": 28,
+            "y": 21,
             "w": 12,
             "h": 12
           },
@@ -2897,7 +2582,7 @@
             ]
           },
           "transformations": [],
-          "id": 24
+          "id": 20
         },
         {
           "type": "timeseries",
@@ -2905,7 +2590,7 @@
           "description": "Incoming and outgoing network traffic per interface",
           "gridPos": {
             "x": 0,
-            "y": 440,
+            "y": 433,
             "w": 12,
             "h": 12
           },
@@ -3023,7 +2708,7 @@
             ]
           },
           "transformations": [],
-          "id": 25
+          "id": 21
         },
         {
           "type": "timeseries",
@@ -3031,7 +2716,7 @@
           "description": "Network interface utilization as a percentage of its maximum capacity",
           "gridPos": {
             "x": 12,
-            "y": 440,
+            "y": 433,
             "w": 12,
             "h": 12
           },
@@ -3149,7 +2834,7 @@
             ]
           },
           "transformations": [],
-          "id": 26
+          "id": 22
         },
         {
           "type": "timeseries",
@@ -3157,7 +2842,7 @@
           "description": "Disk I/O operations per second for each device",
           "gridPos": {
             "x": 0,
-            "y": 452,
+            "y": 445,
             "w": 12,
             "h": 12
           },
@@ -3273,7 +2958,7 @@
             ]
           },
           "transformations": [],
-          "id": 27
+          "id": 23
         },
         {
           "type": "timeseries",
@@ -3281,7 +2966,7 @@
           "description": "Disk I/O throughput per device",
           "gridPos": {
             "x": 12,
-            "y": 452,
+            "y": 445,
             "w": 12,
             "h": 12
           },
@@ -3399,7 +3084,7 @@
             ]
           },
           "transformations": [],
-          "id": 28
+          "id": 24
         },
         {
           "type": "timeseries",
@@ -3407,7 +3092,7 @@
           "description": "Amount of available disk space per mounted filesystem, excluding rootfs. Based on block availability to non-root users",
           "gridPos": {
             "x": 0,
-            "y": 464,
+            "y": 457,
             "w": 12,
             "h": 12
           },
@@ -3529,7 +3214,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 29
+          "id": 25
         },
         {
           "type": "timeseries",
@@ -3537,7 +3222,7 @@
           "description": "Disk usage (used = total - available) per mountpoint",
           "gridPos": {
             "x": 12,
-            "y": 464,
+            "y": 457,
             "w": 12,
             "h": 12
           },
@@ -3630,7 +3315,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 30
+          "id": 26
         },
         {
           "type": "timeseries",
@@ -3638,7 +3323,7 @@
           "description": "Percentage of time the disk was actively processing I/O operations",
           "gridPos": {
             "x": 0,
-            "y": 476,
+            "y": 469,
             "w": 12,
             "h": 12
           },
@@ -3732,7 +3417,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 31
+          "id": 27
         },
         {
           "type": "timeseries",
@@ -3740,7 +3425,7 @@
           "description": "How often tasks experience CPU, memory, or I/O delays. 'Some' indicates partial slowdown; 'Full' indicates all tasks are stalled. Based on Linux PSI metrics:\nhttps://docs.kernel.org/accounting/psi.html",
           "gridPos": {
             "x": 12,
-            "y": 476,
+            "y": 469,
             "w": 12,
             "h": 12
           },
@@ -3922,10 +3607,10 @@
             ]
           },
           "transformations": [],
-          "id": 32
+          "id": 28
         }
       ],
-      "id": 22
+      "id": 18
     },
     {
       "type": "row",
@@ -3933,7 +3618,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 28,
+        "y": 21,
         "w": 24,
         "h": 1
       },
@@ -3944,7 +3629,7 @@
           "description": "Displays committed memory usage versus the system's commit limit. Exceeding the limit is allowed under Linux overcommit policies but may increase OOM risks under high load",
           "gridPos": {
             "x": 0,
-            "y": 739,
+            "y": 732,
             "w": 12,
             "h": 10
           },
@@ -4071,7 +3756,7 @@
             ]
           },
           "transformations": [],
-          "id": 34
+          "id": 30
         },
         {
           "type": "timeseries",
@@ -4079,7 +3764,7 @@
           "description": "Memory currently dirty (modified but not yet written to disk), being actively written back, or held by writeback buffers. High dirty or writeback memory may indicate disk I/O pressure or delayed flushing",
           "gridPos": {
             "x": 12,
-            "y": 739,
+            "y": 732,
             "w": 12,
             "h": 10
           },
@@ -4211,7 +3896,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 35
+          "id": 31
         },
         {
           "type": "timeseries",
@@ -4219,7 +3904,7 @@
           "description": "Kernel slab memory usage, separated into reclaimable and non-reclaimable categories. Reclaimable memory can be freed under memory pressure (e.g., caches), while unreclaimable memory is locked by the kernel for core functions",
           "gridPos": {
             "x": 0,
-            "y": 939,
+            "y": 932,
             "w": 12,
             "h": 10
           },
@@ -4325,7 +4010,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 36
+          "id": 32
         },
         {
           "type": "timeseries",
@@ -4333,7 +4018,7 @@
           "description": "Memory used for mapped files (such as libraries) and shared memory (shmem and tmpfs), including variants backed by huge pages",
           "gridPos": {
             "x": 12,
-            "y": 939,
+            "y": 932,
             "w": 12,
             "h": 10
           },
@@ -4468,7 +4153,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 37
+          "id": 33
         },
         {
           "type": "timeseries",
@@ -4476,7 +4161,7 @@
           "description": "Proportion of memory pages in the kernel's active and inactive LRU lists relative to total RAM. Active pages have been recently used, while inactive pages are less recently accessed but still resident in memory",
           "gridPos": {
             "x": 0,
-            "y": 949,
+            "y": 942,
             "w": 12,
             "h": 10
           },
@@ -4614,7 +4299,7 @@
             ]
           },
           "transformations": [],
-          "id": 38
+          "id": 34
         },
         {
           "type": "timeseries",
@@ -4622,7 +4307,7 @@
           "description": "Breakdown of memory pages in the kernel's active and inactive LRU lists, separated by anonymous (heap, tmpfs) and file-backed (caches, mmap) pages.",
           "gridPos": {
             "x": 12,
-            "y": 949,
+            "y": 942,
             "w": 12,
             "h": 10
           },
@@ -4755,7 +4440,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 39
+          "id": 35
         },
         {
           "type": "timeseries",
@@ -4763,7 +4448,7 @@
           "description": "Tracks kernel memory used for CPU-local structures, per-thread stacks, and bounce buffers used for I/O on DMA-limited devices. These areas are typically small but critical for low-level operations",
           "gridPos": {
             "x": 0,
-            "y": 959,
+            "y": 952,
             "w": 12,
             "h": 10
           },
@@ -4885,7 +4570,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 40
+          "id": 36
         },
         {
           "type": "timeseries",
@@ -4893,7 +4578,7 @@
           "description": "Usage of the kernel's vmalloc area, which provides virtual memory allocations for kernel modules and drivers. Includes total, used, and largest free block sizes",
           "gridPos": {
             "x": 12,
-            "y": 959,
+            "y": 952,
             "w": 12,
             "h": 10
           },
@@ -5042,7 +4727,7 @@
             ]
           },
           "transformations": [],
-          "id": 41
+          "id": 37
         },
         {
           "type": "timeseries",
@@ -5050,7 +4735,7 @@
           "description": "Memory used by anonymous pages (not backed by files), including standard and huge page allocations. Includes heap, stack, and memory-mapped anonymous regions",
           "gridPos": {
             "x": 0,
-            "y": 969,
+            "y": 962,
             "w": 12,
             "h": 10
           },
@@ -5156,7 +4841,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 42
+          "id": 38
         },
         {
           "type": "timeseries",
@@ -5164,7 +4849,7 @@
           "description": "Memory that is locked in RAM and cannot be swapped out. Includes both kernel-unevictable memory and user-level memory locked with mlock()",
           "gridPos": {
             "x": 12,
-            "y": 969,
+            "y": 962,
             "w": 12,
             "h": 10
           },
@@ -5271,7 +4956,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 43
+          "id": 39
         },
         {
           "type": "timeseries",
@@ -5279,7 +4964,7 @@
           "description": "How much memory is directly mapped in the kernel using different page sizes (4K, 2M, 1G). Helps monitor large page utilization in the direct map region",
           "gridPos": {
             "x": 0,
-            "y": 979,
+            "y": 972,
             "w": 12,
             "h": 10
           },
@@ -5404,7 +5089,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 44
+          "id": 40
         },
         {
           "type": "timeseries",
@@ -5412,7 +5097,7 @@
           "description": "Displays HugePages memory usage in bytes, including allocated, free, reserved, and surplus memory. All values are calculated based on the number of huge pages multiplied by their configured size",
           "gridPos": {
             "x": 12,
-            "y": 979,
+            "y": 972,
             "w": 12,
             "h": 10
           },
@@ -5544,10 +5229,10 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 45
+          "id": 41
         }
       ],
-      "id": 33
+      "id": 29
     },
     {
       "type": "row",
@@ -5555,7 +5240,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 29,
+        "y": 22,
         "w": 24,
         "h": 1
       },
@@ -5566,7 +5251,7 @@
           "description": "Rate of memory pages being read from or written to disk (page-in and page-out operations). High page-out may indicate memory pressure or swapping activity",
           "gridPos": {
             "x": 0,
-            "y": 740,
+            "y": 733,
             "w": 12,
             "h": 10
           },
@@ -5684,7 +5369,7 @@
             ]
           },
           "transformations": [],
-          "id": 47
+          "id": 43
         },
         {
           "type": "timeseries",
@@ -5692,7 +5377,7 @@
           "description": "Rate at which memory pages are being swapped in from or out to disk. High swap-out activity may indicate memory pressure",
           "gridPos": {
             "x": 12,
-            "y": 740,
+            "y": 733,
             "w": 12,
             "h": 10
           },
@@ -5810,7 +5495,7 @@
             ]
           },
           "transformations": [],
-          "id": 48
+          "id": 44
         },
         {
           "type": "timeseries",
@@ -5818,7 +5503,7 @@
           "description": "Rate of memory page faults, split into total, major (disk-backed), and derived minor (non-disk) faults. High major fault rates may indicate memory pressure or insufficient RAM",
           "gridPos": {
             "x": 0,
-            "y": 920,
+            "y": 913,
             "w": 12,
             "h": 10
           },
@@ -5975,7 +5660,7 @@
             ]
           },
           "transformations": [],
-          "id": 49
+          "id": 45
         },
         {
           "type": "timeseries",
@@ -5983,7 +5668,7 @@
           "description": "Rate of Out-of-Memory (OOM) kill events. A non-zero value indicates the kernel has terminated one or more processes due to memory exhaustion",
           "gridPos": {
             "x": 12,
-            "y": 920,
+            "y": 913,
             "w": 12,
             "h": 10
           },
@@ -6093,10 +5778,10 @@
             ]
           },
           "transformations": [],
-          "id": 50
+          "id": 46
         }
       ],
-      "id": 46
+      "id": 42
     },
     {
       "type": "row",
@@ -6104,7 +5789,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 30,
+        "y": 23,
         "w": 24,
         "h": 1
       },
@@ -6115,7 +5800,7 @@
           "description": "Tracks the system clock's estimated and maximum error, as well as its offset from the reference clock (e.g., via NTP). Useful for detecting synchronization drift",
           "gridPos": {
             "x": 0,
-            "y": 741,
+            "y": 734,
             "w": 12,
             "h": 10
           },
@@ -6236,7 +5921,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 52
+          "id": 48
         },
         {
           "type": "timeseries",
@@ -6244,7 +5929,7 @@
           "description": "NTP phase-locked loop (PLL) time constant used by the kernel to control time adjustments. Lower values mean faster correction but less stability",
           "gridPos": {
             "x": 12,
-            "y": 741,
+            "y": 734,
             "w": 12,
             "h": 10
           },
@@ -6337,7 +6022,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 53
+          "id": 49
         },
         {
           "type": "timeseries",
@@ -6345,7 +6030,7 @@
           "description": "Shows whether the system clock is synchronized to a reliable time source, and the current frequency correction ratio applied by the kernel to maintain synchronization",
           "gridPos": {
             "x": 0,
-            "y": 891,
+            "y": 884,
             "w": 12,
             "h": 10
           },
@@ -6482,7 +6167,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 54
+          "id": 50
         },
         {
           "type": "timeseries",
@@ -6490,7 +6175,7 @@
           "description": "Displays the PPS signal's frequency offset and stability (jitter) in hertz. Useful for monitoring high-precision time sources like GPS or atomic clocks",
           "gridPos": {
             "x": 12,
-            "y": 891,
+            "y": 884,
             "w": 12,
             "h": 10
           },
@@ -6597,7 +6282,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 55
+          "id": 51
         },
         {
           "type": "timeseries",
@@ -6605,7 +6290,7 @@
           "description": "Tracks PPS signal timing jitter and shift compared to system clock",
           "gridPos": {
             "x": 0,
-            "y": 901,
+            "y": 894,
             "w": 12,
             "h": 10
           },
@@ -6712,7 +6397,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 56
+          "id": 52
         },
         {
           "type": "timeseries",
@@ -6720,7 +6405,7 @@
           "description": "Rate of PPS synchronization diagnostics including calibration events, jitter violations, errors, and frequency stability exceedances",
           "gridPos": {
             "x": 12,
-            "y": 901,
+            "y": 894,
             "w": 12,
             "h": 10
           },
@@ -6859,10 +6544,10 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 57
+          "id": 53
         }
       ],
-      "id": 51
+      "id": 47
     },
     {
       "type": "row",
@@ -6870,7 +6555,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 31,
+        "y": 24,
         "w": 24,
         "h": 1
       },
@@ -6881,7 +6566,7 @@
           "description": "Processes currently in runnable or blocked states. Helps identify CPU contention or I/O wait bottlenecks.",
           "gridPos": {
             "x": 0,
-            "y": 742,
+            "y": 735,
             "w": 12,
             "h": 10
           },
@@ -6991,7 +6676,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 59
+          "id": 55
         },
         {
           "type": "timeseries",
@@ -6999,7 +6684,7 @@
           "description": "Current number of processes in each state (e.g., running, sleeping, zombie). Requires --collector.processes to be enabled in node_exporter",
           "gridPos": {
             "x": 12,
-            "y": 742,
+            "y": 735,
             "w": 12,
             "h": 10
           },
@@ -7178,7 +6863,7 @@
             ]
           },
           "transformations": [],
-          "id": 60
+          "id": 56
         },
         {
           "type": "timeseries",
@@ -7186,7 +6871,7 @@
           "description": "Rate of new processes being created on the system (forks/sec).",
           "gridPos": {
             "x": 0,
-            "y": 772,
+            "y": 765,
             "w": 12,
             "h": 10
           },
@@ -7279,7 +6964,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 61
+          "id": 57
         },
         {
           "type": "timeseries",
@@ -7287,7 +6972,7 @@
           "description": "Shows CPU saturation per core, calculated as the proportion of time spent waiting to run relative to total time demanded (running + waiting).",
           "gridPos": {
             "x": 12,
-            "y": 772,
+            "y": 765,
             "w": 12,
             "h": 10
           },
@@ -7427,7 +7112,7 @@
             ]
           },
           "transformations": [],
-          "id": 62
+          "id": 58
         },
         {
           "type": "timeseries",
@@ -7435,7 +7120,7 @@
           "description": "Number of active PIDs on the system and the configured maximum allowed. Useful for detecting PID exhaustion risk. Requires --collector.processes in node_exporter",
           "gridPos": {
             "x": 0,
-            "y": 782,
+            "y": 775,
             "w": 12,
             "h": 10
           },
@@ -7573,7 +7258,7 @@
             ]
           },
           "transformations": [],
-          "id": 63
+          "id": 59
         },
         {
           "type": "timeseries",
@@ -7581,7 +7266,7 @@
           "description": "Number of active threads on the system and the configured thread limit. Useful for monitoring thread pressure. Requires --collector.processes in node_exporter",
           "gridPos": {
             "x": 12,
-            "y": 782,
+            "y": 775,
             "w": 12,
             "h": 10
           },
@@ -7719,10 +7404,10 @@
             ]
           },
           "transformations": [],
-          "id": 64
+          "id": 60
         }
       ],
-      "id": 58
+      "id": 54
     },
     {
       "type": "row",
@@ -7730,7 +7415,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 32,
+        "y": 25,
         "w": 24,
         "h": 1
       },
@@ -7741,7 +7426,7 @@
           "description": "Per-second rate of context switches and hardware interrupts. High values may indicate intense CPU or I/O activity",
           "gridPos": {
             "x": 0,
-            "y": 823,
+            "y": 816,
             "w": 12,
             "h": 10
           },
@@ -7847,7 +7532,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 66
+          "id": 62
         },
         {
           "type": "timeseries",
@@ -7855,7 +7540,7 @@
           "description": "System load average over 1, 5, and 15 minutes. Reflects the number of active or waiting processes. Values above CPU core count may indicate overload",
           "gridPos": {
             "x": 12,
-            "y": 823,
+            "y": 816,
             "w": 12,
             "h": 10
           },
@@ -8017,7 +7702,7 @@
             ]
           },
           "transformations": [],
-          "id": 67
+          "id": 63
         },
         {
           "type": "timeseries",
@@ -8025,7 +7710,7 @@
           "description": "Real-time CPU frequency scaling per core, including average minimum and maximum allowed scaling frequencies",
           "gridPos": {
             "x": 0,
-            "y": 833,
+            "y": 826,
             "w": 12,
             "h": 10
           },
@@ -8213,7 +7898,7 @@
             ]
           },
           "transformations": [],
-          "id": 68
+          "id": 64
         },
         {
           "type": "timeseries",
@@ -8221,7 +7906,7 @@
           "description": "Rate of scheduling timeslices executed per CPU. Reflects how frequently the scheduler switches tasks on each core",
           "gridPos": {
             "x": 12,
-            "y": 833,
+            "y": 826,
             "w": 12,
             "h": 10
           },
@@ -8314,7 +7999,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 69
+          "id": 65
         },
         {
           "type": "timeseries",
@@ -8322,7 +8007,7 @@
           "description": "Breaks down hardware interrupts by type and device. Useful for diagnosing IRQ load on network, disk, or CPU interfaces. Requires --collector.interrupts to be enabled in node_exporter",
           "gridPos": {
             "x": 0,
-            "y": 843,
+            "y": 836,
             "w": 12,
             "h": 10
           },
@@ -8416,7 +8101,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 70
+          "id": 66
         },
         {
           "type": "timeseries",
@@ -8424,7 +8109,7 @@
           "description": "Number of bits of entropy currently available to the system's random number generators (e.g., /dev/random). Low values may indicate that random number generation could block or degrade performance of cryptographic operations",
           "gridPos": {
             "x": 12,
-            "y": 843,
+            "y": 836,
             "w": 12,
             "h": 10
           },
@@ -8560,10 +8245,10 @@
             ]
           },
           "transformations": [],
-          "id": 71
+          "id": 67
         }
       ],
-      "id": 65
+      "id": 61
     },
     {
       "type": "row",
@@ -8571,7 +8256,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 33,
+        "y": 26,
         "w": 24,
         "h": 1
       },
@@ -8582,7 +8267,7 @@
           "description": "Monitors hardware sensor temperatures and critical thresholds as exposed by Linux hwmon. Includes CPU, GPU, and motherboard sensors where available",
           "gridPos": {
             "x": 0,
-            "y": 744,
+            "y": 737,
             "w": 12,
             "h": 10
           },
@@ -8749,7 +8434,7 @@
             ]
           },
           "transformations": [],
-          "id": 73
+          "id": 69
         },
         {
           "type": "timeseries",
@@ -8757,7 +8442,7 @@
           "description": "Shows how hard each cooling device (fan/throttle) is working relative to its maximum capacity",
           "gridPos": {
             "x": 12,
-            "y": 744,
+            "y": 737,
             "w": 12,
             "h": 10
           },
@@ -8870,7 +8555,7 @@
             ]
           },
           "transformations": [],
-          "id": 74
+          "id": 70
         },
         {
           "type": "timeseries",
@@ -8878,7 +8563,7 @@
           "description": "Shows the online status of power supplies (e.g., AC, battery). A value of 1-Yes indicates the power supply is active/online",
           "gridPos": {
             "x": 0,
-            "y": 754,
+            "y": 747,
             "w": 12,
             "h": 10
           },
@@ -8975,7 +8660,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 75
+          "id": 71
         },
         {
           "type": "timeseries",
@@ -8983,7 +8668,7 @@
           "description": "Displays the current fan speeds (RPM) from hardware sensors via the hwmon interface",
           "gridPos": {
             "x": 12,
-            "y": 754,
+            "y": 747,
             "w": 12,
             "h": 10
           },
@@ -9092,10 +8777,10 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 76
+          "id": 72
         }
       ],
-      "id": 72
+      "id": 68
     },
     {
       "type": "row",
@@ -9103,7 +8788,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 34,
+        "y": 27,
         "w": 24,
         "h": 1
       },
@@ -9114,7 +8799,7 @@
           "description": "Current number of systemd units in each operational state, such as active, failed, inactive, or transitioning",
           "gridPos": {
             "x": 0,
-            "y": 4235,
+            "y": 4228,
             "w": 12,
             "h": 10
           },
@@ -9339,7 +9024,7 @@
             ]
           },
           "transformations": [],
-          "id": 78
+          "id": 74
         },
         {
           "type": "timeseries",
@@ -9347,7 +9032,7 @@
           "description": "Current number of active connections per systemd socket, as reported by the Node Exporter systemd collector",
           "gridPos": {
             "x": 12,
-            "y": 4235,
+            "y": 4228,
             "w": 12,
             "h": 10
           },
@@ -9441,7 +9126,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 79
+          "id": 75
         },
         {
           "type": "timeseries",
@@ -9449,7 +9134,7 @@
           "description": "Rate of accepted connections per second for each systemd socket",
           "gridPos": {
             "x": 0,
-            "y": 4245,
+            "y": 4238,
             "w": 12,
             "h": 10
           },
@@ -9543,7 +9228,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 80
+          "id": 76
         },
         {
           "type": "timeseries",
@@ -9551,7 +9236,7 @@
           "description": "Rate of systemd socket connection refusals per second, typically due to service unavailability or backlog overflow",
           "gridPos": {
             "x": 12,
-            "y": 4245,
+            "y": 4238,
             "w": 12,
             "h": 10
           },
@@ -9645,10 +9330,10 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 81
+          "id": 77
         }
       ],
-      "id": 77
+      "id": 73
     },
     {
       "type": "row",
@@ -9656,7 +9341,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 35,
+        "y": 28,
         "w": 24,
         "h": 1
       },
@@ -9667,7 +9352,7 @@
           "description": "Number of I/O operations completed per second for the device (after merges), including both reads and writes",
           "gridPos": {
             "x": 0,
-            "y": 36,
+            "y": 29,
             "w": 12,
             "h": 10
           },
@@ -9798,7 +9483,7 @@
             ]
           },
           "transformations": [],
-          "id": 83
+          "id": 79
         },
         {
           "type": "timeseries",
@@ -9806,7 +9491,7 @@
           "description": "Number of bytes read from or written to the device per second",
           "gridPos": {
             "x": 12,
-            "y": 36,
+            "y": 29,
             "w": 12,
             "h": 10
           },
@@ -9941,7 +9626,7 @@
             ]
           },
           "transformations": [],
-          "id": 84
+          "id": 80
         },
         {
           "type": "timeseries",
@@ -9949,7 +9634,7 @@
           "description": "Average time for requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them.",
           "gridPos": {
             "x": 0,
-            "y": 396,
+            "y": 389,
             "w": 12,
             "h": 10
           },
@@ -10082,7 +9767,7 @@
             ]
           },
           "transformations": [],
-          "id": 85
+          "id": 81
         },
         {
           "type": "timeseries",
@@ -10090,7 +9775,7 @@
           "description": "Average queue length of the requests that were issued to the device",
           "gridPos": {
             "x": 12,
-            "y": 396,
+            "y": 389,
             "w": 12,
             "h": 10
           },
@@ -10199,7 +9884,7 @@
             ]
           },
           "transformations": [],
-          "id": 86
+          "id": 82
         },
         {
           "type": "timeseries",
@@ -10207,7 +9892,7 @@
           "description": "Number of read and write requests merged per second that were queued to the device",
           "gridPos": {
             "x": 0,
-            "y": 406,
+            "y": 399,
             "w": 12,
             "h": 10
           },
@@ -10338,7 +10023,7 @@
             ]
           },
           "transformations": [],
-          "id": 87
+          "id": 83
         },
         {
           "type": "timeseries",
@@ -10346,7 +10031,7 @@
           "description": "Percentage of time the disk spent actively processing I/O operations, including general I/O, discards (TRIM), and write cache flushes",
           "gridPos": {
             "x": 12,
-            "y": 406,
+            "y": 399,
             "w": 12,
             "h": 10
           },
@@ -10481,7 +10166,7 @@
             ]
           },
           "transformations": [],
-          "id": 88
+          "id": 84
         },
         {
           "type": "timeseries",
@@ -10489,7 +10174,7 @@
           "description": "Per-second rate of discard (TRIM) and flush (write cache) operations. Useful for monitoring low-level disk activity on SSDs and advanced storage",
           "gridPos": {
             "x": 0,
-            "y": 416,
+            "y": 409,
             "w": 12,
             "h": 10
           },
@@ -10623,7 +10308,7 @@
             ]
           },
           "transformations": [],
-          "id": 89
+          "id": 85
         },
         {
           "type": "timeseries",
@@ -10631,7 +10316,7 @@
           "description": "Shows how many disk sectors are discarded (TRIMed) per second. Useful for monitoring SSD behavior and storage efficiency",
           "gridPos": {
             "x": 12,
-            "y": 416,
+            "y": 409,
             "w": 12,
             "h": 10
           },
@@ -10739,7 +10424,7 @@
             ]
           },
           "transformations": [],
-          "id": 90
+          "id": 86
         },
         {
           "type": "timeseries",
@@ -10747,7 +10432,7 @@
           "description": "Number of in-progress I/O requests at the time of sampling (active requests in the disk queue)",
           "gridPos": {
             "x": 0,
-            "y": 426,
+            "y": 419,
             "w": 12,
             "h": 10
           },
@@ -10856,10 +10541,10 @@
             ]
           },
           "transformations": [],
-          "id": 91
+          "id": 87
         }
       ],
-      "id": 82
+      "id": 78
     },
     {
       "type": "row",
@@ -10867,7 +10552,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 36,
+        "y": 29,
         "w": 24,
         "h": 1
       },
@@ -10878,7 +10563,7 @@
           "description": "Number of file descriptors currently allocated system-wide versus the system limit. Important for detecting descriptor exhaustion risks",
           "gridPos": {
             "x": 0,
-            "y": 37,
+            "y": 30,
             "w": 12,
             "h": 10
           },
@@ -11014,7 +10699,7 @@
             ]
           },
           "transformations": [],
-          "id": 93
+          "id": 89
         },
         {
           "type": "timeseries",
@@ -11022,7 +10707,7 @@
           "description": "Number of free file nodes (inodes) available per mounted filesystem. A low count may prevent file creation even if disk space is available",
           "gridPos": {
             "x": 12,
-            "y": 37,
+            "y": 30,
             "w": 12,
             "h": 10
           },
@@ -11115,7 +10800,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 94
+          "id": 90
         },
         {
           "type": "timeseries",
@@ -11123,7 +10808,7 @@
           "description": "Indicates filesystems mounted in read-only mode or reporting device-level I/O errors.",
           "gridPos": {
             "x": 0,
-            "y": 377,
+            "y": 370,
             "w": 12,
             "h": 10
           },
@@ -11231,7 +10916,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 95
+          "id": 91
         },
         {
           "type": "timeseries",
@@ -11239,7 +10924,7 @@
           "description": "Number of file nodes (inodes) available per mounted filesystem. Reflects maximum file capacity regardless of disk size",
           "gridPos": {
             "x": 12,
-            "y": 377,
+            "y": 370,
             "w": 12,
             "h": 10
           },
@@ -11332,10 +11017,10 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 96
+          "id": 92
         }
       ],
-      "id": 92
+      "id": 88
     },
     {
       "type": "row",
@@ -11343,7 +11028,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 37,
+        "y": 30,
         "w": 24,
         "h": 1
       },
@@ -11354,7 +11039,7 @@
           "description": "Number of network packets received and transmitted per second, by interface.",
           "gridPos": {
             "x": 0,
-            "y": 38,
+            "y": 31,
             "w": 12,
             "h": 10
           },
@@ -11475,7 +11160,7 @@
             ]
           },
           "transformations": [],
-          "id": 98
+          "id": 94
         },
         {
           "type": "timeseries",
@@ -11483,7 +11168,7 @@
           "description": "Rate of packet-level errors for each network interface. Receive errors may indicate physical or driver issues; transmit errors may reflect collisions or hardware faults",
           "gridPos": {
             "x": 12,
-            "y": 38,
+            "y": 31,
             "w": 12,
             "h": 10
           },
@@ -11602,7 +11287,7 @@
             ]
           },
           "transformations": [],
-          "id": 99
+          "id": 95
         },
         {
           "type": "timeseries",
@@ -11610,7 +11295,7 @@
           "description": "Rate of dropped packets per network interface. Receive drops can indicate buffer overflow or driver issues; transmit drops may result from outbound congestion or queuing limits",
           "gridPos": {
             "x": 0,
-            "y": 258,
+            "y": 251,
             "w": 12,
             "h": 10
           },
@@ -11729,7 +11414,7 @@
             ]
           },
           "transformations": [],
-          "id": 100
+          "id": 96
         },
         {
           "type": "timeseries",
@@ -11737,7 +11422,7 @@
           "description": "Rate of compressed network packets received and transmitted per interface. These are common in low-bandwidth or special interfaces like PPP or SLIP",
           "gridPos": {
             "x": 12,
-            "y": 258,
+            "y": 251,
             "w": 12,
             "h": 10
           },
@@ -11856,7 +11541,7 @@
             ]
           },
           "transformations": [],
-          "id": 101
+          "id": 97
         },
         {
           "type": "timeseries",
@@ -11864,7 +11549,7 @@
           "description": "Rate of incoming multicast packets received per network interface. Multicast is used by protocols such as mDNS, SSDP, and some streaming or cluster services",
           "gridPos": {
             "x": 0,
-            "y": 268,
+            "y": 261,
             "w": 12,
             "h": 10
           },
@@ -11957,7 +11642,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 102
+          "id": 98
         },
         {
           "type": "timeseries",
@@ -11965,7 +11650,7 @@
           "description": "Rate of received packets that could not be processed due to missing protocol or handler in the kernel. May indicate unsupported traffic or misconfiguration",
           "gridPos": {
             "x": 12,
-            "y": 268,
+            "y": 261,
             "w": 12,
             "h": 10
           },
@@ -12058,7 +11743,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 103
+          "id": 99
         },
         {
           "type": "timeseries",
@@ -12066,7 +11751,7 @@
           "description": "Rate of frame errors on received packets, typically caused by physical layer issues such as bad cables, duplex mismatches, or hardware problems",
           "gridPos": {
             "x": 0,
-            "y": 278,
+            "y": 271,
             "w": 12,
             "h": 10
           },
@@ -12159,7 +11844,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 104
+          "id": 100
         },
         {
           "type": "timeseries",
@@ -12167,7 +11852,7 @@
           "description": "Tracks FIFO buffer overrun errors on network interfaces. These occur when incoming or outgoing packets are dropped due to queue or buffer overflows, often indicating congestion or hardware limits",
           "gridPos": {
             "x": 12,
-            "y": 278,
+            "y": 271,
             "w": 12,
             "h": 10
           },
@@ -12286,7 +11971,7 @@
             ]
           },
           "transformations": [],
-          "id": 105
+          "id": 101
         },
         {
           "type": "timeseries",
@@ -12294,7 +11979,7 @@
           "description": "Rate of packet collisions detected during transmission. Mostly relevant on half-duplex or legacy Ethernet networks",
           "gridPos": {
             "x": 0,
-            "y": 288,
+            "y": 281,
             "w": 12,
             "h": 10
           },
@@ -12400,7 +12085,7 @@
             ]
           },
           "transformations": [],
-          "id": 106
+          "id": 102
         },
         {
           "type": "timeseries",
@@ -12408,7 +12093,7 @@
           "description": "Rate of carrier errors during transmission. These typically indicate physical layer issues like faulty cabling or duplex mismatches",
           "gridPos": {
             "x": 12,
-            "y": 288,
+            "y": 281,
             "w": 12,
             "h": 10
           },
@@ -12501,7 +12186,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 107
+          "id": 103
         },
         {
           "type": "timeseries",
@@ -12509,7 +12194,7 @@
           "description": "Number of ARP entries per interface. Useful for detecting excessive ARP traffic or table growth due to scanning or misconfiguration",
           "gridPos": {
             "x": 0,
-            "y": 298,
+            "y": 291,
             "w": 12,
             "h": 10
           },
@@ -12602,7 +12287,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 108
+          "id": 104
         },
         {
           "type": "timeseries",
@@ -12610,7 +12295,7 @@
           "description": "Current and maximum connection tracking entries used by Netfilter (nf_conntrack). High usage approaching the limit may cause packet drops or connection issues",
           "gridPos": {
             "x": 12,
-            "y": 298,
+            "y": 291,
             "w": 12,
             "h": 10
           },
@@ -12746,7 +12431,7 @@
             ]
           },
           "transformations": [],
-          "id": 109
+          "id": 105
         },
         {
           "type": "timeseries",
@@ -12754,7 +12439,7 @@
           "description": "Operational and physical link status of each network interface. Values are Yes for 'up' or link present, and No for 'down' or no carrier.",
           "gridPos": {
             "x": 0,
-            "y": 308,
+            "y": 301,
             "w": 12,
             "h": 10
           },
@@ -12860,7 +12545,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 110
+          "id": 106
         },
         {
           "type": "bargauge",
@@ -12868,7 +12553,7 @@
           "description": "Maximum speed of each network interface as reported by the operating system. This is a static hardware capability, not current throughput",
           "gridPos": {
             "x": 12,
-            "y": 308,
+            "y": 301,
             "w": 6,
             "h": 10
           },
@@ -12937,7 +12622,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 111
+          "id": 107
         },
         {
           "type": "bargauge",
@@ -12945,7 +12630,7 @@
           "description": "MTU (Maximum Transmission Unit) in bytes for each network interface. Affects packet size and transmission efficiency",
           "gridPos": {
             "x": 18,
-            "y": 308,
+            "y": 301,
             "w": 6,
             "h": 10
           },
@@ -13013,10 +12698,10 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 112
+          "id": 108
         }
       ],
-      "id": 97
+      "id": 93
     },
     {
       "type": "row",
@@ -13024,7 +12709,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 38,
+        "y": 31,
         "w": 24,
         "h": 1
       },
@@ -13035,7 +12720,7 @@
           "description": "Tracks TCP socket usage and memory per node",
           "gridPos": {
             "x": 0,
-            "y": 39,
+            "y": 32,
             "w": 12,
             "h": 10
           },
@@ -13172,7 +12857,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 114
+          "id": 110
         },
         {
           "type": "timeseries",
@@ -13180,7 +12865,7 @@
           "description": "Number of UDP and UDPLite sockets currently in use",
           "gridPos": {
             "x": 12,
-            "y": 39,
+            "y": 32,
             "w": 12,
             "h": 10
           },
@@ -13289,7 +12974,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 115
+          "id": 111
         },
         {
           "type": "timeseries",
@@ -13297,7 +12982,7 @@
           "description": "Total number of sockets currently in use across all protocols (TCP, UDP, UNIX, etc.), as reported by /proc/net/sockstat",
           "gridPos": {
             "x": 0,
-            "y": 49,
+            "y": 42,
             "w": 12,
             "h": 10
           },
@@ -13392,7 +13077,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 116
+          "id": 112
         },
         {
           "type": "timeseries",
@@ -13400,7 +13085,7 @@
           "description": "Number of FRAG and RAW sockets currently in use. RAW sockets are used for custom protocols or tools like ping; FRAG sockets are used internally for IP packet defragmentation",
           "gridPos": {
             "x": 12,
-            "y": 49,
+            "y": 42,
             "w": 12,
             "h": 10
           },
@@ -13509,7 +13194,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 117
+          "id": 113
         },
         {
           "type": "timeseries",
@@ -13517,7 +13202,7 @@
           "description": "Kernel memory used by TCP, UDP, and IP fragmentation buffers",
           "gridPos": {
             "x": 0,
-            "y": 59,
+            "y": 52,
             "w": 12,
             "h": 10
           },
@@ -13638,7 +13323,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 118
+          "id": 114
         },
         {
           "type": "timeseries",
@@ -13646,7 +13331,7 @@
           "description": "Average memory used per socket (TCP/UDP). Helps tune net.ipv4.tcp_rmem / tcp_wmem",
           "gridPos": {
             "x": 12,
-            "y": 59,
+            "y": 52,
             "w": 12,
             "h": 10
           },
@@ -13755,7 +13440,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 119
+          "id": 115
         },
         {
           "type": "timeseries",
@@ -13763,7 +13448,7 @@
           "description": "TCP/UDP socket memory usage in kernel (in pages)",
           "gridPos": {
             "x": 0,
-            "y": 69,
+            "y": 62,
             "w": 12,
             "h": 10
           },
@@ -13872,7 +13557,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 120
+          "id": 116
         },
         {
           "type": "timeseries",
@@ -13880,7 +13565,7 @@
           "description": "Packets processed and dropped by the softnet network stack per CPU. Drops may indicate CPU saturation or network driver limitations",
           "gridPos": {
             "x": 12,
-            "y": 69,
+            "y": 62,
             "w": 12,
             "h": 10
           },
@@ -14001,7 +13686,7 @@
             ]
           },
           "transformations": [],
-          "id": 121
+          "id": 117
         },
         {
           "type": "timeseries",
@@ -14009,7 +13694,7 @@
           "description": "How often the kernel was unable to process all packets in the softnet queue before time ran out. Frequent squeezes may indicate CPU contention or driver inefficiency",
           "gridPos": {
             "x": 0,
-            "y": 79,
+            "y": 72,
             "w": 12,
             "h": 10
           },
@@ -14107,7 +13792,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 122
+          "id": 118
         },
         {
           "type": "timeseries",
@@ -14115,7 +13800,7 @@
           "description": "Tracks the number of packets processed or dropped by Receive Packet Steering (RPS), a mechanism to distribute packet processing across CPUs",
           "gridPos": {
             "x": 12,
-            "y": 79,
+            "y": 72,
             "w": 12,
             "h": 10
           },
@@ -14243,10 +13928,10 @@
             ]
           },
           "transformations": [],
-          "id": 123
+          "id": 119
         }
       ],
-      "id": 113
+      "id": 109
     },
     {
       "type": "row",
@@ -14254,7 +13939,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 39,
+        "y": 32,
         "w": 24,
         "h": 1
       },
@@ -14265,7 +13950,7 @@
           "description": "Rate of octets sent and received at the IP layer, as reported by /proc/net/netstat",
           "gridPos": {
             "x": 0,
-            "y": 170,
+            "y": 163,
             "w": 12,
             "h": 10
           },
@@ -14385,7 +14070,7 @@
             ]
           },
           "transformations": [],
-          "id": 125
+          "id": 121
         },
         {
           "type": "timeseries",
@@ -14393,7 +14078,7 @@
           "description": "Rate of TCP segments sent and received per second, including data and control segments",
           "gridPos": {
             "x": 12,
-            "y": 170,
+            "y": 163,
             "w": 12,
             "h": 10
           },
@@ -14517,7 +14202,7 @@
             ]
           },
           "transformations": [],
-          "id": 126
+          "id": 122
         },
         {
           "type": "timeseries",
@@ -14525,7 +14210,7 @@
           "description": "Rate of UDP datagrams sent and received per second, based on /proc/net/netstat",
           "gridPos": {
             "x": 0,
-            "y": 200,
+            "y": 193,
             "w": 12,
             "h": 10
           },
@@ -14645,7 +14330,7 @@
             ]
           },
           "transformations": [],
-          "id": 127
+          "id": 123
         },
         {
           "type": "timeseries",
@@ -14653,7 +14338,7 @@
           "description": "Number of ICMP messages sent and received per second, including error and control messages",
           "gridPos": {
             "x": 12,
-            "y": 200,
+            "y": 193,
             "w": 12,
             "h": 10
           },
@@ -14777,7 +14462,7 @@
             ]
           },
           "transformations": [],
-          "id": 128
+          "id": 124
         },
         {
           "type": "timeseries",
@@ -14785,7 +14470,7 @@
           "description": "Tracks various TCP error and congestion-related events, including retransmissions, timeouts, dropped connections, and buffer issues",
           "gridPos": {
             "x": 0,
-            "y": 210,
+            "y": 203,
             "w": 12,
             "h": 10
           },
@@ -14979,7 +14664,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 129
+          "id": 125
         },
         {
           "type": "timeseries",
@@ -14987,7 +14672,7 @@
           "description": "Rate of UDP and UDPLite datagram delivery errors, including missing listeners, buffer overflows, and protocol-specific issues",
           "gridPos": {
             "x": 12,
-            "y": 210,
+            "y": 203,
             "w": 12,
             "h": 10
           },
@@ -15138,7 +14823,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 130
+          "id": 126
         },
         {
           "type": "timeseries",
@@ -15146,7 +14831,7 @@
           "description": "Rate of incoming ICMP messages that contained protocol-specific errors, such as bad checksums or invalid lengths",
           "gridPos": {
             "x": 0,
-            "y": 220,
+            "y": 213,
             "w": 12,
             "h": 10
           },
@@ -15239,7 +14924,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 131
+          "id": 127
         },
         {
           "type": "timeseries",
@@ -15247,7 +14932,7 @@
           "description": "Rate of TCP SYN cookies sent, validated, and failed. These are used to protect against SYN flood attacks and manage TCP handshake resources under load",
           "gridPos": {
             "x": 12,
-            "y": 220,
+            "y": 213,
             "w": 12,
             "h": 10
           },
@@ -15384,7 +15069,7 @@
             ]
           },
           "transformations": [],
-          "id": 132
+          "id": 128
         },
         {
           "type": "timeseries",
@@ -15392,7 +15077,7 @@
           "description": "Number of currently established TCP connections and the system's max supported limit. On Linux, MaxConn may return -1 to indicate a dynamic/unlimited configuration",
           "gridPos": {
             "x": 0,
-            "y": 230,
+            "y": 223,
             "w": 12,
             "h": 10
           },
@@ -15530,7 +15215,7 @@
             ]
           },
           "transformations": [],
-          "id": 133
+          "id": 129
         },
         {
           "type": "timeseries",
@@ -15538,7 +15223,7 @@
           "description": "Number of UDP packets currently queued in the receive (RX) and transmit (TX) buffers. A growing queue may indicate a bottleneck",
           "gridPos": {
             "x": 12,
-            "y": 230,
+            "y": 223,
             "w": 12,
             "h": 10
           },
@@ -15645,7 +15330,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 134
+          "id": 130
         },
         {
           "type": "timeseries",
@@ -15653,7 +15338,7 @@
           "description": "Rate of TCP connection initiations per second. 'Active' opens are initiated by this host. 'Passive' opens are accepted from incoming connections",
           "gridPos": {
             "x": 0,
-            "y": 240,
+            "y": 233,
             "w": 12,
             "h": 10
           },
@@ -15761,7 +15446,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 135
+          "id": 131
         },
         {
           "type": "timeseries",
@@ -15769,7 +15454,7 @@
           "description": "Number of TCP sockets in key connection states. Requires the --collector.tcpstat flag on node_exporter",
           "gridPos": {
             "x": 12,
-            "y": 240,
+            "y": 233,
             "w": 12,
             "h": 10
           },
@@ -15920,7 +15605,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 136
+          "id": 132
         },
         {
           "type": "timeseries",
@@ -15928,7 +15613,7 @@
           "description": "Transient TCP connection states. These are typically short-lived during connection establishment and teardown",
           "gridPos": {
             "x": 0,
-            "y": 250,
+            "y": 243,
             "w": 12,
             "h": 10
           },
@@ -16087,7 +15772,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 137
+          "id": 133
         },
         {
           "type": "timeseries",
@@ -16095,7 +15780,7 @@
           "description": "TCP socket queue sizes. High rx_queued_bytes indicates application not reading fast enough. High tx_queued_bytes indicates network congestion or slow receiver",
           "gridPos": {
             "x": 12,
-            "y": 250,
+            "y": 243,
             "w": 12,
             "h": 10
           },
@@ -16201,10 +15886,10 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 138
+          "id": 134
         }
       ],
-      "id": 124
+      "id": 120
     },
     {
       "type": "row",
@@ -16212,7 +15897,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 40,
+        "y": 33,
         "w": 24,
         "h": 1
       },
@@ -16223,7 +15908,7 @@
           "description": "Duration of each individual collector executed during a Node Exporter scrape. Useful for identifying slow or failing collectors",
           "gridPos": {
             "x": 0,
-            "y": 171,
+            "y": 164,
             "w": 12,
             "h": 10
           },
@@ -16320,7 +16005,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 140
+          "id": 136
         },
         {
           "type": "timeseries",
@@ -16328,7 +16013,7 @@
           "description": "Rate of CPU time used by the process exposing this metric (user + system mode)",
           "gridPos": {
             "x": 12,
-            "y": 171,
+            "y": 164,
             "w": 12,
             "h": 10
           },
@@ -16421,7 +16106,7 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 141
+          "id": 137
         },
         {
           "type": "timeseries",
@@ -16429,7 +16114,7 @@
           "description": "Tracks the memory usage of the process exposing this metric (e.g., node_exporter), including current virtual memory and maximum virtual memory limit",
           "gridPos": {
             "x": 0,
-            "y": 181,
+            "y": 174,
             "w": 10,
             "h": 10
           },
@@ -16589,7 +16274,7 @@
             ]
           },
           "transformations": [],
-          "id": 142
+          "id": 138
         },
         {
           "type": "timeseries",
@@ -16597,7 +16282,7 @@
           "description": "Number of file descriptors used by the exporter process versus its configured limit",
           "gridPos": {
             "x": 10,
-            "y": 181,
+            "y": 174,
             "w": 10,
             "h": 10
           },
@@ -16757,7 +16442,7 @@
             ]
           },
           "transformations": [],
-          "id": 143
+          "id": 139
         },
         {
           "type": "bargauge",
@@ -16765,7 +16450,7 @@
           "description": "Shows whether each Node Exporter collector scraped successfully (1 = success, 0 = failure), and whether the textfile collector returned an error.",
           "gridPos": {
             "x": 20,
-            "y": 181,
+            "y": 174,
             "w": 4,
             "h": 10
           },
@@ -16854,10 +16539,10 @@
             "overrides": []
           },
           "transformations": [],
-          "id": 144
+          "id": 140
         }
       ],
-      "id": 139
+      "id": 135
     },
     {
       "type": "row",
@@ -16865,11 +16550,136 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 41,
+        "y": 34,
         "w": 24,
         "h": 1
       },
       "panels": [
+        {
+          "type": "table",
+          "title": "Pools",
+          "description": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vm"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "vm"
+              },
+              "expr": "node_zfs_zpool_state{host=~\"$host\"} == 1",
+              "legendFormat": "",
+              "refId": "A",
+              "range": false,
+              "instant": true,
+              "format": "table"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                }
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "state"
+                },
+                "properties": [
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "type": "color-text"
+                    }
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "type": "value",
+                        "options": {
+                          "online": {
+                            "color": "green",
+                            "index": 0
+                          }
+                        }
+                      },
+                      {
+                        "type": "regex",
+                        "options": {
+                          "pattern": ".*",
+                          "result": {
+                            "color": "red",
+                            "index": 1
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "showHeader": true,
+            "cellHeight": "sm",
+            "footer": {
+              "show": false
+            }
+          },
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value": true,
+                  "__name__": true,
+                  "host": true,
+                  "instance": true,
+                  "job": true,
+                  "monitor": true,
+                  "network": true,
+                  "role": true,
+                  "zone": true
+                },
+                "indexByName": {
+                  "zpool": 0,
+                  "state": 1
+                },
+                "renameByName": {}
+              }
+            }
+          ],
+          "gridPos": {
+            "x": 0,
+            "y": 35,
+            "w": 24,
+            "h": 4
+          },
+          "id": 142
+        },
         {
           "type": "timeseries",
           "title": "ARC size",
@@ -16948,11 +16758,11 @@
           },
           "gridPos": {
             "x": 0,
-            "y": 42,
+            "y": 39,
             "w": 8,
             "h": 8
           },
-          "id": 146
+          "id": 143
         },
         {
           "type": "timeseries",
@@ -17023,11 +16833,11 @@
           },
           "gridPos": {
             "x": 8,
-            "y": 42,
+            "y": 39,
             "w": 8,
             "h": 8
           },
-          "id": 147
+          "id": 144
         },
         {
           "type": "timeseries",
@@ -17096,11 +16906,11 @@
           },
           "gridPos": {
             "x": 16,
-            "y": 42,
+            "y": 39,
             "w": 8,
             "h": 8
           },
-          "id": 148
+          "id": 145
         },
         {
           "type": "timeseries",
@@ -17169,11 +16979,11 @@
           },
           "gridPos": {
             "x": 0,
-            "y": 50,
+            "y": 47,
             "w": 12,
             "h": 8
           },
-          "id": 149
+          "id": 146
         },
         {
           "type": "timeseries",
@@ -17242,14 +17052,14 @@
           },
           "gridPos": {
             "x": 12,
-            "y": 50,
+            "y": 47,
             "w": 12,
             "h": 8
           },
-          "id": 150
+          "id": 147
         }
       ],
-      "id": 145
+      "id": 141
     },
     {
       "type": "row",
@@ -17257,7 +17067,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 58,
+        "y": 55,
         "w": 24,
         "h": 1
       },
@@ -17323,11 +17133,11 @@
           },
           "gridPos": {
             "x": 0,
-            "y": 59,
+            "y": 56,
             "w": 6,
             "h": 4
           },
-          "id": 152
+          "id": 149
         },
         {
           "type": "stat",
@@ -17390,11 +17200,11 @@
           },
           "gridPos": {
             "x": 6,
-            "y": 59,
+            "y": 56,
             "w": 6,
             "h": 4
           },
-          "id": 153
+          "id": 150
         },
         {
           "type": "stat",
@@ -17457,11 +17267,11 @@
           },
           "gridPos": {
             "x": 12,
-            "y": 59,
+            "y": 56,
             "w": 6,
             "h": 4
           },
-          "id": 154
+          "id": 151
         },
         {
           "type": "stat",
@@ -17520,11 +17330,11 @@
           },
           "gridPos": {
             "x": 18,
-            "y": 59,
+            "y": 56,
             "w": 6,
             "h": 4
           },
-          "id": 155
+          "id": 152
         },
         {
           "type": "timeseries",
@@ -17582,11 +17392,11 @@
           },
           "gridPos": {
             "x": 0,
-            "y": 63,
+            "y": 60,
             "w": 12,
             "h": 8
           },
-          "id": 156
+          "id": 153
         },
         {
           "type": "timeseries",
@@ -17644,11 +17454,11 @@
           },
           "gridPos": {
             "x": 12,
-            "y": 63,
+            "y": 60,
             "w": 12,
             "h": 8
           },
-          "id": 157
+          "id": 154
         },
         {
           "type": "timeseries",
@@ -17706,11 +17516,11 @@
           },
           "gridPos": {
             "x": 0,
-            "y": 71,
+            "y": 68,
             "w": 12,
             "h": 8
           },
-          "id": 158
+          "id": 155
         },
         {
           "type": "timeseries",
@@ -17769,14 +17579,14 @@
           },
           "gridPos": {
             "x": 12,
-            "y": 71,
+            "y": 68,
             "w": 12,
             "h": 8
           },
-          "id": 159
+          "id": 156
         }
       ],
-      "id": 151
+      "id": 148
     },
     {
       "type": "row",
@@ -17784,7 +17594,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 79,
+        "y": 76,
         "w": 24,
         "h": 1
       },
@@ -17845,11 +17655,11 @@
           },
           "gridPos": {
             "x": 0,
-            "y": 80,
+            "y": 77,
             "w": 8,
             "h": 9
           },
-          "id": 161
+          "id": 158
         },
         {
           "type": "timeseries",
@@ -17907,11 +17717,11 @@
           },
           "gridPos": {
             "x": 8,
-            "y": 80,
+            "y": 77,
             "w": 8,
             "h": 9
           },
-          "id": 162
+          "id": 159
         },
         {
           "type": "timeseries",
@@ -17969,14 +17779,14 @@
           },
           "gridPos": {
             "x": 16,
-            "y": 80,
+            "y": 77,
             "w": 8,
             "h": 9
           },
-          "id": 163
+          "id": 160
         }
       ],
-      "id": 160
+      "id": 157
     },
     {
       "type": "row",
@@ -17984,7 +17794,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 89,
+        "y": 86,
         "w": 24,
         "h": 1
       },
@@ -18045,11 +17855,11 @@
           },
           "gridPos": {
             "x": 0,
-            "y": 90,
+            "y": 87,
             "w": 12,
             "h": 8
           },
-          "id": 165
+          "id": 162
         },
         {
           "type": "timeseries",
@@ -18118,14 +17928,14 @@
           },
           "gridPos": {
             "x": 12,
-            "y": 90,
+            "y": 87,
             "w": 12,
             "h": 8
           },
-          "id": 166
+          "id": 163
         }
       ],
-      "id": 164
+      "id": 161
     },
     {
       "type": "row",
@@ -18133,7 +17943,7 @@
       "collapsed": true,
       "gridPos": {
         "x": 0,
-        "y": 98,
+        "y": 95,
         "w": 24,
         "h": 1
       },
@@ -18205,11 +18015,11 @@
           },
           "gridPos": {
             "x": 0,
-            "y": 99,
+            "y": 96,
             "w": 16,
             "h": 8
           },
-          "id": 168
+          "id": 165
         },
         {
           "type": "table",
@@ -18319,11 +18129,510 @@
           ],
           "gridPos": {
             "x": 16,
-            "y": 99,
+            "y": 96,
             "w": 8,
             "h": 8
           },
+          "id": 166
+        }
+      ],
+      "id": 164
+    },
+    {
+      "type": "row",
+      "title": "Problems (alerts / failed units)",
+      "collapsed": true,
+      "gridPos": {
+        "x": 0,
+        "y": 104,
+        "w": 24,
+        "h": 1
+      },
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Firing alerts",
+          "description": "Alerts from vmalert for this host (rules keep instance = host name).",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vm"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "vm"
+              },
+              "expr": "(count(ALERTS{alertstate=\"firing\",instance=\"$host\"})) or vector(0)",
+              "legendFormat": "",
+              "refId": "A",
+              "range": false,
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 1
+                  }
+                ]
+              },
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [
+                {
+                  "type": "value",
+                  "options": {
+                    "0": {
+                      "text": "OK",
+                      "color": "green"
+                    }
+                  }
+                }
+              ]
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "textMode": "auto",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "wideLayout": true
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 105,
+            "w": 6,
+            "h": 4
+          },
+          "id": 168
+        },
+        {
+          "type": "stat",
+          "title": "Failed systemd units",
+          "description": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vm"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "vm"
+              },
+              "expr": "(count(node_systemd_unit_state{host=~\"$host\",state=\"failed\"} == 1)) or vector(0)",
+              "legendFormat": "",
+              "refId": "A",
+              "range": false,
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 1
+                  }
+                ]
+              },
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [
+                {
+                  "type": "value",
+                  "options": {
+                    "0": {
+                      "text": "OK",
+                      "color": "green"
+                    }
+                  }
+                }
+              ]
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "textMode": "auto",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "wideLayout": true
+          },
+          "gridPos": {
+            "x": 6,
+            "y": 105,
+            "w": 6,
+            "h": 4
+          },
           "id": 169
+        },
+        {
+          "type": "stat",
+          "title": "ZFS pools not online",
+          "description": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vm"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "vm"
+              },
+              "expr": "(count(node_zfs_zpool_state{host=~\"$host\",state!=\"online\"} == 1)) or vector(0)",
+              "legendFormat": "",
+              "refId": "A",
+              "range": false,
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 1
+                  }
+                ]
+              },
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [
+                {
+                  "type": "value",
+                  "options": {
+                    "0": {
+                      "text": "OK",
+                      "color": "green"
+                    }
+                  }
+                }
+              ]
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "textMode": "auto",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "wideLayout": true
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 105,
+            "w": 6,
+            "h": 4
+          },
+          "id": 170
+        },
+        {
+          "type": "stat",
+          "title": "Memory ECC uncorrectable",
+          "description": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vm"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "vm"
+              },
+              "expr": "(sum(node_edac_uncorrectable_errors_total{host=~\"$host\"})) or vector(0)",
+              "legendFormat": "",
+              "refId": "A",
+              "range": false,
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 1
+                  }
+                ]
+              },
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [
+                {
+                  "type": "value",
+                  "options": {
+                    "0": {
+                      "text": "OK",
+                      "color": "green"
+                    }
+                  }
+                }
+              ]
+            },
+            "overrides": []
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "textMode": "auto",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "wideLayout": true
+          },
+          "gridPos": {
+            "x": 18,
+            "y": 105,
+            "w": 6,
+            "h": 4
+          },
+          "id": 171
+        },
+        {
+          "type": "table",
+          "title": "Firing alerts",
+          "description": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vm"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "vm"
+              },
+              "expr": "ALERTS{alertstate=\"firing\",instance=\"$host\"}",
+              "legendFormat": "",
+              "refId": "A",
+              "range": false,
+              "instant": true,
+              "format": "table"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                }
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": {
+            "showHeader": true,
+            "cellHeight": "sm",
+            "footer": {
+              "show": false
+            }
+          },
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value": true,
+                  "__name__": true,
+                  "host": true,
+                  "instance": true,
+                  "job": true,
+                  "monitor": true,
+                  "network": true,
+                  "role": true,
+                  "zone": true,
+                  "alertstate": true,
+                  "evaluator": true
+                },
+                "indexByName": {
+                  "alertname": 0,
+                  "severity": 1
+                },
+                "renameByName": {}
+              }
+            }
+          ],
+          "gridPos": {
+            "x": 0,
+            "y": 109,
+            "w": 16,
+            "h": 6
+          },
+          "id": 172
+        },
+        {
+          "type": "table",
+          "title": "Failed systemd units",
+          "description": "",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vm"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "vm"
+              },
+              "expr": "node_systemd_unit_state{host=~\"$host\",state=\"failed\"} == 1",
+              "legendFormat": "",
+              "refId": "A",
+              "range": false,
+              "instant": true,
+              "format": "table"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                }
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": {
+            "showHeader": true,
+            "cellHeight": "sm",
+            "footer": {
+              "show": false
+            }
+          },
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value": true,
+                  "__name__": true,
+                  "host": true,
+                  "instance": true,
+                  "job": true,
+                  "monitor": true,
+                  "network": true,
+                  "role": true,
+                  "zone": true,
+                  "state": true,
+                  "type": true
+                },
+                "indexByName": {
+                  "name": 0
+                },
+                "renameByName": {
+                  "name": "unit"
+                }
+              }
+            }
+          ],
+          "gridPos": {
+            "x": 16,
+            "y": 109,
+            "w": 8,
+            "h": 6
+          },
+          "id": 173
         }
       ],
       "id": 167
