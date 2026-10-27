@@ -1,6 +1,6 @@
 services:
   niks3:
-    image: ghcr.io/mic92/niks3:main@sha256:a1d9196510c82a029e7d1487cdf6c3407421f37c9b2549dbf838b02f3df2fee3
+    image: ghcr.io/mic92/niks3:main@sha256:28af3c2d1b7162d8f5aab6b2eeb0a5e7b82dbbbc3a31a7bc9b92ac6933587fb6
     container_name: niks3
     ports:
       - "35751:5751"
