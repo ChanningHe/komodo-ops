@@ -33,7 +33,7 @@ services:
       labelgate.dns.niks3.proxied: false
 
   niks3-db:
-    image: postgres:16@sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54
+    image: postgres:16@sha256:1beaa3084eee2676f20a9cd9928f0bf2c5bf674f8e49f81017912183d377c61c
     container_name: niks3-db
     networks:
       - default
