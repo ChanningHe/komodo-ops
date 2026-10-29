@@ -73,7 +73,7 @@ services:
 
   traefik-poecilia-redis:
     restart: always
-    image: redis:7.4.11-alpine@sha256:57e4255cc971b1c8d6f8a6ca283ac01bc3ecdd914273ef6bfaede87aaecd6541
+    image: redis:7.4.12-alpine@sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f
     container_name: traefik-poecilia-redis
     ports:
       - "6379:6379"
