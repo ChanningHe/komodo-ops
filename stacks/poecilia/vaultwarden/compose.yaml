@@ -1,0 +1,22 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      DOMAIN: "https://vw.${DOMAIN_INT}"
+      ADMIN_TOKEN: ${VAULTWARDEN_ADMIN_TOKEN}
+    volumes:
+      - ${DOCKER_DATA}/vaultwarden/data/:/data
+    ports:
+      - 127.0.0.1:42118:80
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.vaultwarden.rule: Host(`vw.${DOMAIN_INT}`)
+      traefik.http.services.vaultwarden.loadbalancer.server.port: 80
+      traefik.docker.network: traefik-poecilia_local_web
+networks:
+  traefik-poecilia_local_web:
+    external: true
