@@ -4,9 +4,9 @@ Command References
 
 ### sops
 
-deloy a stack with secrets without komodo in CLI.
+deploy a stack with secrets without komodo in CLI (or `just up stacks/<host>/<stack>`).
 ```
-sops env-exec ../komodo-secrets/envs/$HOSTNAME.env 'docker compose -f xxx/compose.yaml up -d'
+sops exec-env ../komodo-secrets/envs/$HOSTNAME.env 'docker compose -f xxx/compose.yaml up -d'
 ```
 
 ### crane
