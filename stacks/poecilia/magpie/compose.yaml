@@ -5,7 +5,7 @@ services:
     ports:
       - "33430:33430"
     environment:
-      MAGPIE_ADDR: 127.0.0.1:33425
+      MAGPIE_ADDR: 0.0.0.0:33425
       MAGPIE_PUBLIC_URL: https://magie.${DOMAIN_INT}
       MAGPIE_WEB_KEY: ${MAGPIE_WEB_KEY}
     volumes:
