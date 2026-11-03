@@ -6,7 +6,7 @@ services:
       - "33430:33430"
     environment:
       MAGPIE_ADDR: 0.0.0.0:33425
-      MAGPIE_PUBLIC_URL: https://magie.${DOMAIN_INT}
+      MAGPIE_PUBLIC_URL: https://magpie.${DOMAIN_INT}
       MAGPIE_WEB_KEY: ${MAGPIE_WEB_KEY}
     volumes:
       - ${DOCKER_DATA}/magpie/config:/config
