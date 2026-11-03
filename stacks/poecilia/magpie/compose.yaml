@@ -1,0 +1,23 @@
+services:
+  magpie:
+    image: ghcr.io/yetone/magpie:0.1.2816@sha256:d9d64cc1977ac553fa5d00fb735b45bb44e900b6355922ab4765213f79ea834a
+    restart: unless-stopped
+    ports:
+      - "33430:33430"
+    environment:
+      MAGPIE_ADDR: 127.0.0.1:33425
+      MAGPIE_PUBLIC_URL: https://magie.${DOMAIN_INT}
+      MAGPIE_WEB_KEY: ${MAGPIE_WEB_KEY}
+    volumes:
+      - ${DOCKER_DATA}/magpie/config:/config
+    command: [web, --addr, 0.0.0.0:33430, --no-open]
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.magpie.rule: Host(`magpie.${DOMAIN_INT}`)
+      traefik.http.services.magpie.loadbalancer.server.port: 33425
+      traefik.docker.network: traefik-poecilia_local_web
+networks:
+  traefik-poecilia_local_web:
+    external: true
