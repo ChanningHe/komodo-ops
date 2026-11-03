@@ -1,6 +1,6 @@
 services:
   open-webui:
-    image: ghcr.io/open-webui/open-webui:v0.11.3@sha256:9cd136effce6bb12a6a1988a35ab3b82cb40c48a6768fceeb17c83baf7cfac9c
+    image: ghcr.io/open-webui/open-webui:v0.13.0@sha256:321595ca87042d6b8418ab19fc287cd6957ac9808bde15d1329fc016ceedbf50
     container_name: open-webui
     ports:
       - 35924:8080
