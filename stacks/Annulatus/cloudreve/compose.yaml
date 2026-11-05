@@ -70,7 +70,7 @@ services:
       - $DOCKER_DATA/cloudreve/postgresql:/var/lib/postgresql/data
 
   cloudreve-redis:
-    image: redis:8.6.3@sha256:4d25e2fe601f7ffaeb4437cb6ced3518bc36edf34ebe98863c80836943d94529
+    image: redis:8.10.3@sha256:f245f4c83b84a9e9a0588da1c9456e579455310f0945d5db52cd2ba27f2000cc
     restart: always
     container_name: cloudreve-redis
     networks:
