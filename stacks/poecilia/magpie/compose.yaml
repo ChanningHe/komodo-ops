@@ -1,6 +1,6 @@
 services:
   magpie:
-    image: ghcr.io/yetone/magpie:0.1.2816@sha256:d9d64cc1977ac553fa5d00fb735b45bb44e900b6355922ab4765213f79ea834a
+    image: ghcr.io/yetone/magpie:0.1.3208@sha256:0ef9fba0680713e7cfcf52b3a152b3acc33aa5baad2eec1b728153a3cf0f7a93
     restart: unless-stopped
     ports:
       - "33430:33430"
