@@ -3,6 +3,7 @@ services:
     image: ghcr.io/cristianadrielbraun/gofer:0.22@sha256:9751e123f0f19073e33246d8a53fceb106786581550b3317ff7937ebea4f52f7
     container_name: gofer
     restart: unless-stopped
+    user: 5000:5000
     ports:
       - "38090:8090"
     environment:
