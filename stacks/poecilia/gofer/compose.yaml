@@ -1,0 +1,31 @@
+services:
+  gofer:
+    image: ghcr.io/cristianadrielbraun/gofer:0.22@sha256:9751e123f0f19073e33246d8a53fceb106786581550b3317ff7937ebea4f52f7
+    container_name: gofer
+    restart: unless-stopped
+    ports:
+      - "38090:8090"
+    environment:
+      # The address people open in their browser.
+      GOFER_BASE_URL: https://gofer.${DOMAIN_INT}
+      # personal (the default) or managed. See .env.example for all options.
+      # GOFER_AUTH_MODE: managed
+      # A reverse proxy on this machine reaches Gofer through the Docker
+      # network gateway. Trust it to pass the real client address.
+      # GOFER_TRUSTED_PROXY_CIDRS: 172.16.0.0/12
+      # unencrypted on that network.
+      # GOFER_ALLOW_INSECURE_LAN: "true"
+    # Further settings, such as OAuth clients, can come from a file.
+    # env_file: .env
+    volumes:
+      - ${DOCKER_DATA}/gofer/data:/data
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.gofer.rule: Host(`gofer.${DOMAIN_INT}`)
+      traefik.http.services.gofer.loadbalancer.server.port: 8090
+      traefik.docker.network: traefik-poecilia_local_web
+networks:
+  traefik-poecilia_local_web:
+    external: true
