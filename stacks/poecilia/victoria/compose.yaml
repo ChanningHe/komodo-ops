@@ -24,7 +24,7 @@ services:
       traefik.docker.network: traefik-poecilia_local_web
 
   vmalert-metrics:
-    image: victoriametrics/vmalert:v1.154.1@sha256:aafb962b5a5713c71f0d697d629416f9cccf23aecb74f0ec5e829ddbf3f221f2
+    image: victoriametrics/vmalert:v1.156.0@sha256:4fea7d1a888d4db4ff18804434ef0f3ca8eb6482e289c50d32001c2db218287c
     container_name: vmalert-metrics
     restart: always
     user: 5000:5000
@@ -49,7 +49,7 @@ services:
 
   # one vmalert per datasource (upstream recommendation): this one evaluates LogsQL against VictoriaLogs
   vmalert-logs:
-    image: victoriametrics/vmalert:v1.154.1@sha256:aafb962b5a5713c71f0d697d629416f9cccf23aecb74f0ec5e829ddbf3f221f2
+    image: victoriametrics/vmalert:v1.156.0@sha256:4fea7d1a888d4db4ff18804434ef0f3ca8eb6482e289c50d32001c2db218287c
     container_name: vmalert-logs
     restart: always
     user: 5000:5000
