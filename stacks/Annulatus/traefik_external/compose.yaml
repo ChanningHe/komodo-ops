@@ -140,7 +140,7 @@ services:
 
   traefik-external-redis:
     restart: always
-    image: redis:7.4.11-alpine@sha256:57e4255cc971b1c8d6f8a6ca283ac01bc3ecdd914273ef6bfaede87aaecd6541
+    image: redis:7.4.12-alpine@sha256:7b1753b4c5ad8458906c272a8132b8c15f5557b000379eb115fb239706a384b7
     container_name: traefik-external-redis
     # ports:
     #   - "6379:6379"
