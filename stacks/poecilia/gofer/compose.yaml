@@ -1,6 +1,6 @@
 services:
   gofer:
-    image: ghcr.io/cristianadrielbraun/gofer:0.22@sha256:9751e123f0f19073e33246d8a53fceb106786581550b3317ff7937ebea4f52f7
+    image: ghcr.io/cristianadrielbraun/gofer:0.24@sha256:bf0f70bc9e42eff96d6f6a350ba410b2d91beeccd3ed09bb8922e02e13824bc1
     container_name: gofer
     restart: unless-stopped
     user: 5000:5000
