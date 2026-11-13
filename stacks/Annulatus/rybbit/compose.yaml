@@ -131,7 +131,7 @@ services:
     restart: unless-stopped
 
   rybbit-postgres:
-    image: postgres:17.4@sha256:304ab813518754228f9f792f79d6da36359b82d8ecf418096c636725f8c930ad
+    image: postgres:17.12@sha256:dbb9623d5121b5d2c2c9e2fba56e40193cbb3510d4af7f035b1ab1823aff3205
     container_name: rybbit-postgres
     # env_file:
     #   - ./.env
