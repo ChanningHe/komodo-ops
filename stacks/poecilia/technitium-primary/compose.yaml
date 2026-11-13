@@ -11,7 +11,7 @@ services:
     environment:
       - DNS_SERVER_LOG_USING_LOCAL_TIME=true
     volumes:
-      - $DOCKER_DATA/technitium-dns/config:/etc/dns
+      - $DOCKER_DATA/technitium-dns-primary/config:/etc/dns
     restart: always
     #sysctls:
     #  - net.ipv4.ip_local_port_range=1024 65000
