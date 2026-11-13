@@ -10,7 +10,7 @@ services:
     ports:
       - 5380:5380/tcp
     volumes:
-      - $DOCKER_DATA/technitium-dns-secondary/data:/etc/dns
+      - $DOCKER_DATA/technitium-dns-secondary/config:/etc/dns
   keepalived:
     image: shawly/keepalived:edge-4a11a97@sha256:3c9abead7cd9bc97e07624732b2eafd324e070ce38616b955f1b4f665d2659fa
     restart: always
