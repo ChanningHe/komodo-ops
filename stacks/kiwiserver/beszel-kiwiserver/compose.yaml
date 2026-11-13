@@ -1,6 +1,6 @@
 services:
   beszel-agent:
-    image: henrygd/beszel-agent:alpine@sha256:3781ce55ab65f605769f12aafaf9fb518f6c414ab9170e474ab14be32c264df1
+    image: henrygd/beszel-agent:alpine@sha256:2ea69d4c9a6690d07368d50762cf606281d96b447cdd411855c87ff4027465d9
     container_name: beszel-kiwiserver
     restart: unless-stopped
     network_mode: host
