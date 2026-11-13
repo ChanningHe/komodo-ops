@@ -1,6 +1,6 @@
 services:
   beszel:
-    image: henrygd/beszel:latest@sha256:4c51486968efa0b0a702c1b0967966a2e06fb250b7418f3072d2488faea27c51
+    image: henrygd/beszel:latest@sha256:b0be90bd4aee2993fde763032a5098ce4386fba43cfe5031ec017b8d9e8c97a2
     container_name: beszel-hub
     restart: unless-stopped
     environment:
