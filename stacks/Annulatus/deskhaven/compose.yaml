@@ -1,0 +1,92 @@
+name: deskhaven
+
+x-hardening: &hardening
+  read_only: true
+  user: "65532:65532"
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  restart: unless-stopped
+
+services:
+  deskhaven:
+    <<: *hardening
+    image: ghcr.io/channinghe/deskhaven:0.1.0
+    container_name: deskhaven
+    volumes:
+      # Key pair, master key, SQLite database. Back it up.
+      - ${DOCKER_DATA}/deskhaven/deskhaven-data:/var/lib/deskhaven
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    # Async runtime workers + blocking pool scale with the CPU count.
+    pids_limit: 1024
+    ports:
+      - "11115:11115/tcp" # NAT type test
+      - "11116:11116/tcp" # rendezvous
+      - "11116:11116/udp" # rendezvous
+      - "127.0.0.1:21114:21114/tcp" # console + client API (HTTP)
+      #- "127.0.0.1:11118:11118/tcp" # rendezvous WebSocket
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/deskhaven", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+      start_interval: 1s
+    stop_grace_period: 15s
+    environment:
+      DESKHAVEN_PUBLIC_URL: https://${DOMAIN_DESKHAVEN}
+      # Pinned: the relay list is managed here, read-only in the console.
+      #DESKHAVEN_SETTINGS__SIGNAL__RELAY_SERVERS: ${DESKHAVEN_RELAY}
+      DESKHAVEN_SIGNAL__PORT: 11116
+      # Proxies whose X-Forwarded-For is honored; empty = none.
+      DESKHAVEN_SECURITY__TRUSTED_PROXIES: 10.99.0.0/16
+      DESKHAVEN_LOG__LEVEL: debug
+    networks:
+      - traefik_external_public_web
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik_external_public_web
+      traefik.http.routers.deskhaven-console.rule: Host(`${DOMAIN_DESKHAVEN}`)
+      traefik.http.routers.deskhaven-console.priority: 50
+      traefik.http.routers.deskhaven-console.entrypoints: https
+      traefik.http.services.deskhaven-console.loadbalancer.server.port: 21114
+      traefik.http.routers.deskhaven-console.service: deskhaven-console
+      #
+      traefik.http.routers.deskhaven-ws-id.rule: Host(`${DOMAIN_DESKHAVEN}`) && PathPrefix(`/ws/id`)
+      traefik.http.routers.deskhaven-ws-id.entrypoints: https
+      traefik.http.routers.deskhaven-ws-id.priority: 100
+      traefik.http.services.deskhaven-ws-id.loadbalancer.server.port: 11118
+      traefik.http.routers.deskhaven-ws-id.service: deskhaven-ws-id
+      # labelgate
+      labelgate.dns.deskhaven.hostname: ${DOMAIN_DESKHAVEN}
+      labelgate.dns.deskhaven.credential: public
+      labelgate.dns.deskhaven.proxied: false
+
+  relay:
+    <<: *hardening
+    image: ghcr.io/channinghe/deskhaven-relay:0.1.0
+    container_name: deskhaven-relay
+    environment:
+      # deskhaven's public key (`deskhaven key show`); the relay only lets
+      # clients with this key through, and refuses to start without a valid one.
+      KEY: ${DESKHAVEN_RELAY_PUB_KEY}
+    networks:
+      - traefik_external_public_web
+    labels:
+      traefik.enable: true
+      traefik.public: true
+      traefik.docker.network: traefik_external_public_web
+      traefik.http.routers.deskhaven-ws-relay.rule: Host(`${DOMAIN_DESKHAVEN}`) && PathPrefix(`/ws/relay`)
+      traefik.http.routers.deskhaven-ws-relay.entrypoints: https
+      traefik.http.routers.deskhaven-ws-relay.priority: 100
+      traefik.http.services.deskhaven-ws-relay.loadbalancer.server.port: 21119
+      traefik.http.routers.deskhaven-ws-relay.service: deskhaven-ws-relay
+    pids_limit: 512
+    ports:
+      - "11117:21117/tcp" # relay
+      - "127.0.0.1:21119:21119/tcp" # relay WebSocket
+
+networks:
+  traefik_external_public_web:
+    external: true
