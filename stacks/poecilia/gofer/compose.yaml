@@ -30,7 +30,9 @@ services:
       homepage.group: Dev
       homepage.name: gofer
       homepage.icon: https://raw.githubusercontent.com/cristianadrielbraun/gofer/refs/heads/master/assets/logo.svg
-      homepage.href: "gofer.${DOMAIN_INT}"
+      homepage.href: "https://gofer.${DOMAIN_INT}"
+      homepage.widget.url: https://gofer.${DOMAIN_INT}
+
 
 networks:
   traefik-poecilia_local_web:
