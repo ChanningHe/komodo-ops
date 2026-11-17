@@ -24,9 +24,15 @@ services:
       # bucket stays private; nix clients substitute from niks3 itself
       NIKS3_ENABLE_READ_PROXY: "true"
       NIKS3_CACHE_URL: https://niks3.${DOMAIN_CC}
+      # Any provider granting `read` gates the read proxy; hosts read with the
+      # static API token via netrc (Basic auth password)
+      NIKS3_OIDC_CONFIG: /etc/niks3/oidc.json
     secrets:
       - source: niks3_signing_key
         target: /secrets/signing-key
+    configs:
+      - source: niks3_oidc
+        target: /etc/niks3/oidc.json
     depends_on:
       niks3-db:
         condition: service_healthy
@@ -75,6 +81,23 @@ secrets:
   # one-line `nix key generate-secret` output, injected from sops env
   niks3_signing_key:
     environment: NIKS3_SIGNING_KEY
+
+configs:
+  # pocket-id users in group niks3-readers may get read-only tokens.
+  # jwks_url skips discovery so niks3 starts even when pocket-id is down.
+  niks3_oidc:
+    content: |
+      {
+        "providers": {
+          "pocket-id": {
+            "issuer": "https://${DOMAIN_POCKETID}",
+            "jwks_url": "https://${DOMAIN_POCKETID}/.well-known/jwks.json",
+            "audience": "https://niks3.${DOMAIN_CC}",
+            "bound_claims": { "groups": ["niks3-readers"] },
+            "scopes": ["read"]
+          }
+        }
+      }
 
 networks:
   default:
