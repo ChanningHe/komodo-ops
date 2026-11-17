@@ -274,6 +274,7 @@ configs:
         ,"scenario":{{ .Scenario | toJson }},"scenario_version":{{ .ScenarioVersion | toJson }} {{- /**/ -}}
         ,"message":{{ .Message | toJson }},"events_count":{{ .EventsCount | toJson }} {{- /**/ -}}
         ,"start_at":{{ .StartAt | toJson }},"stop_at":{{ .StopAt | toJson }},"machine_id":{{ .MachineID | toJson }} {{- /**/ -}}
+        ,"uuid":{{ .UUID | toJson }} {{- /**/ -}}
         {{- with .Source }},"ip":{{ .Value | toJson }},"scope":{{ .Scope | toJson }},"range":{{ .Range | toJson }} {{- /**/ -}}
         ,"country":{{ .Cn | toJson }},"as_name":{{ .AsName | toJson }},"as_number":{{ .AsNumber | toJson }}{{ end -}}
         {{- with .Decisions }}{{ with index . 0 }},"decision_type":{{ .Type | toJson }} {{- /**/ -}}
@@ -286,9 +287,11 @@ configs:
       headers:
         Content-Type: application/stream+json
 
-  # adds the requested domain to HTTP and AppSec alert context (hub http_base.yaml has only the path)
+  # adds the requested domain to alert context (hub http_base.yaml has only the path).
+  # Log-based HTTP alerts carry it in evt.Meta; AppSec alerts only have the request (req).
   crowdsec_context_target_fqdn:
     content: |
       context:
         target_fqdn:
           - evt.Meta.target_fqdn
+          - "req.Method != '' ? req.Host : ''"
