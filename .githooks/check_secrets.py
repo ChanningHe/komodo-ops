@@ -54,6 +54,9 @@ SECRET_KEY_RE = re.compile(
 # Variable reference patterns (safe to allow)
 VAR_REF_RE = re.compile(r"^\$\{|^\$[A-Z_]|^\[\[")
 
+# Compose `secrets.<name>.environment: VAR` names a variable, it holds no value
+COMPOSE_SECRET_ENV_RE = re.compile(r"^environment:\s*[A-Z_][A-Z0-9_]*\s*$")
+
 # Value extractor: after = or : , optionally quoted
 VALUE_AFTER_EQ = re.compile(r"""=\s*['"]?([^'"#\s].*?)['"]?\s*(?:#.*)?$""")
 VALUE_AFTER_COLON = re.compile(r""":\s+['"]?([^'"#\s].*?)['"]?\s*(?:#.*)?$""")
@@ -192,7 +195,7 @@ def main() -> int:
                         issues += 1
 
         elif ext in (".yaml", ".yml"):
-            if SECRET_KEY_RE.search(content):
+            if SECRET_KEY_RE.search(content) and not COMPOSE_SECRET_ENV_RE.match(stripped):
                 val = None
                 m_eq = VALUE_AFTER_EQ.search(content)
                 m_col = VALUE_AFTER_COLON.search(content)

@@ -1,21 +1,35 @@
 services:
   niks3:
-    image: ghcr.io/mic92/niks3:main@sha256:a1d9196510c82a029e7d1487cdf6c3407421f37c9b2549dbf838b02f3df2fee3
+    image: ghcr.io/mic92/niks3:v1.17.1@sha256:8c78347d3ed0abab966ebb295769b954caa36f75037ef88c07752d6936c42425
     container_name: niks3
-    ports:
-      - "35751:5751"
+    restart: unless-stopped
     environment:
-      NIKS3_DB: postgres://niks3:password@db:5432/niks3?sslmode=disable
-      NIKS3_S3_ENDPOINT: garage.${DOMAIN_CC}
+      # NIKS3_DB unset: pgx reads libpq PG* vars
+      PGHOST: niks3-db
+      PGUSER: niks3
+      PGPASSWORD: ${NIKS3_POSTGRES_PASSWORD}
+      PGDATABASE: niks3
+      PGSSLMODE: disable
+      # S3 via the internal garage container; presigned upload URLs use the public route
+      NIKS3_S3_ENDPOINT: garage:33900
+      NIKS3_S3_USE_SSL: "false"
+      NIKS3_S3_BUCKET_LOOKUP: path
+      NIKS3_S3_REGION: ${NIKS3_S3_REGION}
+      NIKS3_S3_PUBLIC_URL: https://garage.${DOMAIN_CC}
       NIKS3_S3_BUCKET: nix-niks3
       NIKS3_S3_ACCESS_KEY: ${NIKS3_S3_ACCESS_KEY}
       NIKS3_S3_SECRET_KEY: ${NIKS3_S3_SECRET_KEY}
       NIKS3_API_TOKEN: ${NIKS3_API_TOKEN}
       NIKS3_SIGN_KEY_PATHS: /secrets/signing-key
-    volumes:
-      - ${DOCKER_DATA}/niks3/secrets:/secrets:ro
+      # bucket stays private; nix clients substitute from niks3 itself
+      NIKS3_ENABLE_READ_PROXY: "true"
+      NIKS3_CACHE_URL: https://niks3.${DOMAIN_CC}
+    secrets:
+      - source: niks3_signing_key
+        target: /secrets/signing-key
     depends_on:
-      - db
+      niks3-db:
+        condition: service_healthy
     networks:
       - default
       - traefik_external_public_web
@@ -23,7 +37,7 @@ services:
       traefik.enable: true
       traefik.public: true
       traefik.http.routers.niks3.rule: Host(`niks3.${DOMAIN_CC}`)
-      traefik.http.services.niks3.loadbalancer.server.port: 33900
+      traefik.http.services.niks3.loadbalancer.server.port: 5751
       traefik.http.routers.niks3.service: niks3
       traefik.docker.network: traefik_external_public_web
       traefik.http.routers.niks3.entrypoints: https
@@ -31,10 +45,17 @@ services:
       labelgate.dns.niks3.hostname: niks3.${DOMAIN_CC}
       labelgate.dns.niks3.credential: public
       labelgate.dns.niks3.proxied: false
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:5751/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   niks3-db:
     image: postgres:16@sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54
     container_name: niks3-db
+    restart: unless-stopped
     networks:
       - default
     environment:
@@ -43,6 +64,17 @@ services:
       POSTGRES_DB: niks3
     volumes:
       - ${DOCKER_DATA}/niks3/postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U niks3 -d niks3"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+secrets:
+  # one-line `nix key generate-secret` output, injected from sops env
+  niks3_signing_key:
+    environment: NIKS3_SIGNING_KEY
 
 networks:
   default:
