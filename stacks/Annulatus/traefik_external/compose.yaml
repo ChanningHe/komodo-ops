@@ -94,6 +94,13 @@ services:
       - $DOCKER_DATA/crowdsec/config:/etc/crowdsec
       - $DOCKER_DATA/crowdsec/data:/var/lib/crowdsec/data
       - $DOCKER_DATA/crowdsec/logs:/var/log/crowdsec
+    # Every alert is also written to VictoriaLogs (stream app=crowdsec) for the Grafana
+    # security dashboard. The notification is referenced from profiles.yaml on the host.
+    configs:
+      - source: crowdsec_notification_vlogs
+        target: /etc/crowdsec/notifications/vlogs.yaml
+      - source: crowdsec_context_target_fqdn
+        target: /etc/crowdsec/contexts/target_fqdn.yaml
 
   logrotate:
     image: vegardit/traefik-logrotate:latest@sha256:410006e29707d6a06e1c18341f0ef1c270dfc5f9b1993158aff014ede434039e
@@ -249,3 +256,39 @@ configs:
 
         su root root
       }
+
+  # CrowdSec http notification: one NDJSON line per alert into VictoriaLogs.
+  # Context values arrive as JSON arrays ('["/a","/b"]') and are flattened to "/a,/b".
+  # Every line must end in an action with "-}}" so the record stays on one line;
+  # no Go template variables ($x) here because compose would interpolate them.
+  crowdsec_notification_vlogs:
+    content: |
+      type: http
+      name: http_vlogs
+      log_level: info
+      group_wait: 30s
+      group_threshold: 50
+      format: |
+        {{- range . -}}
+        {"app":"crowdsec","hostname":"annulatus","kind":"{{ if .Remediation }}remediation{{ else }}detection{{ end }}" {{- /**/ -}}
+        ,"scenario":{{ .Scenario | toJson }},"scenario_version":{{ .ScenarioVersion | toJson }} {{- /**/ -}}
+        ,"message":{{ .Message | toJson }},"events_count":{{ .EventsCount | toJson }} {{- /**/ -}}
+        ,"start_at":{{ .StartAt | toJson }},"stop_at":{{ .StopAt | toJson }},"machine_id":{{ .MachineID | toJson }} {{- /**/ -}}
+        {{- with .Source }},"ip":{{ .Value | toJson }},"scope":{{ .Scope | toJson }},"range":{{ .Range | toJson }} {{- /**/ -}}
+        ,"country":{{ .Cn | toJson }},"as_name":{{ .AsName | toJson }},"as_number":{{ .AsNumber | toJson }}{{ end -}}
+        {{- with .Decisions }}{{ with index . 0 }},"decision_type":{{ .Type | toJson }} {{- /**/ -}}
+        ,"decision_duration":{{ .Duration | toJson }},"decision_origin":{{ .Origin | toJson }}{{ end }}{{ end -}}
+        {{- range .Meta }},{{ printf "ctx_%s" .Key | toJson }}:{{ .Value | trimAll "[]" | replace "\"" "" | toJson }}{{ end -}}
+        }{{ "\n" }}
+        {{- end -}}
+      url: http://${IP_ANNULATUS}:39428/insert/jsonline?_stream_fields=app,hostname&_msg_field=message&_time_field=stop_at
+      method: POST
+      headers:
+        Content-Type: application/stream+json
+
+  # adds the requested domain to HTTP and AppSec alert context (hub http_base.yaml has only the path)
+  crowdsec_context_target_fqdn:
+    content: |
+      context:
+        target_fqdn:
+          - evt.Meta.target_fqdn
