@@ -1,0 +1,1893 @@
+{
+  "uid": "svc-security",
+  "title": "Security - CrowdSec",
+  "tags": [
+    "services",
+    "security",
+    "crowdsec"
+  ],
+  "description": "Who is blocked, what they tried to reach and which CrowdSec scenario or blocklist stopped them.",
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 1,
+  "editable": true,
+  "graphTooltip": 1,
+  "fiscalYearStartMonth": 0,
+  "liveNow": false,
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "refresh": "1m",
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "links": [
+    {
+      "title": "Fleet Overview",
+      "type": "link",
+      "url": "/d/fleet-overview",
+      "icon": "dashboard",
+      "keepTime": true,
+      "includeVars": false,
+      "asDropdown": false,
+      "targetBlank": false,
+      "tags": [],
+      "tooltip": ""
+    },
+    {
+      "title": "Services",
+      "type": "dashboards",
+      "tags": [
+        "services"
+      ],
+      "asDropdown": true,
+      "keepTime": true,
+      "includeVars": false,
+      "targetBlank": false,
+      "icon": "external link",
+      "tooltip": "",
+      "url": ""
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "type": "textbox",
+        "name": "ip",
+        "label": "IP / prefix",
+        "hide": 0,
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "options": [],
+        "description": "Exact IP or prefix (e.g. 203.0.113.); empty = all."
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "row",
+      "title": "Overview",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 1
+      },
+      "id": 1
+    },
+    {
+      "type": "stat",
+      "title": "Blocked requests",
+      "description": "Requests answered by the bouncer (403/429) without reaching the backend.",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:traefik DownstreamStatus:in(403,429) OriginStatus:0 ClientHost:~\"^${ip:regex}\" | stats count() n",
+          "queryType": "stats",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "id": 2
+    },
+    {
+      "type": "stat",
+      "title": "Blocked IPs",
+      "description": "",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:traefik DownstreamStatus:in(403,429) OriginStatus:0 ClientHost:~\"^${ip:regex}\" | stats count_uniq(ClientHost) n",
+          "queryType": "stats",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true
+      },
+      "gridPos": {
+        "x": 4,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "id": 3
+    },
+    {
+      "type": "stat",
+      "title": "Domains hit by blocked IPs",
+      "description": "",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:traefik DownstreamStatus:in(403,429) OriginStatus:0 ClientHost:~\"^${ip:regex}\" | stats count_uniq(RequestHost) n",
+          "queryType": "stats",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "id": 4
+    },
+    {
+      "type": "stat",
+      "title": "Bans / captchas issued",
+      "description": "Local CrowdSec alerts that produced a decision.",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:crowdsec ip:~\"^${ip:regex}\" kind:remediation | stats count() n",
+          "queryType": "stats",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "id": 5
+    },
+    {
+      "type": "stat",
+      "title": "AppSec detections",
+      "description": "Requests stopped by AppSec rules (no IP decision).",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:crowdsec ip:~\"^${ip:regex}\" kind:detection | stats count() n",
+          "queryType": "stats",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "id": 6
+    },
+    {
+      "type": "stat",
+      "title": "Alerted IPs",
+      "description": "",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:crowdsec ip:~\"^${ip:regex}\" | stats count_uniq(ip) n",
+          "queryType": "stats",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "0",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true
+      },
+      "gridPos": {
+        "x": 20,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "id": 7
+    },
+    {
+      "type": "table",
+      "title": "Blocked by reason",
+      "description": "Reason comes from the IP's CrowdSec alerts (last 30 days); IPs without a local alert are blocked by a subscribed blocklist (CAPI / lists).",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:traefik DownstreamStatus:in(403,429) OriginStatus:0 ClientHost:~\"^${ip:regex}\" | join by (ClientHost) (options(ignore_global_time_filter=true) _time:30d app:crowdsec | rename ip as ClientHost | stats by (ClientHost) count() if (kind:remediation) bans, count() if (kind:detection) detections, uniq_values(scenario) scenarios) | format \"blocklist (CAPI/lists)\" as reason | format if (detections:>0) \"AppSec\" as reason | format if (bans:>0) \"CrowdSec decision\" as reason | stats by (reason) count() requests, count_uniq(ClientHost) ips | sort by (requests desc)",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "source": "labels",
+            "format": "json",
+            "replace": false,
+            "keepTime": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "id": true,
+              "labels": true,
+              "streams": true,
+              "streamId": true
+            },
+            "indexByName": {
+              "reason": 0,
+              "requests": 1,
+              "ips": 2
+            },
+            "renameByName": {
+              "ips": "IPs"
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reason"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "CrowdSec decision": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "AppSec": {
+                        "color": "orange",
+                        "index": 1
+                      },
+                      "blocklist (CAPI/lists)": {
+                        "color": "purple",
+                        "index": 2
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reason"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 165
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "requests"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 85
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPs"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 60
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 6,
+        "h": 8
+      },
+      "id": 8
+    },
+    {
+      "type": "timeseries",
+      "title": "Blocked requests by domain",
+      "description": "",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:traefik DownstreamStatus:in(403,429) OriginStatus:0 ClientHost:~\"^${ip:regex}\" | stats by (RequestHost) count() n",
+          "queryType": "statsRange",
+          "refId": "A",
+          "legendFormat": "{{RequestHost}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 70,
+            "lineWidth": 1,
+            "showPoints": "never",
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "sum"
+          ],
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 5,
+        "w": 9,
+        "h": 8
+      },
+      "id": 9
+    },
+    {
+      "type": "timeseries",
+      "title": "CrowdSec alerts by scenario",
+      "description": "",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:crowdsec ip:~\"^${ip:regex}\" | stats by (scenario) count() n",
+          "queryType": "statsRange",
+          "refId": "A",
+          "legendFormat": "{{scenario}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 70,
+            "lineWidth": 1,
+            "showPoints": "never",
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "sum"
+          ],
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "gridPos": {
+        "x": 15,
+        "y": 5,
+        "w": 9,
+        "h": 8
+      },
+      "id": 10
+    },
+    {
+      "type": "row",
+      "title": "Blocked traffic",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 13,
+        "w": 24,
+        "h": 1
+      },
+      "id": 11
+    },
+    {
+      "type": "table",
+      "title": "Blocked IPs",
+      "description": "One row per blocked IP: what it tried to reach and why it is blocked.",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:traefik DownstreamStatus:in(403,429) OriginStatus:0 ClientHost:~\"^${ip:regex}\" | stats by (ClientHost, geo_country, geo_as_org) count() blocked, count_uniq(RequestHost) domains, uniq_values(RequestHost) hosts, uniq_values(_msg) paths, min(_time) first_seen, max(_time) last_seen | join by (ClientHost) (options(ignore_global_time_filter=true) _time:30d app:crowdsec | rename ip as ClientHost | stats by (ClientHost) count() if (kind:remediation) bans, count() if (kind:detection) detections, uniq_values(scenario) scenarios) | format \"blocklist (CAPI/lists)\" as reason | format if (detections:>0) \"AppSec\" as reason | format if (bans:>0) \"CrowdSec decision\" as reason | sort by (blocked desc) | limit 200",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "source": "labels",
+            "format": "json",
+            "replace": false,
+            "keepTime": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "id": true,
+              "labels": true,
+              "streams": true,
+              "streamId": true
+            },
+            "indexByName": {
+              "ClientHost": 0,
+              "reason": 1,
+              "scenarios": 2,
+              "blocked": 3,
+              "domains": 4,
+              "hosts": 5,
+              "paths": 6,
+              "geo_country": 7,
+              "geo_as_org": 8,
+              "first_seen": 9,
+              "last_seen": 10
+            },
+            "renameByName": {
+              "ClientHost": "IP",
+              "geo_country": "country",
+              "geo_as_org": "AS"
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IP"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filter this dashboard by IP",
+                    "url": "/d/svc-security?var-ip=${__value.raw}&${__url_time_range}"
+                  },
+                  {
+                    "title": "CrowdSec CTI",
+                    "url": "https://app.crowdsec.net/cti/${__value.raw}",
+                    "targetBlank": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reason"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "CrowdSec decision": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "AppSec": {
+                        "color": "orange",
+                        "index": 1
+                      },
+                      "blocklist (CAPI/lists)": {
+                        "color": "purple",
+                        "index": 2
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bans"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "detections"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IP"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reason"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 165
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "blocked"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 75
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "domains"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "country"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "AS"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "first_seen"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 165
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "last_seen"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 165
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 14,
+        "w": 24,
+        "h": 10
+      },
+      "id": 12
+    },
+    {
+      "type": "table",
+      "title": "Blocked requests",
+      "description": "",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:traefik DownstreamStatus:in(403,429) OriginStatus:0 ClientHost:~\"^${ip:regex}\" | join by (ClientHost) (options(ignore_global_time_filter=true) _time:30d app:crowdsec | rename ip as ClientHost | stats by (ClientHost) count() if (kind:remediation) bans, count() if (kind:detection) detections, uniq_values(scenario) scenarios) | format \"blocklist (CAPI/lists)\" as reason | format if (detections:>0) \"AppSec\" as reason | format if (bans:>0) \"CrowdSec decision\" as reason | rename _msg as path | fields _time, ClientHost, geo_country, RequestHost, RequestMethod, path, DownstreamStatus, RouterName, reason, scenarios, request_User-Agent | sort by (_time desc) | limit 500",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "source": "labels",
+            "format": "json",
+            "replace": false,
+            "keepTime": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "id": true,
+              "labels": true,
+              "streams": true,
+              "streamId": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "ClientHost": 1,
+              "geo_country": 2,
+              "RequestHost": 3,
+              "RequestMethod": 4,
+              "path": 5,
+              "DownstreamStatus": 6,
+              "reason": 7,
+              "scenarios": 8,
+              "RouterName": 9,
+              "request_User-Agent": 10
+            },
+            "renameByName": {
+              "Time": "time",
+              "ClientHost": "IP",
+              "geo_country": "country",
+              "RequestHost": "domain",
+              "RequestMethod": "method",
+              "DownstreamStatus": "status",
+              "RouterName": "router",
+              "request_User-Agent": "user agent"
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IP"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filter this dashboard by IP",
+                    "url": "/d/svc-security?var-ip=${__value.raw}&${__url_time_range}"
+                  },
+                  {
+                    "title": "CrowdSec CTI",
+                    "url": "https://app.crowdsec.net/cti/${__value.raw}",
+                    "targetBlank": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reason"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "CrowdSec decision": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "AppSec": {
+                        "color": "orange",
+                        "index": 1
+                      },
+                      "blocklist (CAPI/lists)": {
+                        "color": "purple",
+                        "index": 2
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 165
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IP"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "country"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "method"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 75
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 65
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reason"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 165
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "router"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 24,
+        "h": 10
+      },
+      "id": 13
+    },
+    {
+      "type": "row",
+      "title": "CrowdSec alerts",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 34,
+        "w": 24,
+        "h": 1
+      },
+      "id": 14
+    },
+    {
+      "type": "table",
+      "title": "Alerts",
+      "description": "Every local CrowdSec alert: remediation = ban/captcha issued, detection = AppSec stopped the request only.",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:crowdsec ip:~\"^${ip:regex}\" | fields _time, kind, ip, country, as_name, scenario, decision_type, decision_duration, events_count, ctx_target_fqdn, ctx_method, ctx_target_uri, ctx_status, ctx_msg, ctx_user_agent | sort by (_time desc) | limit 500",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "source": "labels",
+            "format": "json",
+            "replace": false,
+            "keepTime": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "id": true,
+              "labels": true,
+              "streams": true,
+              "streamId": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "kind": 1,
+              "ip": 2,
+              "country": 3,
+              "as_name": 4,
+              "scenario": 5,
+              "decision_type": 6,
+              "decision_duration": 7,
+              "events_count": 8,
+              "ctx_target_fqdn": 9,
+              "ctx_method": 10,
+              "ctx_target_uri": 11,
+              "ctx_status": 12,
+              "ctx_msg": 13,
+              "ctx_user_agent": 14
+            },
+            "renameByName": {
+              "Time": "time",
+              "ip": "IP",
+              "as_name": "AS",
+              "decision_type": "decision",
+              "decision_duration": "duration",
+              "events_count": "events",
+              "ctx_target_fqdn": "domain",
+              "ctx_method": "method",
+              "ctx_target_uri": "paths",
+              "ctx_status": "status",
+              "ctx_msg": "rule",
+              "ctx_user_agent": "user agent"
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IP"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Filter this dashboard by IP",
+                    "url": "/d/svc-security?var-ip=${__value.raw}&${__url_time_range}"
+                  },
+                  {
+                    "title": "CrowdSec CTI",
+                    "url": "https://app.crowdsec.net/cti/${__value.raw}",
+                    "targetBlank": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 165
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "kind"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IP"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "country"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "AS"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "decision"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "duration"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 95
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "events"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "method"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 75
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 65
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 35,
+        "w": 24,
+        "h": 10
+      },
+      "id": 15
+    },
+    {
+      "type": "table",
+      "title": "Scenarios",
+      "description": "",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:crowdsec ip:~\"^${ip:regex}\" | stats by (scenario, kind) count() alerts, count_uniq(ip) ips | sort by (alerts desc)",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "source": "labels",
+            "format": "json",
+            "replace": false,
+            "keepTime": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "id": true,
+              "labels": true,
+              "streams": true,
+              "streamId": true
+            },
+            "indexByName": {
+              "scenario": 0,
+              "kind": 1,
+              "alerts": 2,
+              "ips": 3
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "kind"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "alerts"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ips"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 60
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 45,
+        "w": 12,
+        "h": 8
+      },
+      "id": 16
+    },
+    {
+      "type": "table",
+      "title": "Targeted domains",
+      "description": "",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "vlogs"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "expr": "app:crowdsec ip:~\"^${ip:regex}\" | stats by (ctx_target_fqdn) count() alerts, count_uniq(ip) ips, uniq_values(scenario) scenarios | sort by (alerts desc) | limit 50",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "source": "labels",
+            "format": "json",
+            "replace": false,
+            "keepTime": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "id": true,
+              "labels": true,
+              "streams": true,
+              "streamId": true
+            },
+            "indexByName": {
+              "ctx_target_fqdn": 0,
+              "alerts": 1,
+              "ips": 2,
+              "scenarios": 3
+            },
+            "renameByName": {
+              "ctx_target_fqdn": "domain"
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "alerts"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ips"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 60
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 45,
+        "w": 12,
+        "h": 8
+      },
+      "id": 17
+    },
+    {
+      "type": "row",
+      "title": "IP drill-down (fill in the IP box)",
+      "collapsed": true,
+      "panels": [
+        {
+          "type": "table",
+          "title": "All requests from the selected IP",
+          "description": "Every request, blocked or not. Without an IP this is simply the latest 500 requests.",
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "vlogs"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "victoriametrics-logs-datasource",
+                "uid": "vlogs"
+              },
+              "expr": "app:traefik ClientHost:~\"^${ip:regex}\" | rename _msg as path | fields _time, ClientHost, RequestHost, RequestMethod, path, DownstreamStatus, OriginStatus, RouterName, request_User-Agent | sort by (_time desc) | limit 500",
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "extractFields",
+              "options": {
+                "source": "labels",
+                "format": "json",
+                "replace": false,
+                "keepTime": false
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Line": true,
+                  "id": true,
+                  "labels": true,
+                  "streams": true,
+                  "streamId": true
+                },
+                "indexByName": {
+                  "Time": 0,
+                  "ClientHost": 1,
+                  "RequestHost": 2,
+                  "RequestMethod": 3,
+                  "path": 4,
+                  "DownstreamStatus": 5,
+                  "OriginStatus": 6,
+                  "RouterName": 7,
+                  "request_User-Agent": 8
+                },
+                "renameByName": {
+                  "Time": "time",
+                  "ClientHost": "IP",
+                  "RequestHost": "domain",
+                  "RequestMethod": "method",
+                  "DownstreamStatus": "status",
+                  "OriginStatus": "origin status",
+                  "RouterName": "router",
+                  "request_User-Agent": "user agent"
+                }
+              }
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": true
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "time"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 165
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "IP"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 150
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "method"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 75
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "status"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 65
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "origin status"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 95
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "router"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 170
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "showHeader": true,
+            "cellHeight": "sm",
+            "footer": {
+              "show": false
+            }
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 54,
+            "w": 24,
+            "h": 12
+          },
+          "id": 19
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 53,
+        "w": 24,
+        "h": 1
+      },
+      "id": 18
+    }
+  ]
+}
