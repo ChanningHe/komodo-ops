@@ -2,7 +2,7 @@ services:
   # Main Labelgate instance
   labelgate:
     #image: ghcr.io/channinghe/labelgate:v0
-    image: ghcr.io/channinghe/labelgate:main-6d05a6c
+    image: ghcr.io/channinghe/labelgate:main-84efbed
     container_name: labelgate
     restart: unless-stopped
     #user: nonroot
