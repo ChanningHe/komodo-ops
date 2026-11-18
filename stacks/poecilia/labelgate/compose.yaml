@@ -23,6 +23,7 @@ services:
       - LABELGATE_CONFIG=/config/labelgate/labelgate.toml
       - LABELGATE_SYNC_ORPHAN_TTL=5s
       - LABELGATE_SYNC_REMOVE_DELAY=1m
+      - LABELGATE_AGENT_ACCEPT_SERVICES=traefik
       # Optional settings
       - LABELGATE_LOG_LEVEL=debug
       - LABELGATE_LOG_FORMAT=text
