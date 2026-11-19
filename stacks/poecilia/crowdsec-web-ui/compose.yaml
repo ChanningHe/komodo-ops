@@ -1,0 +1,37 @@
+services:
+  crowdsec-web-ui:
+    image: ghcr.io/theduffman85/crowdsec-web-ui:2026.11.12
+    container_name: crowdsec-web-ui
+    restart: unless-stopped
+    # CONFIG_* values are parsed as YAML and override /app/data/config.yaml in memory.
+    # The LAPI password is kept as an env reference in config.yaml, never as plaintext.
+    environment:
+      CONFIG_AUTH_ENABLED: "true"
+      CONFIG_UPDATES_ENABLED: "false" # versions are managed by Renovate
+      CONFIG_UI_TIME_ZONE: ${LOCAL_TZ}
+      # CrowdSec LAPI runs on Annulatus (traefik_external stack). Alert deletion needs
+      # this host's IP in LAPI trusted_ips (config.yaml.local in traefik_external).
+      CONFIG_INSTANCE_ID: annulatus
+      CONFIG_INSTANCE_NAME: Annulatus
+      CONFIG_INSTANCE_LAPI_URL: http://${IP_ANNULATUS}:48387
+      CONFIG_INSTANCE_LAPI_AUTH_USERNAME: crowdsec-web-ui
+      CONFIG_INSTANCE_LAPI_AUTH_PASSWORD: ${CROWDSECWEBUI_LAPI_PASSWORD}
+      CONFIG_INSTANCE_METRICS_URL: http://${IP_ANNULATUS}:6060/metrics
+    volumes:
+      - $DOCKER_DATA/crowdsec-web-ui/data:/app/data
+    networks:
+      - traefik-poecilia_local_web
+    labels:
+      traefik.enable: true
+      traefik.http.routers.crowdsec-web-ui.rule: Host(`crowdsec-ui.${DOMAIN_INT}`)
+      traefik.http.services.crowdsec-web-ui.loadbalancer.server.port: 3000
+      traefik.docker.network: traefik-poecilia_local_web
+      #
+      homepage.group: Monitoring
+      homepage.name: CrowdSec
+      homepage.icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/crowdsec.png
+      homepage.href: "https://crowdsec-ui.${DOMAIN_INT}"
+
+networks:
+  traefik-poecilia_local_web:
+    external: true
