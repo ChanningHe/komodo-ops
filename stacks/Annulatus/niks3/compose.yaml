@@ -1,6 +1,6 @@
 services:
   niks3:
-    image: ghcr.io/mic92/niks3:v1.17.1@sha256:8c78347d3ed0abab966ebb295769b954caa36f75037ef88c07752d6936c42425
+    image: ghcr.io/mic92/niks3:v1.19.0@sha256:732f9006ee9fb9a68fbffc9570e0d4b9766e451ff25451d7ff7ce465b95ef320
     container_name: niks3
     restart: unless-stopped
     environment:
