@@ -43,7 +43,7 @@ services:
 
   attic-postgres:
     container_name: attic-postgres
-    image: postgres:17.12-alpine@sha256:34261f594522cf41dfcb76aefd42b9d201098b0e6b23c9c68733f169e4218b6f
+    image: postgres:17.12-alpine@sha256:f9cf3e1f0066f0eb0c48707d864f0ac5941e9ff454a072077d97a4d278d07d73
     restart: unless-stopped
     networks:
       - default
