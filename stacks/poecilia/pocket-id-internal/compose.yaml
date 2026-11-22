@@ -16,7 +16,7 @@ services:
       start_period: 10s
     environment:
       - TZ=${LOCAL_TZ}
-      - APP_URL=https://pocketid.${DOMAIN_STWL}
+      - APP_URL=https://id.${DOMAIN_INT}
       - ENCRYPTION_KEY=${POCKETID_ENCRYPTION_KEY}
       - TRUST_PROXY=false
       - PUID=${PM_RL_UID}
@@ -25,7 +25,7 @@ services:
       - traefik-poecilia_local_web
     labels:
       traefik.enable: true
-      traefik.http.routers.pocket-id.rule: Host(`pocketid.${DOMAIN_STWL}`)
+      traefik.http.routers.pocket-id.rule: Host(`id.${DOMAIN_INT}`)
       traefik.http.services.pocket-id.loadbalancer.server.port: 1411
       traefik.docker.network: traefik-poecilia_local_web
 networks:
