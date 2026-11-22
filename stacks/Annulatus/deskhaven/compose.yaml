@@ -10,7 +10,7 @@ x-hardening: &hardening
 services:
   deskhaven:
     <<: *hardening
-    image: ghcr.io/channinghe/deskhaven:0.1.0
+    image: ghcr.io/channinghe/deskhaven:0.1.1
     container_name: deskhaven
     volumes:
       # Key pair, master key, SQLite database. Back it up.
@@ -65,7 +65,7 @@ services:
 
   relay:
     <<: *hardening
-    image: ghcr.io/channinghe/deskhaven-relay:0.1.0
+    image: ghcr.io/channinghe/deskhaven-relay:0.1.1
     container_name: deskhaven-relay
     environment:
       # deskhaven's public key (`deskhaven key show`); the relay only lets
