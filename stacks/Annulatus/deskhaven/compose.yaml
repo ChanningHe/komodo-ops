@@ -40,6 +40,7 @@ services:
       # Pinned: the relay list is managed here, read-only in the console.
       #DESKHAVEN_SETTINGS__SIGNAL__RELAY_SERVERS: ${DESKHAVEN_RELAY}
       DESKHAVEN_SIGNAL__PORT: 11116
+      DESKHAVEN_SETTINGS__WEB_CLIENT__ENABLED: true
       # Proxies whose X-Forwarded-For is honored; empty = none.
       DESKHAVEN_SECURITY__TRUSTED_PROXIES: 10.99.0.0/16
       DESKHAVEN_LOG__LEVEL: debug
