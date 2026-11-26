@@ -19,10 +19,12 @@ services:
       - /tmp:size=16m,mode=1777
     # Async runtime workers + blocking pool scale with the CPU count.
     pids_limit: 1024
+    # IPv4 only: the network has no IPv6, so [::] clients would be seen
+    # as the bridge gateway.
     ports:
-      - "11115:11115/tcp" # NAT type test
-      - "11116:11116/tcp" # rendezvous
-      - "11116:11116/udp" # rendezvous
+      - "0.0.0.0:11115:11115/tcp" # NAT type test
+      - "0.0.0.0:11116:11116/tcp" # rendezvous
+      - "0.0.0.0:11116:11116/udp" # rendezvous
       - "127.0.0.1:21114:21114/tcp" # console + client API (HTTP)
       #- "127.0.0.1:11118:11118/tcp" # rendezvous WebSocket
     healthcheck:
@@ -47,10 +49,20 @@ services:
       traefik.enable: true
       traefik.public: true
       traefik.docker.network: traefik_external_public_web
-      traefik.http.routers.deskhaven-console.rule: Host(`${DOMAIN_DESKHAVEN}`)
-      traefik.http.routers.deskhaven-console.priority: 50
-      traefik.http.routers.deskhaven-console.entrypoints: https
+      # docs/guides/restrict-console.md, policy 1: only client paths are
+      # public; console and management API are limited to trusted networks.
+      traefik.http.middlewares.deskhaven-trusted.ipallowlist.sourcerange: ${IP_LIST_TRUSTED},${LOCAL_V4}/32
       traefik.http.services.deskhaven-console.loadbalancer.server.port: 21114
+      #
+      traefik.http.routers.deskhaven-public.rule: Host(`${DOMAIN_DESKHAVEN}`) && (PathPrefix(`/api/`) || Path(`/healthz`))
+      traefik.http.routers.deskhaven-public.entrypoints: https
+      traefik.http.routers.deskhaven-public.priority: 100
+      traefik.http.routers.deskhaven-public.service: deskhaven-console
+      #
+      traefik.http.routers.deskhaven-console.rule: Host(`${DOMAIN_DESKHAVEN}`)
+      traefik.http.routers.deskhaven-console.entrypoints: https
+      traefik.http.routers.deskhaven-console.priority: 1
+      traefik.http.routers.deskhaven-console.middlewares: deskhaven-trusted
       traefik.http.routers.deskhaven-console.service: deskhaven-console
       #
       traefik.http.routers.deskhaven-ws-id.rule: Host(`${DOMAIN_DESKHAVEN}`) && PathPrefix(`/ws/id`)
@@ -84,7 +96,7 @@ services:
       traefik.http.routers.deskhaven-ws-relay.service: deskhaven-ws-relay
     pids_limit: 512
     ports:
-      - "11117:21117/tcp" # relay
+      - "0.0.0.0:11117:21117/tcp" # relay
       - "127.0.0.1:21119:21119/tcp" # relay WebSocket
 
 networks:

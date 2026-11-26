@@ -14,7 +14,7 @@ services:
         restart: true
       traefik-external-redis:
         condition: service_healthy
-    # command: 
+    # command:
     #   - "--api.insecure=true"
     #   - "--providers.docker"
     #   - "--ping=true"
@@ -26,9 +26,7 @@ services:
           memory: 4G
     ports:
       #- "0.0.0.0:80:80"
-      #- "[::]:80:80"
       - "0.0.0.0:443:443"
-      - "[::]:443:443"
       - "${IP_ANNULATUS}:31080:8080"
     volumes:
       - /etc/timezone:/etc/timezone:ro
@@ -185,7 +183,7 @@ services:
     command:
       - '-loglevel=info'
       - '-listenip=0.0.0.0'
-      - '-allowfrom=traefik,crowdsec,10.1.10.0/24' 
+      - '-allowfrom=traefik,crowdsec,10.1.10.0/24'
       - '-allowGET=(/v1\.[0-9]+)?/(_ping|version|info|containers/.*|events.*)'
       - '-allowhealthcheck'
       - '-watchdoginterval=300'
