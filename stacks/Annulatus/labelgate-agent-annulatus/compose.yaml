@@ -1,7 +1,7 @@
 services:
   labelgate-agent-Annulatus:
     #image: git.cloudcloud.cc/channinghe/labelgate:dev@sha256:9efe8621cfbf532bd5098a3f451a9b5421fc10058ddc94507309d5a4842671f1
-    image: ghcr.io/channinghe/labelgate:main-84efbed
+    image: ghcr.io/channinghe/labelgate:main-84efbed@sha256:2b49ff5a200203440f71f245c487bddaf27e2f41bb990036caa1b89b3187fc1d
     container_name: labelgate-agent-Annulatus
     restart: unless-stopped
     group_add:

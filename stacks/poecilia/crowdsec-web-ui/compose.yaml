@@ -1,6 +1,6 @@
 services:
   crowdsec-web-ui:
-    image: ghcr.io/theduffman85/crowdsec-web-ui:2026.11.12
+    image: ghcr.io/theduffman85/crowdsec-web-ui:2026.11.12@sha256:5bc8a0bdb6350101bce07f1db55df9784b27f6f2ff49cc1316bd67988628558e
     container_name: crowdsec-web-ui
     restart: unless-stopped
     # CONFIG_* values are parsed as YAML and override /app/data/config.yaml in memory.
