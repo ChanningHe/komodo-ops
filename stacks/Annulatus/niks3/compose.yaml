@@ -59,7 +59,7 @@ services:
       start_period: 20s
 
   niks3-db:
-    image: postgres:16@sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54
+    image: postgres:16@sha256:ce81150802644ddfac1db4da9e63be6f2a3818aa6ee98a7a28838aeea65dc37a
     container_name: niks3-db
     restart: unless-stopped
     networks:
